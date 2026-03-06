@@ -1,0 +1,48 @@
+import * as React from "react";
+import { cn } from "@/lib/utils";
+
+export interface SectionProps extends React.HTMLAttributes<HTMLElement> {
+  containerClassName?: string;
+  background?: "default" | "dark" | "white";
+}
+
+const Section = React.forwardRef<HTMLElement, SectionProps>(
+  (
+    {
+      className,
+      containerClassName,
+      background = "default",
+      children,
+      ...props
+    },
+    ref,
+  ) => {
+    return (
+      <section
+        ref={ref}
+        className={cn(
+          "py-16 md:py-24",
+          {
+            "bg-off-white": background === "default",
+            "bg-indigo-900 text-white": background === "dark",
+            "bg-white": background === "white",
+          },
+          className,
+        )}
+        {...props}
+      >
+        <div
+          className={cn(
+            "mx-auto max-w-7xl px-4 sm:px-6 lg:px-8",
+            containerClassName,
+          )}
+        >
+          {children}
+        </div>
+      </section>
+    );
+  },
+);
+Section.displayName = "Section";
+
+export { Section };
