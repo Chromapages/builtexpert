@@ -1,8 +1,10 @@
 import * as React from "react";
-import { motion, Variants, HTMLMotionProps } from "motion/react";
+import { motion, Variants, HTMLMotionProps, useReducedMotion } from "motion/react";
 import { cn } from "@/lib/utils";
 
-export interface AnimateInProps extends HTMLMotionProps<"div"> {
+export interface AnimateInProps
+  extends Omit<HTMLMotionProps<"div">, "children"> {
+  children?: React.ReactNode;
   delay?: number;
   stagger?: boolean;
   staggerChildren?: number;
@@ -39,6 +41,12 @@ export function AnimateIn({
   staggerChildren = 0.1,
   ...props
 }: AnimateInProps) {
+  const shouldReduceMotion = useReducedMotion();
+
+  if (shouldReduceMotion) {
+    return <div className={className}>{children}</div>;
+  }
+
   if (stagger) {
     return (
       <motion.div

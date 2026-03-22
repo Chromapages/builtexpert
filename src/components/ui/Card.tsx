@@ -1,24 +1,22 @@
 import * as React from "react";
-import { motion, HTMLMotionProps } from "motion/react";
 import { cn } from "@/lib/utils";
 
-export interface CardProps extends HTMLMotionProps<"div"> {
-  variant?: "default" | "dark" | "bordered";
+export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
+  variant?: "default" | "featured" | "bordered" | "editorial";
 }
 
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
   ({ className, variant = "default", ...props }, ref) => {
     return (
-      <motion.div
+      <div
         ref={ref}
-        whileHover={{ y: -4, transition: { duration: 0.2, ease: "easeOut" } }}
         className={cn(
-          "rounded-xl p-6 md:p-8 transition-shadow duration-300",
+          "rounded-none p-6 md:p-8 transition-all duration-300 hover:border-ink/40",
           {
-            "bg-white shadow-card hover:shadow-elevated": variant === "default",
-            "bg-indigo-900 text-white shadow-card hover:shadow-elevated":
-              variant === "dark",
-            "bg-off-white border border-neutral-200": variant === "bordered",
+            "bg-surface border border-border": variant === "default",
+            "bg-accent text-white border border-accent": variant === "featured",
+            "bg-bg border border-border": variant === "bordered",
+            "bg-transparent border-t border-border": variant === "editorial",
           },
           className,
         )}

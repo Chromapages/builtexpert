@@ -1,171 +1,266 @@
 import * as React from "react";
 import { useParams, Link } from "react-router-dom";
+import { SEO } from "@/components/SEO";
 import { Section } from "@/components/ui/Section";
 import { AnimateIn } from "@/components/ui/AnimateIn";
 import { Button } from "@/components/ui/Button";
+import { Skeleton } from "@/components/ui/Skeleton";
+import { CASE_STUDIES } from "@/data/caseStudies";
 
 export function CaseStudy() {
   const { slug } = useParams();
+  const [isLoading] = React.useState(false);
+  const study = slug ? CASE_STUDIES[slug] : null;
 
-  // Mock data based on slug
-  const study = {
-    client: "Acme Financial",
-    industry: "Fintech",
-    services: [
-      "Web App Development",
-      "UI/UX Design",
-      "Performance Optimization",
-    ],
-    timeline: "4 Months",
-    heroImage: "https://picsum.photos/seed/fintech/1920/1080",
-    problem:
-      "Acme Financial's legacy dashboard was slow, confusing, and causing a high volume of support tickets. Users struggled to find key features, leading to frustration and churn.",
-    solution:
-      "We completely redesigned the user interface with a focus on clarity and speed. We rebuilt the frontend using modern technologies, optimizing data loading and rendering performance. We also implemented a new design system to ensure consistency across the application.",
-    results:
-      "The new dashboard resulted in a significant improvement in user experience. Support tickets related to usability dropped by 30%, and user retention increased by 47%. The application now loads 3x faster, providing a seamless experience for all users.",
-    stats: [
-      { label: "User Retention", value: "+47%" },
-      { label: "Support Tickets", value: "-30%" },
-      { label: "Load Time", value: "3x Faster" },
-    ],
+  if (!study) {
+    return (
+      <Section className="min-h-[60vh] flex flex-col items-center justify-center text-center">
+        <h2 className="text-3xl font-display font-medium text-ink uppercase mb-4">Case Study Not Found</h2>
+        <p className="text-muted mb-8">
+          The project you're looking for doesn't exist or has been moved.
+        </p>
+        <Link to="/work">
+          <Button variant="primary">Back to Work</Button>
+        </Link>
+      </Section>
+    );
+  }
+
+  const caseStudySchema = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: `${study.client} Case Study: ${study.result}`,
+    description: study.problem,
+    image: `https://builtexpert.com${study.image}`,
+    author: {
+      "@type": "Person",
+      name: "Eric Black",
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "BuiltExpert",
+      logo: {
+        "@type": "ImageObject",
+        url: "https://builtexpert.com/logo.png",
+      },
+    },
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `https://builtexpert.com/work/${study.slug}`,
+    },
   };
+
+  // Get next and previous projects
+  const slugs = Object.keys(CASE_STUDIES);
+  const currentIndex = slugs.indexOf(slug || "");
+  const prevSlug = slugs[currentIndex - 1] || null;
+  const nextSlug = slugs[currentIndex + 1] || null;
+  const prevProject = prevSlug ? CASE_STUDIES[prevSlug] : null;
+  const nextProject = nextSlug ? CASE_STUDIES[nextSlug] : null;
+
+  if (isLoading) {
+    return (
+      <>
+        <SEO title="Loading..." />
+        <Section className="pt-32 pb-16">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+            <div className="lg:col-span-7 space-y-6">
+              <Skeleton className="h-4 w-24 rounded-none bg-border" />
+              <Skeleton className="h-20 w-full rounded-none bg-border" />
+              <Skeleton className="h-20 w-3/4 rounded-none bg-border" />
+            </div>
+            <div className="lg:col-span-4 lg:col-start-9 space-y-4">
+              <Skeleton className="h-24 w-full rounded-none bg-border" />
+              <Skeleton className="h-24 w-full rounded-none bg-border" />
+              <Skeleton className="h-24 w-full rounded-none bg-border" />
+            </div>
+          </div>
+        </Section>
+        <div className="w-full aspect-[21/9] relative">
+          <Skeleton className="w-full h-full rounded-none" />
+        </div>
+        <Section background="white">
+          <div className="space-y-16">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+              <div className="lg:col-span-3">
+                <Skeleton className="h-8 w-24 rounded-none bg-border" />
+              </div>
+              <div className="lg:col-span-7 space-y-6">
+                <Skeleton className="h-10 w-48 rounded-none bg-border" />
+                <Skeleton className="h-32 w-full rounded-none bg-border" />
+              </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <Skeleton className="h-32 w-full rounded-none bg-border" />
+              <Skeleton className="h-32 w-full rounded-none bg-border" />
+              <Skeleton className="h-32 w-full rounded-none bg-border" />
+            </div>
+          </div>
+        </Section>
+      </>
+    );
+  }
 
   return (
     <>
-      {/* Hero Image */}
-      <div className="w-full h-[50vh] md:h-[70vh] relative overflow-hidden">
-        <img
-          src={study.heroImage}
-          alt={study.client}
-          className="w-full h-full object-cover"
-          referrerPolicy="no-referrer"
-        />
-        <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-          <h1 className="text-5xl md:text-7xl font-black tracking-tighter text-white text-center px-4">
-            {study.client}
-          </h1>
-        </div>
-      </div>
+      <SEO
+        title={`${study.client} Case Study`}
+        description={`How we helped ${study.client} achieve ${study.result} in their ${study.industry} project.`}
+        canonical={`/work/${study.slug}`}
+        schema={caseStudySchema}
+      />
 
-      <Section background="white">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-          {/* Sidebar */}
-          <div className="lg:col-span-4 space-y-8">
-            <AnimateIn>
+      <Section className="pt-32 pb-16">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+          <AnimateIn className="lg:col-span-7">
+            <p className="text-[10px] font-bold uppercase tracking-[0.35em] text-muted mb-4">
+              {study.category}
+            </p>
+            <h1 className="text-5xl md:text-7xl font-display font-light text-ink uppercase leading-none mb-6">
+              {study.client}
+            </h1>
+            <p className="text-xl text-ink leading-relaxed mb-6 max-w-prose">
+              {study.result}
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-sm">
               <div>
-                <h3 className="text-sm font-semibold text-neutral-500 uppercase tracking-wider mb-2">
-                  Client
-                </h3>
-                <p className="text-lg font-medium text-neutral-900">
-                  {study.client}
-                </p>
-              </div>
-              <div>
-                <h3 className="text-sm font-semibold text-neutral-500 uppercase tracking-wider mb-2">
+                <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-muted mb-2">
                   Industry
-                </h3>
-                <p className="text-lg font-medium text-neutral-900">
-                  {study.industry}
                 </p>
+                <p className="text-ink">{study.industry}</p>
               </div>
               <div>
-                <h3 className="text-sm font-semibold text-neutral-500 uppercase tracking-wider mb-2">
-                  Services
-                </h3>
-                <ul className="space-y-1">
-                  {study.services.map((service) => (
-                    <li
-                      key={service}
-                      className="text-lg font-medium text-neutral-900"
-                    >
-                      {service}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div>
-                <h3 className="text-sm font-semibold text-neutral-500 uppercase tracking-wider mb-2">
+                <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-muted mb-2">
                   Timeline
-                </h3>
-                <p className="text-lg font-medium text-neutral-900">
-                  {study.timeline}
                 </p>
+                <p className="text-ink">{study.timeline}</p>
               </div>
-            </AnimateIn>
-          </div>
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-muted mb-2">
+                  Services
+                </p>
+                <p className="text-ink">{study.services.join(", ")}</p>
+              </div>
+            </div>
+          </AnimateIn>
 
-          {/* Main Content */}
-          <div className="lg:col-span-8 space-y-16">
-            <AnimateIn>
-              <h2 className="text-3xl font-bold text-neutral-900 mb-6">
-                The Problem
-              </h2>
-              <p className="text-lg text-neutral-600 leading-relaxed">
-                {study.problem}
+          <AnimateIn delay={0.1} className="lg:col-span-4 lg:col-start-9">
+            <div className="border border-border bg-surface p-8 md:p-10">
+              <p className="text-[10px] font-bold uppercase tracking-[0.35em] text-muted mb-6">
+                Key Metrics
               </p>
-            </AnimateIn>
-
-            <AnimateIn>
-              <h2 className="text-3xl font-bold text-neutral-900 mb-6">
-                The Solution
-              </h2>
-              <p className="text-lg text-neutral-600 leading-relaxed">
-                {study.solution}
-              </p>
-            </AnimateIn>
-
-            <AnimateIn>
-              <h2 className="text-3xl font-bold text-neutral-900 mb-6">
-                The Results
-              </h2>
-              <p className="text-lg text-neutral-600 leading-relaxed mb-12">
-                {study.results}
-              </p>
-
-              {/* Metrics Highlight Row */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 border-t border-b border-neutral-200 py-12">
+              <div className="space-y-6">
                 {study.stats.map((stat) => (
-                  <div key={stat.label} className="text-center">
-                    <p className="text-4xl md:text-5xl font-black text-indigo-900 mb-2">
+                  <div key={stat.label} className="border-b border-border pb-6 last:border-b-0 last:pb-0">
+                    <p className="text-4xl font-display font-light text-ink leading-none mb-2">
                       {stat.value}
                     </p>
-                    <p className="text-sm font-semibold text-neutral-500 uppercase tracking-wider">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-muted">
                       {stat.label}
                     </p>
                   </div>
                 ))}
               </div>
-            </AnimateIn>
-          </div>
+            </div>
+          </AnimateIn>
         </div>
       </Section>
 
-      {/* Next Project Navigation */}
-      <Section background="dark" className="text-center py-24">
-        <AnimateIn>
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-8">
-            Ready to see more?
-          </h2>
-          <div className="flex justify-center gap-4">
-            <Link to="/work">
-              <Button
-                variant="secondary"
-                className="bg-transparent border-white text-white hover:bg-white/10"
-              >
-                Back to Work
-              </Button>
-            </Link>
-            <Link to="/contact">
-              <Button
-                variant="primary"
-                className="bg-white text-indigo-900 hover:bg-neutral-100"
-              >
-                Start Your Project
-              </Button>
-            </Link>
+      <div className="w-full aspect-[21/9] max-h-[600px] relative overflow-hidden border-y border-border bg-surface">
+        <img
+          src={study.image}
+          alt={study.client}
+          className="w-full h-full object-cover"
+          referrerPolicy="no-referrer"
+        />
+      </div>
+
+      <Section background="white">
+        <div className="space-y-20">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+            <AnimateIn className="lg:col-span-3">
+              <p className="text-[10px] font-bold uppercase tracking-[0.35em] text-muted">
+                The Challenge
+              </p>
+            </AnimateIn>
+            <AnimateIn delay={0.1} className="lg:col-span-7 lg:col-start-5">
+              <p className="text-lg text-muted leading-relaxed max-w-prose">
+                {study.problem}
+              </p>
+            </AnimateIn>
           </div>
-        </AnimateIn>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+            <AnimateIn className="lg:col-span-3">
+              <p className="text-[10px] font-bold uppercase tracking-[0.35em] text-muted">
+                The Approach
+              </p>
+            </AnimateIn>
+            <AnimateIn delay={0.1} className="lg:col-span-7 lg:col-start-5">
+              <p className="text-lg text-muted leading-relaxed max-w-prose">
+                {study.solution}
+              </p>
+            </AnimateIn>
+          </div>
+
+          <AnimateIn delay={0.2}>
+            <div className="bg-ink text-white p-8 md:p-12">
+              <p className="text-[10px] font-bold uppercase tracking-[0.35em] text-white/50 mb-8">
+                Results
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {study.stats.map((stat) => (
+                  <div key={stat.label} className="border-t border-white/20 pt-6">
+                    <p className="text-5xl font-display font-light leading-none mb-3">
+                      {stat.value}
+                    </p>
+                    <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-white/60">
+                      {stat.label}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </AnimateIn>
+
+          <div className="border-t border-border pt-16">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+              <div className="text-left">
+                {prevProject && (
+                  <Link to={`/work/${prevProject.slug}`} className="group block">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-muted mb-2">
+                      Previous Project
+                    </p>
+                    <p className="text-2xl font-display font-medium text-ink uppercase group-hover:text-accent transition-colors">
+                      {prevProject.client}
+                    </p>
+                  </Link>
+                )}
+              </div>
+
+              <div className="text-center">
+                <Link to="/contact">
+                  <Button variant="primary" size="lg">
+                    Start Your Project
+                  </Button>
+                </Link>
+              </div>
+
+              <div className="text-left md:text-right">
+                {nextProject && (
+                  <Link to={`/work/${nextProject.slug}`} className="group block">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-muted mb-2">
+                      Next Project
+                    </p>
+                    <p className="text-2xl font-display font-medium text-ink uppercase group-hover:text-accent transition-colors">
+                      {nextProject.client}
+                    </p>
+                  </Link>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
       </Section>
     </>
   );

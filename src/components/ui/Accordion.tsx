@@ -20,21 +20,22 @@ export function Accordion({ items, className }: AccordionProps) {
       {items.map((item, index) => {
         const isOpen = openIndex === index;
         return (
-          <div key={index} className="border-b border-neutral-200 pb-4">
+          <div
+            key={index}
+            className="rounded-xl bg-md3-surface-container-lowest px-6 py-4 shadow-sm"
+          >
             <button
               onClick={() => toggle(index)}
-              className="flex w-full items-center justify-between py-2 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-900 focus-visible:ring-offset-2"
+              className="flex w-full items-center justify-between gap-4 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-md3-primary focus-visible:ring-offset-2"
               aria-expanded={isOpen}
             >
-              <span className="font-display text-lg font-semibold text-neutral-900">
+              <span className="font-headline text-lg font-semibold text-md3-on-surface">
                 {item.title}
               </span>
               <ChevronDownIcon
                 className={cn(
-                  "h-5 w-5 text-neutral-600 transition-transform duration-300",
-                  {
-                    "rotate-180": isOpen,
-                  },
+                  "h-5 w-5 shrink-0 text-md3-on-surface-variant transition-transform duration-300",
+                  { "rotate-180": isOpen },
                 )}
               />
             </button>
@@ -47,7 +48,7 @@ export function Accordion({ items, className }: AccordionProps) {
                   transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
                   className="overflow-hidden"
                 >
-                  <div className="pt-4 text-neutral-600 leading-relaxed">
+                  <div className="pt-4 text-md3-on-surface-variant leading-relaxed">
                     {item.content}
                   </div>
                 </motion.div>

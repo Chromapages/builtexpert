@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 
 export interface SectionProps extends React.HTMLAttributes<HTMLElement> {
   containerClassName?: string;
-  background?: "default" | "dark" | "white";
+  background?: "default" | "dark" | "white" | "surface";
 }
 
 const Section = React.forwardRef<HTMLElement, SectionProps>(
@@ -23,9 +23,10 @@ const Section = React.forwardRef<HTMLElement, SectionProps>(
         className={cn(
           "py-16 md:py-24",
           {
-            "bg-off-white": background === "default",
-            "bg-indigo-900 text-white": background === "dark",
+            "bg-bg": background === "default",
+            "bg-accent text-white": background === "dark",
             "bg-white": background === "white",
+            "bg-surface": background === "surface",
           },
           className,
         )}
