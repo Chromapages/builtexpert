@@ -12,6 +12,9 @@ import { getFaqItems, getHomePage, getTestimonials, urlFor } from "@/lib/sanity.
 import { PortableText } from "@portabletext/react";
 import { FAQSection } from "@/components/features/FAQSection";
 import { HomeHero } from "@/components/features/HomeHero";
+import { HeroSkeleton } from "@/components/ui/HeroSkeleton";
+import { CardSkeleton } from "@/components/ui/CardSkeleton";
+import { TestimonialSkeleton } from "@/components/ui/TestimonialSkeleton";
 
 const HERO_IMG = "/images/hero/hero-industrial.png";
 
@@ -149,10 +152,12 @@ export function Home() {
   const [homeData, setHomeData] = React.useState<any>(null);
   const [testimonials, setTestimonials] = React.useState<any[]>(TESTIMONIALS);
   const [faqItems, setFaqItems] = React.useState(FAQ_ITEMS.map((item) => ({ question: item.q, answer: item.a, category: "general" })));
+  const [isLoading, setIsLoading] = React.useState(true);
   const navigate = useNavigate();
 
   React.useEffect(() => {
     async function fetchData() {
+      setIsLoading(true);
       try {
         const [home, tests, faqs] = await Promise.all([getHomePage(), getTestimonials(), getFaqItems()]);
         if (home) setHomeData(home);
@@ -166,6 +171,8 @@ export function Home() {
         }
       } catch (error) {
         console.error("Error fetching homepage data:", error);
+      } finally {
+        setIsLoading(false);
       }
     }
     fetchData();
@@ -229,13 +236,17 @@ export function Home() {
       >
         <span id="main-content" className="sr-only" aria-hidden="true" />
         {/* ── Hero ── */}
-        <HomeHero 
-          headline={heroHeadline}
-          subheadline={heroSubheadline}
-          stats={heroStats}
-          bgImage={heroBgImage}
-          videoUrl={heroVideoUrl}
-        />
+        {isLoading && !homeData ? (
+          <HeroSkeleton />
+        ) : (
+          <HomeHero 
+            headline={heroHeadline}
+            subheadline={heroSubheadline}
+            stats={heroStats}
+            bgImage={heroBgImage}
+            videoUrl={heroVideoUrl}
+          />
+        )}
 
 {/* <section id="trust-ticker" className="overflow-hidden border-t border-[#e5e7eb] bg-white/60 py-6 sm:py-8 backdrop-blur-sm [border-top-width:0.5px]">
           <div className="site-container">
@@ -430,48 +441,52 @@ export function Home() {
             <div className="mx-auto mt-4 h-px w-24 bg-md3-primary" />
           </div>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {SYSTEM_SERVICES.map((item) => (
-              <div
-                key={item.title}
-                className="group flex flex-col overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white transition-all [border-width:0.5px] hover:border-md3-primary/40 hover:shadow-xl hover:shadow-md3-primary/5"
-              >
-                {/* Image Header */}
-                <div className="relative aspect-[16/11] overflow-hidden bg-zinc-100">
-                  <img
-                    src={item.imgSrc}
-                    alt={item.imgAlt}
-                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
-                </div>
-
-                <div className="flex flex-1 flex-col p-6 lg:p-8">
-                  <div className="mb-4 flex items-center gap-3">
-                    <span className="material-symbols-outlined text-md3-primary">
-                      {item.icon}
-                    </span>
-                    <h3
-                      className="text-xl font-bold leading-tight transition-colors group-hover:text-md3-primary"
-                      style={{ color: INDUSTRIAL.charcoal }}
-                    >
-                      {item.title}
-                    </h3>
+            {isLoading && !homeData ? (
+              Array.from({ length: 4 }).map((_, i) => <CardSkeleton key={i} />)
+            ) : (
+              SYSTEM_SERVICES.map((item) => (
+                <div
+                  key={item.title}
+                  className="group flex flex-col overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white transition-all [border-width:0.5px] hover:border-md3-primary/40 hover:shadow-xl hover:shadow-md3-primary/5"
+                >
+                  {/* Image Header */}
+                  <div className="relative aspect-[16/11] overflow-hidden bg-zinc-100">
+                    <img
+                      src={item.imgSrc}
+                      alt={item.imgAlt}
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
                   </div>
-                  
-                  <p className="mb-8 flex-1 text-sm font-light leading-relaxed text-zinc-600">
-                    {item.body}
-                  </p>
 
-                  <Link
-                    to={item.href}
-                    className="inline-flex w-full items-center justify-between border border-[#e5e7eb] bg-white px-5 py-3 text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-800 transition-all [border-width:0.5px] hover:bg-zinc-50 group-hover:border-md3-primary/30"
-                  >
-                    Explore Service
-                    <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-1" />
-                  </Link>
+                  <div className="flex flex-1 flex-col p-6 lg:p-8">
+                    <div className="mb-4 flex items-center gap-3">
+                      <span className="material-symbols-outlined text-md3-primary">
+                        {item.icon}
+                      </span>
+                      <h3
+                        className="text-xl font-bold leading-tight transition-colors group-hover:text-md3-primary"
+                        style={{ color: INDUSTRIAL.charcoal }}
+                      >
+                        {item.title}
+                      </h3>
+                    </div>
+                    
+                    <p className="mb-8 flex-1 text-sm font-light leading-relaxed text-zinc-600">
+                      {item.body}
+                    </p>
+
+                    <Link
+                      to={item.href}
+                      className="inline-flex w-full items-center justify-between border border-[#e5e7eb] bg-white px-5 py-3 text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-800 transition-all [border-width:0.5px] hover:bg-zinc-50 group-hover:border-md3-primary/30"
+                    >
+                      Explore Service
+                      <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-1" />
+                    </Link>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         </section>
 
@@ -598,37 +613,41 @@ export function Home() {
               These contractors stopped relying on referrals. Here&apos;s what happened next.
             </p>
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {testimonials.slice(0, 3).map((t, idx) => (
-                <div
-                  key={t.name || idx}
-                  className="group flex flex-col gap-6 rounded-2xl border border-[#e5e7eb] bg-white p-8 shadow-sm transition-all [border-width:0.5px] hover:border-md3-primary/40 hover:shadow-xl hover:shadow-md3-primary/5"
-                >
-                  <div className="flex gap-1.5">
-                    {Array.from({ length: t.rating || 5 }).map((_, i) => (
-                      <Star
-                        key={i}
-                        className="size-3.5 fill-yellow-400 text-yellow-400"
-                        aria-hidden
-                      />
-                    ))}
-                  </div>
-                  <blockquote 
-                    className="flex-1 text-[15px] font-light leading-relaxed italic" 
-                    style={{ color: INDUSTRIAL.charcoal }}
+              {isLoading && testimonials.length === 0 ? (
+                Array.from({ length: 3 }).map((_, i) => <TestimonialSkeleton key={i} />)
+              ) : (
+                testimonials.slice(0, 3).map((t, idx) => (
+                  <div
+                    key={t.name || idx}
+                    className="group flex flex-col gap-6 rounded-2xl border border-[#e5e7eb] bg-white p-8 shadow-sm transition-all [border-width:0.5px] hover:border-md3-primary/40 hover:shadow-xl hover:shadow-md3-primary/5"
                   >
-                    &ldquo;{t.quote || t.content}&rdquo;
-                  </blockquote>
-                  <div className="inline-flex self-start rounded-full bg-md3-primary/5 px-4 py-1.5 text-[11px] font-bold uppercase tracking-wider text-md3-primary">
-                    {t.resultHighlight || t.highlight}
+                    <div className="flex gap-1.5">
+                      {Array.from({ length: t.rating || 5 }).map((_, i) => (
+                        <Star
+                          key={i}
+                          className="size-3.5 fill-yellow-400 text-yellow-400"
+                          aria-hidden
+                        />
+                      ))}
+                    </div>
+                    <blockquote 
+                      className="flex-1 text-[15px] font-light leading-relaxed italic" 
+                      style={{ color: INDUSTRIAL.charcoal }}
+                    >
+                      &ldquo;{t.quote || t.content}&rdquo;
+                    </blockquote>
+                    <div className="inline-flex self-start rounded-full bg-md3-primary/5 px-4 py-1.5 text-[11px] font-bold uppercase tracking-wider text-md3-primary">
+                      {t.resultHighlight || t.highlight}
+                    </div>
+                    <div className="mt-2 border-t border-[#e5e7eb] pt-6 [border-top-width:0.5px]">
+                      <p className="font-bold leading-none mb-1" style={{ color: INDUSTRIAL.charcoal }}>{t.name}</p>
+                      <p className="text-[13px] font-light leading-none" style={{ color: INDUSTRIAL.muted }}>
+                        {t.trade || t.role} · {t.location}
+                      </p>
+                    </div>
                   </div>
-                  <div className="mt-2 border-t border-[#e5e7eb] pt-6 [border-top-width:0.5px]">
-                    <p className="font-bold leading-none mb-1" style={{ color: INDUSTRIAL.charcoal }}>{t.name}</p>
-                    <p className="text-[13px] font-light leading-none" style={{ color: INDUSTRIAL.muted }}>
-                      {t.trade || t.role} · {t.location}
-                    </p>
-                  </div>
-                </div>
-              ))}
+                ))
+              )}
             </div>
           </div>
         </section>

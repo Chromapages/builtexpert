@@ -14,6 +14,7 @@ import { ROICalculator } from "@/components/features/ROICalculator";
 import { OSSection } from "@/components/features/OSSection";
 import { getFaqItems, getPricingTiers, getOsSection } from "@/lib/sanity.client";
 import type { OSSectionData } from "@/components/features/OSSection";
+import { CardSkeleton } from "@/components/ui/CardSkeleton";
 
 // ─── Prices (Fallback) ───────────────────────────────────────────────────────────
 
@@ -98,50 +99,35 @@ export function Pricing() {
   const [tiers, setTiers] = useState<any[]>([]);
   const [osSection, setOsSection] = useState<OSSectionData | null>(null);
   const [faqItems, setFaqItems] = useState(FAQ_ITEMS);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    async function fetchPricing() {
+    async function fetchData() {
+      setIsLoading(true);
       try {
-        const data = await getPricingTiers();
-        if (data && data.length > 0) {
-          setTiers(data);
-        }
-      } catch (error) {
-        console.error("Error fetching pricing tiers:", error);
-      }
-    }
-    fetchPricing();
-  }, []);
+        const [tiersData, osData, faqsData] = await Promise.all([
+          getPricingTiers(),
+          getOsSection(),
+          getFaqItems("pricing"),
+        ]);
 
-  useEffect(() => {
-    async function fetchOsSection() {
-      try {
-        const data = await getOsSection();
-        setOsSection(data);
-      } catch (error) {
-        console.error("Error fetching OS section:", error);
-      }
-    }
-    fetchOsSection();
-  }, []);
-
-  useEffect(() => {
-    async function fetchFaqs() {
-      try {
-        const data = await getFaqItems("pricing");
-        if (data && data.length > 0) {
+        if (tiersData && tiersData.length > 0) setTiers(tiersData);
+        if (osData) setOsSection(osData);
+        if (faqsData && faqsData.length > 0) {
           setFaqItems(
-            data.map((item: any) => ({
+            faqsData.map((item: any) => ({
               title: item.question,
               content: item.answer,
             })),
           );
         }
       } catch (error) {
-        console.error("Error fetching pricing FAQs:", error);
+        console.error("Error fetching pricing page data:", error);
+      } finally {
+        setIsLoading(false);
       }
     }
-    fetchFaqs();
+    fetchData();
   }, []);
 
   const fmt = (n: number) => n?.toLocaleString() || "0";
@@ -155,7 +141,7 @@ export function Pricing() {
   const getAnnualTotal = (tier: any) =>
     (tier.annualPrice * 12).toLocaleString();
 
-  const activeTiers = tiers.length > 0 ? tiers : FALLBACK_TIERS;
+  const activeTiers = tiers.length > 0 ? tiers : (isLoading ? [] : FALLBACK_TIERS);
 
   return (
     <>
@@ -216,7 +202,7 @@ export function Pricing() {
               <div className="mb-8">
                 <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-zinc-400">One-Time Investment</span>
                 <div className="mt-2 flex items-baseline justify-center gap-1">
-                  <span className="text-6xl font-bold tracking-tighter text-[#1a1a1a]">$497</span>
+                  <span className="text-6xl font-bold tracking-tighter text-[#1a1a1a]">${isLoading && !tiers.length ? '...' : activeTiers[0]?.monthlyPrice ? activeTiers[0].monthlyPrice : '497'}</span>
                 </div>
               </div>
               <div className="w-full space-y-4">
@@ -428,113 +414,121 @@ export function Pricing() {
             className="grid grid-cols-1 gap-px overflow-hidden bg-[#e5e7eb] lg:grid-cols-3"
             style={{ borderWidth: "0.5px", borderColor: INDUSTRIAL.outline }}
           >
-            {activeTiers.map((tier, idx) => {
-              const isGrowth = tier.name.toLowerCase() === "growth";
-              const isExpansion = tier.name.toLowerCase() === "expansion";
-              const currentPrice = isAnnual ? tier.annualPrice : tier.monthlyPrice;
-              const slug = tier.name.toLowerCase().replace(/\s+/g, "-");
+            {isLoading && tiers.length === 0 ? (
+               Array.from({ length: 3 }).map((_, i) => (
+                 <div key={`skeleton-${i}`} className="bg-white p-12">
+                   <CardSkeleton />
+                 </div>
+               ))
+            ) : (
+              activeTiers.map((tier, idx) => {
+                const isGrowth = tier.name.toLowerCase() === "growth";
+                const isExpansion = tier.name.toLowerCase() === "expansion";
+                const currentPrice = isAnnual ? tier.annualPrice : tier.monthlyPrice;
+                const slug = tier.name.toLowerCase().replace(/\s+/g, "-");
 
-              return (
-                <div
-                  key={tier._id || tier.name}
-                  className={`flex flex-col justify-between p-12 ${
-                    isGrowth
-                      ? "relative bg-zinc-50 lg:z-10 lg:scale-105 lg:shadow-xl"
-                      : isExpansion
-                      ? "bg-[#1a1a1a] text-white shadow-2xl"
-                      : "bg-white"
-                  }`}
-                >
-                  {isGrowth && (
-                    <div className="absolute right-0 top-0 p-8">
-                      <span className="bg-md3-primary px-3 py-1 text-[9px] font-bold uppercase tracking-[0.2em] text-white">
-                        Most Popular
-                      </span>
-                    </div>
-                  )}
-                  <div>
-                    <h3
-                      className={`mb-8 text-xs font-bold uppercase tracking-[0.2em] ${
-                        isGrowth || isExpansion ? "text-md3-primary" : "text-zinc-400"
-                      }`}
-                    >
-                      {tier.name}
-                    </h3>
-                    <div className="mb-2">
-                      <span
-                        className={`text-4xl tracking-tighter ${
-                          isGrowth ? "font-bold text-[#1a1a1a]" : isExpansion ? "font-light text-white" : "font-light text-[#1a1a1a]"
-                        }`}
-                      >
-                        ${fmt(currentPrice)}
-                      </span>
-                      <span
-                        className={`ml-2 text-sm ${
-                          isExpansion ? "text-zinc-500" : "text-zinc-400"
-                        }`}
-                      >
-                        / mo
-                      </span>
-                    </div>
-
-                    {isAnnual ? (
-                      <p
-                        className={`mb-5 text-[10px] font-bold uppercase tracking-widest ${
-                          isExpansion ? "text-teal-400" : "text-teal-600"
-                        }`}
-                      >
-                        ${getAnnualTotal(tier)}/yr · save ${getAnnualSaving(tier)}
-                      </p>
-                    ) : (
-                      <p
-                        className={`mb-5 text-[10px] font-light uppercase tracking-widest ${
-                          isExpansion ? "text-zinc-600" : "text-zinc-400"
-                        }`}
-                      >
-                        or ${tier.annualPrice}/mo billed annually
-                      </p>
-                    )}
-
-                    <p
-                      className={`mb-6 text-[11px] font-light ${
-                        isExpansion ? "text-zinc-400" : "text-zinc-500"
-                      }`}
-                    >
-                      {tier.tagline}
-                    </p>
-
-                    <ul className={`mb-12 space-y-3 text-sm ${isExpansion ? "text-zinc-300" : "text-[#1a1a1a]"}`}>
-                      {tier.includes?.map((item: string) => (
-                        <li key={item} className="flex items-start gap-2">
-                          <span
-                            className={`material-symbols-outlined mt-0.5 text-sm ${
-                              isExpansion ? "text-md3-primary" : "text-teal-600"
-                            }`}
-                          >
-                            check
-                          </span>
-                          <span className="font-light">{item}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  <Link
-                    to={`/contact?growth=${slug}${isAnnual ? "&billing=annual" : ""}`}
-                    className={`block w-full py-3 text-center text-[10px] font-bold uppercase tracking-[0.2em] transition-all ${
+                return (
+                  <div
+                    key={tier._id || tier.name}
+                    className={`flex flex-col justify-between p-12 ${
                       isGrowth
-                        ? "bg-[#1a1a1a] text-white hover:bg-md3-primary"
+                        ? "relative bg-zinc-50 lg:z-10 lg:scale-105 lg:shadow-xl"
                         : isExpansion
-                        ? "bg-md3-primary text-white hover:bg-white hover:text-[#1a1a1a]"
-                        : "border text-[#1a1a1a] hover:bg-[#1a1a1a] hover:text-white"
+                        ? "bg-[#1a1a1a] text-white shadow-2xl"
+                        : "bg-white"
                     }`}
-                    style={!isGrowth && !isExpansion ? { borderWidth: "0.5px", borderColor: INDUSTRIAL.outline } : {}}
                   >
-                    Start {tier.name}
-                  </Link>
-                </div>
-              );
-            })}
+                    {isGrowth && (
+                      <div className="absolute right-0 top-0 p-8">
+                        <span className="bg-md3-primary px-3 py-1 text-[9px] font-bold uppercase tracking-[0.2em] text-white">
+                          Most Popular
+                        </span>
+                      </div>
+                    )}
+                    <div>
+                      <h3
+                        className={`mb-8 text-xs font-bold uppercase tracking-[0.2em] ${
+                          isGrowth || isExpansion ? "text-md3-primary" : "text-zinc-400"
+                        }`}
+                      >
+                        {tier.name}
+                      </h3>
+                      <div className="mb-2">
+                        <span
+                          className={`text-4xl tracking-tighter ${
+                            isGrowth ? "font-bold text-[#1a1a1a]" : isExpansion ? "font-light text-white" : "font-light text-[#1a1a1a]"
+                          }`}
+                        >
+                          ${fmt(currentPrice)}
+                        </span>
+                        <span
+                          className={`ml-2 text-sm ${
+                            isExpansion ? "text-zinc-500" : "text-zinc-400"
+                          }`}
+                        >
+                          / mo
+                        </span>
+                      </div>
+
+                      {isAnnual ? (
+                        <p
+                          className={`mb-5 text-[10px] font-bold uppercase tracking-widest ${
+                            isExpansion ? "text-teal-400" : "text-teal-600"
+                          }`}
+                        >
+                          ${getAnnualTotal(tier)}/yr · save ${getAnnualSaving(tier)}
+                        </p>
+                      ) : (
+                        <p
+                          className={`mb-5 text-[10px] font-light uppercase tracking-widest ${
+                            isExpansion ? "text-zinc-600" : "text-zinc-400"
+                          }`}
+                        >
+                          or ${tier.annualPrice}/mo billed annually
+                        </p>
+                      )}
+
+                      <p
+                        className={`mb-6 text-[11px] font-light ${
+                          isExpansion ? "text-zinc-400" : "text-zinc-500"
+                        }`}
+                      >
+                        {tier.tagline}
+                      </p>
+
+                      <ul className={`mb-12 space-y-3 text-sm ${isExpansion ? "text-zinc-300" : "text-[#1a1a1a]"}`}>
+                        {tier.includes?.map((item: string) => (
+                          <li key={item} className="flex items-start gap-2">
+                            <span
+                              className={`material-symbols-outlined mt-0.5 text-sm ${
+                                isExpansion ? "text-md3-primary" : "text-teal-600"
+                              }`}
+                            >
+                              check
+                            </span>
+                            <span className="font-light">{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    <Link
+                      to={`/contact?growth=${slug}${isAnnual ? "&billing=annual" : ""}`}
+                      className={`block w-full py-3 text-center text-[10px] font-bold uppercase tracking-[0.2em] transition-all ${
+                        isGrowth
+                          ? "bg-[#1a1a1a] text-white hover:bg-md3-primary"
+                          : isExpansion
+                          ? "bg-md3-primary text-white hover:bg-white hover:text-[#1a1a1a]"
+                          : "border text-[#1a1a1a] hover:bg-[#1a1a1a] hover:text-white"
+                      }`}
+                      style={!isGrowth && !isExpansion ? { borderWidth: "0.5px", borderColor: INDUSTRIAL.outline } : {}}
+                    >
+                      Start {tier.name}
+                    </Link>
+                  </div>
+                );
+              })
+            )}
           </div>
 
           {/* Enterprise / Regional Dominance */}

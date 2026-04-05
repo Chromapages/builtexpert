@@ -141,6 +141,7 @@ export function Audit() {
   const [isDone, setIsDone] = React.useState(false);
   const [submitError, setSubmitError] = React.useState<string>("");
   const [auditOffer, setAuditOffer] = React.useState<any>(null);
+  const [isLoading, setIsLoading] = React.useState(true);
   const [formData, setFormData] = React.useState({
     website: "",
     company: "",
@@ -155,11 +156,14 @@ export function Audit() {
     let active = true;
 
     async function fetchOffer() {
+      setIsLoading(true);
       try {
         const data = await getAuditOffer();
         if (active && data) setAuditOffer(data);
       } catch (error) {
         console.error("Error fetching audit offer:", error);
+      } finally {
+        setIsLoading(false);
       }
     }
 
@@ -231,7 +235,7 @@ export function Audit() {
       <SEO
         title={`Lead System Audit — $${auditPrice}`}
         description={subheadline}
-        canonical="/audit"
+        canonicalPath="/audit"
       />
 
       <div

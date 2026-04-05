@@ -8,6 +8,7 @@ import { HeaderSection } from "@/components/ui/HeaderSection";
 import { CTASection } from "@/components/ui/CTASection";
 import { industrialMeshStyle } from "@/lib/industrialStyle";
 import { getPosts } from "@/lib/sanity.client";
+import { CardSkeleton } from "@/components/ui/CardSkeleton";
 
 const BLOG_POSTS = [
     {
@@ -42,11 +43,13 @@ function formatPublishedDate(value?: string) {
 
 export function Blog() {
   const [posts, setPosts] = React.useState(BLOG_POSTS);
+  const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
     let active = true;
 
     async function fetchPosts() {
+      setLoading(true);
       try {
         const data = await getPosts();
         if (active && data?.length > 0) {
@@ -62,6 +65,8 @@ export function Blog() {
         }
       } catch (error) {
         console.error("Error fetching posts:", error);
+      } finally {
+        if (active) setLoading(false);
       }
     }
 
@@ -77,7 +82,7 @@ export function Blog() {
             <SEO
                 title="Journal"
                 description="Notes on design, performance, and digital strategy for growth-focused businesses."
-                canonical="/journal"
+                canonicalPath="/journal"
             />
             
             <HeaderSection 
@@ -96,30 +101,34 @@ export function Blog() {
             <div style={industrialMeshStyle} className="pb-24">
               <Section background="white">
                   <AnimateIn stagger staggerChildren={0.1} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                      {posts.map((post) => (
-                          <Card key={post.slug} className="flex flex-col h-full group">
-                              <div className="space-y-4 flex-grow">
-                                  <div className="flex justify-between items-center">
-                                      <span className="text-[10px] font-bold text-accent uppercase tracking-[0.25em]">{post.category}</span>
-                                      <span className="text-[10px] text-muted uppercase tracking-[0.2em]">{post.date}</span>
+                      {loading ? (
+                          Array.from({ length: 3 }).map((_, i) => <CardSkeleton key={`skeleton-post-${i}`} />)
+                      ) : (
+                          posts.map((post) => (
+                              <Card key={post.slug} className="flex flex-col h-full group">
+                                  <div className="space-y-4 flex-grow">
+                                      <div className="flex justify-between items-center">
+                                          <span className="text-[10px] font-bold text-accent uppercase tracking-[0.25em]">{post.category}</span>
+                                          <span className="text-[10px] text-muted uppercase tracking-[0.2em]">{post.date}</span>
+                                      </div>
+                                      <h3 className="text-2xl font-display font-medium text-ink uppercase group-hover:text-accent transition-colors">
+                                          {post.title}
+                                      </h3>
+                                      <p className="text-muted leading-relaxed text-sm">
+                                          {post.excerpt}
+                                      </p>
                                   </div>
-                                  <h3 className="text-2xl font-display font-medium text-ink uppercase group-hover:text-accent transition-colors">
-                                      {post.title}
-                                  </h3>
-                                  <p className="text-muted leading-relaxed text-sm">
-                                      {post.excerpt}
-                                  </p>
-                              </div>
-                              <div className="mt-8 pt-6 border-t border-border">
-                                  <Link 
-                                      to={`/journal/${post.slug}`}
-                                      className="text-[10px] font-bold uppercase tracking-[0.25em] text-accent hover:underline inline-flex items-center gap-2"
-                                  >
-                                      Read Article <span className="text-sm">→</span>
-                                  </Link>
-                              </div>
-                          </Card>
-                      ))}
+                                  <div className="mt-8 pt-6 border-t border-border">
+                                      <Link 
+                                          to={`/journal/${post.slug}`}
+                                          className="text-[10px] font-bold uppercase tracking-[0.25em] text-accent hover:underline inline-flex items-center gap-2"
+                                      >
+                                          Read Article <span className="text-sm">→</span>
+                                      </Link>
+                                  </div>
+                              </Card>
+                          ))
+                      )}
                   </AnimateIn>
 
                   <CTASection />

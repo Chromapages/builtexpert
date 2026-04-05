@@ -14,6 +14,7 @@ import { OSSection } from "@/components/features/OSSection";
 import type { OSSectionData } from "@/components/features/OSSection";
 import { CTASection } from "@/components/ui/CTASection";
 import { getOsSection, getServicesHero, getFeaturedTestimonials, getServicesByCategory, getSiteSettings } from "@/lib/sanity.client";
+import { CardSkeleton } from "@/components/ui/CardSkeleton";
 
 // ─── Default testimonials (fallback when Sanity is empty) ─────────────────────
 
@@ -228,9 +229,13 @@ export function Services() {
                   <div className="mt-4 h-px w-24 bg-md3-primary" />
                 </div>
                 <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-                  {categoryMap["audit"].map((service: any) => (
-                    <ServiceCard key={service._id || service.slug?.current} service={service} />
-                  ))}
+                  {loading ? (
+                    Array.from({ length: 3 }).map((_, i) => <CardSkeleton key={`skeleton-audit-${i}`} />)
+                  ) : (
+                    categoryMap["audit"].map((service: any) => (
+                      <ServiceCard key={service._id || service.slug?.current} service={service} />
+                    ))
+                  )}
                 </div>
               </div>
             )}
@@ -248,9 +253,13 @@ export function Services() {
                   <div className="mt-4 h-px w-24 bg-md3-primary" />
                 </div>
                 <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-                  {categoryMap["websites"].map((service: any) => (
-                    <ServiceCard key={service._id || service.slug?.current} service={service} />
-                  ))}
+                  {loading ? (
+                    Array.from({ length: 3 }).map((_, i) => <CardSkeleton key={`skeleton-websites-${i}`} />)
+                  ) : (
+                    categoryMap["websites"].map((service: any) => (
+                      <ServiceCard key={service._id || service.slug?.current} service={service} />
+                    ))
+                  )}
                 </div>
               </div>
             )}
@@ -268,9 +277,13 @@ export function Services() {
                   <div className="mt-4 h-px w-24 bg-md3-primary" />
                 </div>
                 <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-                  {categoryMap["landingPages"].map((service: any) => (
-                    <ServiceCard key={service._id || service.slug?.current} service={service} />
-                  ))}
+                  {loading ? (
+                    Array.from({ length: 3 }).map((_, i) => <CardSkeleton key={`skeleton-lp-${i}`} />)
+                  ) : (
+                    categoryMap["landingPages"].map((service: any) => (
+                      <ServiceCard key={service._id || service.slug?.current} service={service} />
+                    ))
+                  )}
                 </div>
               </div>
             )}
@@ -288,9 +301,13 @@ export function Services() {
                   <div className="mt-4 h-px w-24 bg-md3-primary" />
                 </div>
                 <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-                  {categoryMap["localSeo"].map((service: any) => (
-                    <ServiceCard key={service._id || service.slug?.current} service={service} />
-                  ))}
+                  {loading ? (
+                    Array.from({ length: 2 }).map((_, i) => <CardSkeleton key={`skeleton-seo-${i}`} />)
+                  ) : (
+                    categoryMap["localSeo"].map((service: any) => (
+                      <ServiceCard key={service._id || service.slug?.current} service={service} />
+                    ))
+                  )}
                 </div>
               </div>
             )}
@@ -314,9 +331,13 @@ export function Services() {
                 </div>
 
                 <div className="relative z-10 grid grid-cols-1 gap-6 lg:grid-cols-3">
-                  {categoryMap["growthSupport"].map((service: any) => (
-                    <OngoingSupportCard key={service._id || service.slug?.current} service={service} />
-                  ))}
+                  {loading ? (
+                    Array.from({ length: 3 }).map((_, i) => <div key={`skeleton-gs-${i}`} className="bg-white/5 p-8 rounded-2xl"><CardSkeleton /></div>)
+                  ) : (
+                    categoryMap["growthSupport"].map((service: any) => (
+                      <OngoingSupportCard key={service._id || service.slug?.current} service={service} />
+                    ))
+                  )}
                 </div>
 
                 {/* Decorative element */}

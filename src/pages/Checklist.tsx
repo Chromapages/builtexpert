@@ -37,7 +37,7 @@ export function Checklist() {
       <SEO
         title="Contractor Lead Leak Checklist — 21 Quick Checks"
         description="Stop guessing why your phone isn't ringing. Download the 21-point checklist to find exactly where you're losing leads."
-        canonical="/checklist"
+        canonicalPath="/checklist"
       />
 
       <div className="min-h-screen pb-32">

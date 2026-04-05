@@ -11,6 +11,7 @@ import { CASE_STUDIES } from "@/data/caseStudies";
 import { cn } from "@/lib/utils";
 import { HeaderSection } from "@/components/ui/HeaderSection";
 import { getCaseStudies } from "@/lib/sanity.client";
+import { CardSkeleton } from "@/components/ui/CardSkeleton";
 import {
   INDUSTRIAL,
   industrialMeshStyle,
@@ -58,11 +59,13 @@ function normalizeStudy(study: any) {
 export function Work() {
   const [filter, setFilter] = React.useState("All");
   const [studies, setStudies] = React.useState<any[]>([]);
+  const [isLoading, setIsLoading] = React.useState(true);
 
   React.useEffect(() => {
     let active = true;
 
     async function fetchStudies() {
+      setIsLoading(true);
       try {
         const data = await getCaseStudies();
         if (active && data?.length > 0) {
@@ -70,6 +73,8 @@ export function Work() {
         }
       } catch (error) {
         console.error("Error fetching case studies:", error);
+      } finally {
+        setIsLoading(false);
       }
     }
 
@@ -80,7 +85,7 @@ export function Work() {
     };
   }, []);
 
-  const displayStudies = studies.length > 0 ? studies : ALL_STUDIES;
+  const displayStudies = studies.length > 0 ? studies : (isLoading ? [] : ALL_STUDIES);
   const filteredStudies =
     filter === "All"
       ? displayStudies
@@ -91,7 +96,7 @@ export function Work() {
       <SEO
         title="Our Work & Case Studies"
         description="Explore our portfolio of premium web design and development projects. We build high-converting websites for growth-focused businesses."
-        canonical="/work"
+        canonicalPath="/work"
       />
       <div className="font-body tracking-tight antialiased [letter-spacing:-0.01em] [&_h1]:normal-case [&_h2]:normal-case [&_h3]:normal-case selection:bg-md3-primary-container selection:text-md3-on-primary-container">
         
@@ -129,51 +134,59 @@ export function Work() {
             </AnimateIn>
 
             <div className="grid grid-cols-1 gap-12 md:grid-cols-2">
-          <AnimatePresence mode="popLayout">
-            {filteredStudies.map((study) => (
-              <motion.div
-                key={study.id}
-                layout
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.3 }}
-              >
-                <Card
-                  variant="default"
-                  className="flex flex-col h-full overflow-hidden p-0 group"
-                >
-                  <div className="relative aspect-[16/10] overflow-hidden">
-                    <img
-                      src={study.image}
-                      alt={study.client}
-                      className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
-                      referrerPolicy="no-referrer"
-                    />
-                  </div>
-                  <div className="p-6 md:p-8 flex flex-col flex-grow">
-                    <div className="flex justify-between items-start mb-4">
-                      <p className="text-[10px] font-bold uppercase tracking-[0.35em] text-muted">
-                        {study.category}
-                      </p>
-                      <Badge variant="teal">{study.industry}</Badge>
+              <AnimatePresence mode="popLayout" initial={false}>
+                {isLoading && studies.length === 0 ? (
+                  Array.from({ length: 4 }).map((_, i) => (
+                    <div key={`skeleton-${i}`}>
+                      <CardSkeleton />
                     </div>
-                    <h3 className="text-2xl font-display font-medium text-ink mb-2 uppercase">
-                      {study.client}
-                    </h3>
-                    <p className="text-accent font-medium mb-8">
-                      {study.result}
-                    </p>
-                    <Link to={`/work/${study.slug}`} className="mt-auto">
-                      <Button variant="secondary" className="w-full">
-                        View Case Study
-                      </Button>
-                    </Link>
-                  </div>
-                </Card>
-              </motion.div>
-            ))}
-          </AnimatePresence>
+                  ))
+                ) : (
+                  filteredStudies.map((study) => (
+                    <motion.div
+                      key={study.id}
+                      layout
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.9 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <Card
+                        variant="default"
+                        className="flex flex-col h-full overflow-hidden p-0 group"
+                      >
+                        <div className="relative aspect-[16/10] overflow-hidden">
+                          <img
+                            src={study.image}
+                            alt={study.client}
+                            className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
+                            referrerPolicy="no-referrer"
+                          />
+                        </div>
+                        <div className="p-6 md:p-8 flex flex-col flex-grow">
+                          <div className="flex justify-between items-start mb-4">
+                            <p className="text-[10px] font-bold uppercase tracking-[0.35em] text-muted">
+                              {study.category}
+                            </p>
+                            <Badge variant="teal">{study.industry}</Badge>
+                          </div>
+                          <h3 className="text-2xl font-display font-medium text-ink mb-2 uppercase">
+                            {study.client}
+                          </h3>
+                          <p className="text-accent font-medium mb-8">
+                            {study.result}
+                          </p>
+                          <Link to={`/work/${study.slug}`} className="mt-auto">
+                            <Button variant="secondary" className="w-full">
+                              View Case Study
+                            </Button>
+                          </Link>
+                        </div>
+                      </Card>
+                    </motion.div>
+                  ))
+                )}
+              </AnimatePresence>
             </div>
           </div>
         </div>
