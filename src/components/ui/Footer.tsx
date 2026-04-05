@@ -133,7 +133,7 @@ export function Footer() {
           </a>
           <Link
             to="/audit"
-            className="mt-4 inline-block bg-white/5 border border-white/10 px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-white hover:bg-white/10 transition-colors"
+            className="mt-4 inline-block bg-white/5 border border-white/10 px-4 py-2 text-xs font-bold uppercase tracking-widest text-white hover:bg-white/10 transition-colors"
           >
             Start The Audit
           </Link>

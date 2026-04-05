@@ -436,6 +436,7 @@ function SecondaryExpansionCarousel() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const touchStartX = React.useRef<number | null>(null);
 
   const next = useCallback(() => {
     setDirection(1);
@@ -474,27 +475,57 @@ function SecondaryExpansionCarousel() {
     })
   };
 
+  const handleTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
+    setIsPaused(true);
+    touchStartX.current = event.touches[0]?.clientX ?? null;
+  };
+
+  const handleTouchEnd = (event: React.TouchEvent<HTMLDivElement>) => {
+    const startX = touchStartX.current;
+    const endX = event.changedTouches[0]?.clientX ?? null;
+    touchStartX.current = null;
+
+    if (startX === null || endX === null) {
+      setIsPaused(false);
+      return;
+    }
+
+    const delta = endX - startX;
+    if (Math.abs(delta) > 50) {
+      if (delta < 0) {
+        next();
+      } else {
+        prev();
+      }
+    }
+
+    setIsPaused(false);
+  };
+
   return (
     <div 
       className="group relative"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+      onTouchCancel={() => setIsPaused(false)}
     >
       {/* Navigation Arrows - Outside Card */}
       <button
         onClick={prev}
-        className="absolute -left-4 top-1/2 z-20 flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-full border border-zinc-200 bg-white text-zinc-800 opacity-0 shadow-xl transition-all duration-300 hover:scale-110 hover:border-md3-primary hover:bg-md3-primary hover:text-white group-hover:opacity-100 active:scale-95 sm:-left-12 lg:-left-16"
+        className="absolute -left-2 top-1/2 z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-zinc-200 bg-white text-zinc-800 opacity-100 shadow-xl transition-all duration-300 hover:scale-110 hover:border-md3-primary hover:bg-md3-primary hover:text-white active:scale-95 sm:-left-6 md:opacity-0 md:group-hover:opacity-100 lg:-left-16"
         aria-label="Previous Industry"
       >
-        <ChevronLeft className="size-6" />
+        <ChevronLeft className="size-5" />
       </button>
 
       <button
         onClick={next}
-        className="absolute -right-4 top-1/2 z-20 flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-full border border-zinc-200 bg-white text-zinc-800 opacity-0 shadow-xl transition-all duration-300 hover:scale-110 hover:border-md3-primary hover:bg-md3-primary hover:text-white group-hover:opacity-100 active:scale-95 sm:-right-12 lg:-right-16"
+        className="absolute -right-2 top-1/2 z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-zinc-200 bg-white text-zinc-800 opacity-100 shadow-xl transition-all duration-300 hover:scale-110 hover:border-md3-primary hover:bg-md3-primary hover:text-white active:scale-95 sm:-right-6 md:opacity-0 md:group-hover:opacity-100 lg:-right-16"
         aria-label="Next Industry"
       >
-        <ChevronRight className="size-6" />
+        <ChevronRight className="size-5" />
       </button>
 
       <div className="relative min-h-[600px] overflow-hidden rounded-2xl">
@@ -521,16 +552,19 @@ function SecondaryExpansionCarousel() {
       {/* Technical Navigation UI - Simplified */}
       <div className="mt-12 flex flex-col items-center justify-between gap-8 border-t border-zinc-100 pt-8 sm:flex-row">
         <div className="flex items-center gap-6">
-          <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-zinc-400">
+          <span className="text-xs font-bold uppercase tracking-[0.4em] text-zinc-400">
             TRD // {String(currentIndex + 1).padStart(2, '0')} / {String(SECONDARY.length).padStart(2, '0')}
           </span>
           <div className="hidden h-px w-24 bg-zinc-100 sm:block" />
-          <p className="hidden text-[10px] font-bold uppercase tracking-widest text-md3-primary sm:block">
+          <p className="hidden text-xs font-bold uppercase tracking-widest text-md3-primary sm:block">
             {SECONDARY[currentIndex].name} Specification
           </p>
         </div>
 
         <div className="flex items-center gap-3">
+          <span className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-400">
+            {isPaused ? "Paused" : "Auto-rotating"}
+          </span>
           <div className="flex gap-1.5 px-4">
             {SECONDARY.map((_, idx) => (
               <button

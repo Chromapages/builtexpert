@@ -44,14 +44,14 @@ export function CTASection() {
                 trackPhoneClick(PHONE_DISPLAY, "cta_section");
                 trackEvent("click_cta", { location: "cta_section", label: "Call Now" });
               }}
-              className="rounded-none bg-md3-primary px-8 py-4 text-center text-[11px] font-bold uppercase tracking-[0.25em] text-md3-on-primary shadow-md transition-all hover:bg-[#1a1a1a] lg:w-auto w-full"
+              className="rounded-none bg-md3-primary px-8 py-4 text-center text-xs font-bold uppercase tracking-[0.25em] text-md3-on-primary shadow-md transition-all hover:bg-[#1a1a1a] lg:w-auto w-full"
             >
               Call Now
             </a>
             <Link
               to="/contact?ref=audit"
               onClick={() => trackEvent("click_cta", { location: "cta_section", label: "Start The Audit" })}
-              className="border px-8 py-4 text-center text-[11px] font-bold uppercase tracking-[0.25em] transition-all hover:bg-[#1a1a1a] hover:text-white lg:w-auto w-full"
+              className="border px-8 py-4 text-center text-xs font-bold uppercase tracking-[0.25em] transition-all hover:bg-[#1a1a1a] hover:text-white lg:w-auto w-full"
               style={{ borderColor: INDUSTRIAL.outline, color: INDUSTRIAL.charcoal, borderWidth: "0.5px" }}
             >
               Start The Audit

@@ -315,7 +315,7 @@ export function Services() {
             {/* Category 05 — Growth Support (dark industrial grid) */}
             {(categoryMap["growthSupport"] || []).length > 0 && (
               <div 
-                className="relative overflow-hidden rounded-3xl p-12 lg:p-20"
+                className="relative overflow-hidden rounded-3xl p-6 sm:p-10 lg:p-20"
                 style={industrialDarkMeshStyle}
               >
                 <div className="relative z-10 mb-16 max-w-2xl">

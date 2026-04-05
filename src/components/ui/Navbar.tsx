@@ -25,6 +25,9 @@ export function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
   const location = useLocation();
   const [isScrolled, setIsScrolled] = React.useState(false);
+  const hamburgerRef = React.useRef<HTMLButtonElement>(null);
+  const firstLinkRef = React.useRef<HTMLAnchorElement>(null);
+  const lastLinkRef = React.useRef<HTMLAnchorElement>(null);
 
   React.useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
@@ -40,6 +43,37 @@ export function Navbar() {
   React.useEffect(() => {
     document.body.style.overflow = isMobileMenuOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
+  }, [isMobileMenuOpen]);
+
+  React.useEffect(() => {
+    if (!isMobileMenuOpen) return;
+
+    firstLinkRef.current?.focus();
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsMobileMenuOpen(false);
+        hamburgerRef.current?.focus();
+        return;
+      }
+
+      if (event.key !== "Tab") return;
+
+      const first = firstLinkRef.current;
+      const last = lastLinkRef.current;
+      if (!first || !last) return;
+
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
   }, [isMobileMenuOpen]);
 
   return (
@@ -115,8 +149,9 @@ export function Navbar() {
 
           {/* Mobile hamburger */}
           <button
+            ref={hamburgerRef}
             type="button"
-            className="flex h-10 w-10 cursor-pointer items-center justify-center text-zinc-900 md:hidden"
+            className="flex h-12 w-12 cursor-pointer items-center justify-center text-zinc-900 md:hidden"
             onClick={() => setIsMobileMenuOpen((o) => !o)}
             aria-expanded={isMobileMenuOpen}
             aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
@@ -157,6 +192,7 @@ export function Navbar() {
                     transition={{ delay: i * 0.05 + 0.1 }}
                   >
                     <Link
+                      ref={i === 0 ? firstLinkRef : undefined}
                       to={link.href}
                       className={cn(
                         "block border-b border-zinc-50 py-4 font-headline text-lg font-black tracking-tight transition-colors",
@@ -184,6 +220,8 @@ export function Navbar() {
                   </Link>
                   <a
                     href={PHONE_HREF}
+                    ref={lastLinkRef}
+                    onClick={() => trackPhoneClick(PHONE_DISPLAY, "navbar_mobile")}
                     className="flex w-full items-center justify-center border border-zinc-200 py-5 text-sm font-black uppercase tracking-tighter text-zinc-900"
                   >
                     Call {PHONE_DISPLAY}

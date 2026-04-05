@@ -473,7 +473,7 @@ export function Contact() {
                         </label>
                         <div className="relative">
                           <input
-                            id="email" name="email" type="email" autoComplete="email"
+                            id="email" name="email" type="email" autoComplete="email" inputMode="email"
                             value={formState.email} onChange={handleChange} onBlur={handleBlur}
                             placeholder="you@gmail.com"
                             className={cn(
@@ -518,6 +518,7 @@ export function Contact() {
                         </label>
                         <select
                           id="serviceType" name="serviceType"
+                          autoComplete="off"
                           value={formState.serviceType} onChange={handleChange} onBlur={handleBlur}
                           className={inputClass} style={inputStyle}
                         >
@@ -534,6 +535,7 @@ export function Contact() {
                         </label>
                         <textarea
                           id="goals" name="goals" rows={3}
+                          autoComplete="off"
                           value={formState.goals} onChange={handleChange} onBlur={handleBlur}
                           placeholder="e.g. Not enough calls, losing to competitors on Google, website looks outdated..."
                           className={inputClass} style={inputStyle}

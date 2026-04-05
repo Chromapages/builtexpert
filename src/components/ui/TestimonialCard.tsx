@@ -36,8 +36,8 @@ export function TestimonialCard({ quote, name, title, company, rating = 5 }: Tes
           <span className="text-[10px] font-bold text-white tracking-wider">{initials}</span>
         </div>
         <div>
-          <p className="text-[10px] font-bold uppercase tracking-widest text-ink">{name}</p>
-          <p className="text-[10px] uppercase tracking-widest text-muted">{title} — {company}</p>
+          <p className="text-xs font-bold uppercase tracking-widest text-ink">{name}</p>
+          <p className="text-xs uppercase tracking-widest text-muted">{title} — {company}</p>
         </div>
       </div>
     </div>

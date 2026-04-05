@@ -90,7 +90,7 @@ export function FAQSection({
                       type="button"
                       onClick={() => setActiveCategory("all")}
                       className={cn(
-                        "rounded-full border px-5 py-2.5 text-[10px] font-bold uppercase tracking-[0.24em] transition-all",
+                        "rounded-full border px-5 py-2.5 text-xs font-bold uppercase tracking-[0.24em] transition-all",
                         activeCategory === "all"
                           ? "border-md3-primary bg-md3-primary text-white shadow-lg shadow-md3-primary/10"
                           : "border-md3-outline-variant bg-white text-md3-on-surface-variant hover:border-md3-primary hover:text-md3-primary",
@@ -104,7 +104,7 @@ export function FAQSection({
                         type="button"
                         onClick={() => setActiveCategory(category)}
                         className={cn(
-                          "rounded-full border px-5 py-2.5 text-[10px] font-bold uppercase tracking-[0.24em] transition-all",
+                          "rounded-full border px-5 py-2.5 text-xs font-bold uppercase tracking-[0.24em] transition-all",
                           activeCategory === category
                             ? "border-md3-primary bg-md3-primary text-white shadow-lg shadow-md3-primary/10"
                             : "border-md3-outline-variant bg-white text-md3-on-surface-variant hover:border-md3-primary hover:text-md3-primary",

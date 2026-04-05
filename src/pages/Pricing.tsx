@@ -92,6 +92,65 @@ const FAQ_ITEMS = [
   },
 ];
 
+const COMPARISON_ROWS = [
+  {
+    feature: "Monthly price",
+    v: "$750",
+    g: "$1,500",
+    e: "$3,000+",
+    ent: "Custom",
+  },
+  {
+    feature: "Service areas targeted",
+    v: "1 area",
+    g: "Up to 3",
+    e: "Up to 8",
+    ent: "Unlimited",
+  },
+  {
+    feature: "Hosting & Technical Maintenance",
+    v: "Included",
+    g: "Included",
+    e: "Included",
+    ent: "Included",
+  },
+  {
+    feature: "Google Business Profile",
+    v: "Monthly",
+    g: "Active Strategy",
+    e: "Multi-Location",
+    ent: "Multi-Location",
+  },
+  {
+    feature: "Local SEO Keyword Campaign",
+    v: "Not included",
+    g: "50 Keywords",
+    e: "Comprehensive",
+    ent: "Custom",
+  },
+  {
+    feature: "Content Updates",
+    v: "On Request",
+    g: "1 Page / Mo",
+    e: "Unlimited",
+    ent: "Unlimited",
+  },
+  {
+    feature: "Conversion Optimization",
+    v: "Not included",
+    g: "Monthly Testing",
+    e: "Advanced Funnels",
+    ent: "Advanced Funnels",
+  },
+  {
+    feature: "Reporting & Strategy",
+    v: "Email Monthly",
+    g: "Strategy Call",
+    e: "Dedicated Channel",
+    ent: "Account Manager",
+  },
+];
+
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export function Pricing() {
@@ -525,6 +584,14 @@ export function Pricing() {
                     >
                       Start {tier.name}
                     </Link>
+                    <a
+                      href="#compare-plans"
+                      className={`mt-4 block text-center text-xs font-bold uppercase tracking-[0.2em] md:hidden ${
+                        isExpansion ? "text-zinc-400 hover:text-white" : "text-zinc-500 hover:text-md3-primary"
+                      }`}
+                    >
+                      See what's included →
+                    </a>
                   </div>
                 );
               })
@@ -615,7 +682,7 @@ export function Pricing() {
         </section>
 
         {/* ── Comparison table ─────────────────────────────────────────────── */}
-        <section className="mx-auto mb-32 max-w-[1440px] px-4 sm:px-8 lg:px-12 2xl:px-16 3xl:max-w-screen-2xl 4xl:max-w-[1728px]">
+        <section id="compare-plans" className="mx-auto mb-32 max-w-[1440px] px-4 sm:px-8 lg:px-12 2xl:px-16 3xl:max-w-screen-2xl 4xl:max-w-[1728px]">
           <div className="mb-16">
             <h2
               className="mb-4 font-headline text-3xl font-light tracking-tight"
@@ -624,6 +691,67 @@ export function Pricing() {
               Comparing Growth Retainers
             </h2>
             <div className="h-px w-24 bg-md3-primary" />
+          </div>
+
+          <div className="mb-8 md:hidden">
+            <Accordion
+              items={[
+                {
+                  title: "Coverage & pricing",
+                  content: (
+                    <div className="space-y-4">
+                      {COMPARISON_ROWS.slice(0, 2).map((row) => (
+                        <div key={row.feature} className="rounded-xl border border-zinc-100 bg-white p-4">
+                          <p className="mb-3 text-xs font-bold uppercase tracking-[0.2em] text-zinc-500">{row.feature}</p>
+                          <div className="grid grid-cols-2 gap-3 text-sm">
+                            <div><span className="font-semibold">Support:</span> {row.v}</div>
+                            <div><span className="font-semibold">Growth:</span> {row.g}</div>
+                            <div><span className="font-semibold">Expansion:</span> {row.e}</div>
+                            <div><span className="font-semibold">Enterprise:</span> {row.ent}</div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ),
+                },
+                {
+                  title: "SEO & local visibility",
+                  content: (
+                    <div className="space-y-4">
+                      {COMPARISON_ROWS.slice(2, 5).map((row) => (
+                        <div key={row.feature} className="rounded-xl border border-zinc-100 bg-white p-4">
+                          <p className="mb-3 text-xs font-bold uppercase tracking-[0.2em] text-zinc-500">{row.feature}</p>
+                          <div className="grid grid-cols-2 gap-3 text-sm">
+                            <div><span className="font-semibold">Support:</span> {row.v}</div>
+                            <div><span className="font-semibold">Growth:</span> {row.g}</div>
+                            <div><span className="font-semibold">Expansion:</span> {row.e}</div>
+                            <div><span className="font-semibold">Enterprise:</span> {row.ent}</div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ),
+                },
+                {
+                  title: "Optimization & strategy",
+                  content: (
+                    <div className="space-y-4">
+                      {COMPARISON_ROWS.slice(5).map((row) => (
+                        <div key={row.feature} className="rounded-xl border border-zinc-100 bg-white p-4">
+                          <p className="mb-3 text-xs font-bold uppercase tracking-[0.2em] text-zinc-500">{row.feature}</p>
+                          <div className="grid grid-cols-2 gap-3 text-sm">
+                            <div><span className="font-semibold">Support:</span> {row.v}</div>
+                            <div><span className="font-semibold">Growth:</span> {row.g}</div>
+                            <div><span className="font-semibold">Expansion:</span> {row.e}</div>
+                            <div><span className="font-semibold">Enterprise:</span> {row.ent}</div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ),
+                },
+              ]}
+            />
           </div>
 
           <div className="hidden overflow-x-auto md:block">
@@ -662,61 +790,14 @@ export function Pricing() {
                     eBold: true,
                     highlight: true,
                   },
-                  {
-                    feature: "Service areas targeted",
-                    v: "1 area",
-                    g: "Up to 3",
-                    e: "Up to 8",
-                    ent: "Unlimited",
+                  ...COMPARISON_ROWS.slice(1).map((row) => ({
+                    ...row,
+                    v: row.v === "Included" ? "check" : row.v === "Not included" ? "—" : row.v,
+                    g: row.g === "Included" ? "check" : row.g === "Not included" ? "—" : row.g,
+                    e: row.e === "Included" ? "check" : row.e === "Not included" ? "—" : row.e,
+                    ent: row.ent === "Included" ? "check" : row.ent === "Not included" ? "—" : row.ent,
                     eBold: true,
-                  },
-                  {
-                    feature: "Hosting & Technical Maintenance",
-                    v: "check",
-                    g: "check",
-                    e: "check",
-                    ent: "check",
-                  },
-                  {
-                    feature: "Google Business Profile",
-                    v: "Monthly",
-                    g: "Active Strategy",
-                    e: "Multi-Location",
-                    ent: "Multi-Location",
-                    eBold: true,
-                  },
-                  {
-                    feature: "Local SEO Keyword Campaign",
-                    v: "—",
-                    g: "50 Keywords",
-                    e: "Comprehensive Keyword Targeting",
-                    ent: "Custom",
-                    eBold: true,
-                  },
-                  {
-                    feature: "Content Updates",
-                    v: "On Request",
-                    g: "1 Page / Mo",
-                    e: "Unlimited",
-                    ent: "Unlimited",
-                    eBold: true,
-                  },
-                  {
-                    feature: "Conversion Optimization",
-                    v: "—",
-                    g: "Monthly Testing",
-                    e: "Advanced Funnels",
-                    ent: "Advanced Funnels",
-                    eBold: true,
-                  },
-                  {
-                    feature: "Reporting & Strategy",
-                    v: "Email Monthly",
-                    g: "Strategy Call",
-                    e: "Dedicated Channel",
-                    ent: "Account Manager",
-                    eBold: true,
-                  },
+                  })),
                 ].map((row) => (
                   <tr
                     key={row.feature}

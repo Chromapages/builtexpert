@@ -537,8 +537,8 @@ export function Home() {
                 Start The $497 Audit
               </Link>
             </div>
-            <div className="relative">
-              <div className="rounded-2xl bg-md3-on-primary-fixed-variant p-6 shadow-2xl">
+            <div className="relative max-w-full overflow-hidden">
+              <div className="max-w-full overflow-hidden rounded-2xl bg-md3-on-primary-fixed-variant p-6 shadow-2xl">
                 <div className="mb-6 flex items-center gap-2 border-b border-md3-primary-container pb-4">
                   <div className="h-3 w-3 rounded-full bg-md3-error" />
                   <div className="h-3 w-3 rounded-full bg-yellow-400" />

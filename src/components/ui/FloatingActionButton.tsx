@@ -25,14 +25,14 @@ export function FloatingActionButton() {
   return (
     <div
       className={cn(
-        "fixed bottom-6 right-6 z-50 transition-all duration-300 transform md:hidden",
+        "fixed bottom-[calc(1.5rem+env(safe-area-inset-bottom,0px))] right-6 z-50 transition-all duration-300 transform md:hidden",
         isVisible ? "translate-y-0 opacity-100" : "translate-y-20 opacity-0 pointer-events-none"
       )}
     >
       <Link
         to="/audit"
         onClick={() => trackEvent("click_cta", { location: "floating_action_button", label: "Start The Audit" })}
-        className="flex h-14 items-center justify-center gap-2 rounded-full bg-md3-primary px-6 font-headline text-[11px] font-bold uppercase tracking-[0.25em] text-white shadow-2xl active:scale-[0.95]"
+        className="flex h-14 items-center justify-center gap-2 rounded-full bg-md3-primary px-6 font-headline text-xs font-bold uppercase tracking-[0.25em] text-white shadow-2xl active:scale-[0.95]"
       >
         <Search className="size-4" />
         Start The Audit

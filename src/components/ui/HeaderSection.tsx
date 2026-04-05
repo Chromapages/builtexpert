@@ -37,7 +37,7 @@ export function HeaderSection({
           <span className="mb-6 inline-block rounded-full bg-md3-primary px-3 py-1 text-[10px] font-bold uppercase tracking-[0.3em] text-white">
             {badge}
           </span>
-          <h1 className="mb-10 font-headline text-5xl font-light leading-[0.95] tracking-tighter text-white md:text-7xl">
+          <h1 className="mb-10 font-headline text-3xl font-light leading-[0.95] tracking-tighter text-white sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl">
             {title}
           </h1>
           <p className="max-w-xl text-xl font-light leading-relaxed text-zinc-300">

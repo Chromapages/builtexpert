@@ -28,22 +28,26 @@ export function ROICalculator() {
 
       <div className="grid grid-cols-1 md:grid-cols-2">
         {/* Inputs */}
-        <div className="space-y-8 p-8 md:p-10" style={{ borderRight: `0.5px solid ${INDUSTRIAL.outline}` }}>
+        <div
+          className="space-y-8 p-8 md:border-r md:p-10"
+          style={{ borderColor: INDUSTRIAL.outline, borderRightWidth: "0.5px" }}
+        >
           <div>
             <div className="mb-4 flex items-center justify-between">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Avg Ticket Value</label>
+              <label className="text-xs font-bold uppercase tracking-widest text-zinc-400">Avg Ticket Value</label>
               <span className="font-headline text-lg font-bold text-zinc-800">${ticketValue.toLocaleString()}</span>
             </div>
             <input
               type="range"
+              aria-label="Average ticket value"
               min="500"
               max="20000"
               step="500"
               value={ticketValue}
               onChange={(e) => setTicketValue(Number(e.target.value))}
-              className="h-1.5 w-full cursor-pointer appearance-none rounded-lg bg-zinc-200 accent-md3-primary"
+              className="h-3 w-full cursor-pointer appearance-none rounded-lg bg-zinc-200 accent-md3-primary"
             />
-            <div className="mt-2 flex justify-between text-[9px] font-medium text-zinc-400">
+            <div className="mt-2 flex justify-between text-xs font-medium text-zinc-400">
               <span>$500</span>
               <span>$20,000</span>
             </div>
@@ -51,19 +55,20 @@ export function ROICalculator() {
 
           <div>
             <div className="mb-4 flex items-center justify-between">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Closing Rate (%)</label>
+              <label className="text-xs font-bold uppercase tracking-widest text-zinc-400">Closing Rate (%)</label>
               <span className="font-headline text-lg font-bold text-zinc-800">{closingRate}%</span>
             </div>
             <input
               type="range"
+              aria-label="Closing rate percentage"
               min="5"
               max="60"
               step="1"
               value={closingRate}
               onChange={(e) => setClosingRate(Number(e.target.value))}
-              className="h-1.5 w-full cursor-pointer appearance-none rounded-lg bg-zinc-200 accent-md3-primary"
+              className="h-3 w-full cursor-pointer appearance-none rounded-lg bg-zinc-200 accent-md3-primary"
             />
-            <div className="mt-2 flex justify-between text-[9px] font-medium text-zinc-400">
+            <div className="mt-2 flex justify-between text-xs font-medium text-zinc-400">
               <span>5%</span>
               <span>60%</span>
             </div>
@@ -71,19 +76,20 @@ export function ROICalculator() {
 
           <div>
             <div className="mb-4 flex items-center justify-between">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Monthly Target Leads</label>
+              <label className="text-xs font-bold uppercase tracking-widest text-zinc-400">Monthly Target Leads</label>
               <span className="font-headline text-lg font-bold text-zinc-800">{newLeads} leads</span>
             </div>
             <input
               type="range"
+              aria-label="Monthly target leads"
               min="5"
               max="100"
               step="5"
               value={newLeads}
               onChange={(e) => setNewLeads(Number(e.target.value))}
-              className="h-1.5 w-full cursor-pointer appearance-none rounded-lg bg-zinc-200 accent-md3-primary"
+              className="h-3 w-full cursor-pointer appearance-none rounded-lg bg-zinc-200 accent-md3-primary"
             />
-            <div className="mt-2 flex justify-between text-[9px] font-medium text-zinc-400">
+            <div className="mt-2 flex justify-between text-xs font-medium text-zinc-400">
               <span>5</span>
               <span>100</span>
             </div>

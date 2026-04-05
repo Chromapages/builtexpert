@@ -52,6 +52,7 @@ export function Audit() {
 
   const nextStep = () => setStep((s) => (s + 1) as AuditStep);
   const prevStep = () => setStep((s) => (s - 1) as AuditStep);
+  const stepLabels = ["Business", "Trade", "Leads", "Contact"];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -194,6 +195,30 @@ export function Audit() {
               </div>
 
               <form onSubmit={handleSubmit} className="p-10 md:p-16">
+                <div className="mb-8 grid grid-cols-4 gap-2 sm:gap-4">
+                  {stepLabels.map((label, index) => {
+                    const stepNumber = index + 1;
+                    const isActive = step === stepNumber;
+                    const isComplete = step > stepNumber;
+
+                    return (
+                      <div key={label} className="flex flex-col items-center gap-2 text-center">
+                        <div
+                          className={`flex h-8 w-8 items-center justify-center rounded-full border text-xs font-bold ${
+                            isActive || isComplete
+                              ? "border-md3-primary bg-md3-primary text-white"
+                              : "border-zinc-200 text-zinc-400"
+                          }`}
+                        >
+                          {stepNumber}
+                        </div>
+                        <span className="text-xs font-bold uppercase tracking-[0.18em] text-zinc-400">
+                          {label}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
                 {step === 1 && (
                   <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}>
                     <h3 className="mb-8 font-headline text-2xl font-bold uppercase tracking-tight">The Business Assets</h3>
@@ -309,12 +334,12 @@ export function Audit() {
                         </div>
                         <div>
                           <label className="mb-2 block text-[10px] font-bold uppercase tracking-widest text-zinc-400">Phone</label>
-                          <input required type="tel" className="w-full border-b border-zinc-200 py-3 text-lg outline-none focus:border-md3-primary" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} />
+                          <input required type="tel" inputMode="numeric" autoComplete="tel" className="w-full border-b border-zinc-200 py-3 text-lg outline-none focus:border-md3-primary" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} />
                         </div>
                       </div>
                       <div>
                         <label className="mb-2 block text-[10px] font-bold uppercase tracking-widest text-zinc-400">Work Email</label>
-                        <input required type="email" className="w-full border-b border-zinc-200 py-3 text-lg outline-none focus:border-md3-primary" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} />
+                        <input required type="email" inputMode="email" autoComplete="email" className="w-full border-b border-zinc-200 py-3 text-lg outline-none focus:border-md3-primary" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} />
                       </div>
                     </div>
                     <button
