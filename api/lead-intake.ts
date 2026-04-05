@@ -1,9 +1,10 @@
-import { sendDiscordNotification } from "./_utils/discord";
+import type { IncomingMessage, ServerResponse } from "http";
+import { sendDiscordNotification } from "./_utils/discord.ts";
 
 const rateLimitMap = new Map<string, number>();
 const COOLDOWN_MS = 2000;
 
-type LeadType = "contact" | "audit";
+type LeadType = "contact" | "audit" | "audit_initiated";
 
 interface LeadPayload {
   leadType: LeadType;
@@ -47,9 +48,36 @@ function formatServiceType(serviceType?: string) {
     .join(" ");
 }
 
+function getLeadPresentation(leadType: LeadType) {
+  switch (leadType) {
+    case "audit":
+      return {
+        label: "Lead System Audit (Paid/Success)",
+        title: "Lead System Audit (Paid/Success)",
+        description: "A Lead System Audit payment has been completed.",
+        color: 0x0f9d58,
+      };
+    case "audit_initiated":
+      return {
+        label: "Audit Started (Pending Payment)",
+        title: "Audit Started (Pending Payment)",
+        description: "A visitor completed the audit form and was sent to Stripe Checkout.",
+        color: 0xf4b400,
+      };
+    default:
+      return {
+        label: "Contact Request",
+        title: "New Contact Lead",
+        description: "A new contact inquiry was received.",
+        color: 0x1a1a1a,
+      };
+  }
+}
+
 async function sendToDiscord(payload: LeadPayload) {
+  const presentation = getLeadPresentation(payload.leadType);
   const fields = [
-    { name: "Lead Type", value: payload.leadType === "audit" ? "Lead System Audit" : "Contact Request", inline: true },
+    { name: "Lead Type", value: presentation.label, inline: true },
     { name: "Name", value: payload.name || "Not provided", inline: true },
     { name: "Email", value: payload.email || "Not provided", inline: true },
     { name: "Website", value: payload.website || "Not provided", inline: false },
@@ -64,10 +92,10 @@ async function sendToDiscord(payload: LeadPayload) {
   if (payload.source) fields.push({ name: "Source", value: payload.source, inline: true });
 
   await sendDiscordNotification({
-    title: payload.leadType === "audit" ? "New Audit Request" : "New Contact Lead",
-    color: payload.leadType === "audit" ? 0x006565 : 0x1A1A1A,
+    title: presentation.title,
+    color: presentation.color,
     fields,
-    description: `A new ${payload.leadType} inquiry was received.`,
+    description: presentation.description,
   });
 }
 
@@ -108,7 +136,7 @@ export default async function handler(
       return json(response, 200, { success: true });
     }
 
-    if (leadType !== "contact" && leadType !== "audit") {
+    if (leadType !== "contact" && leadType !== "audit" && leadType !== "audit_initiated") {
       return json(response, 400, { error: "Invalid lead type" });
     }
 
@@ -147,8 +175,7 @@ export default async function handler(
   } catch (error: any) {
     console.error("Lead intake error:", error);
     return json(response, 500, {
-      error: "Failed to submit lead",
-      details: error?.message || "Unknown error",
+      error: error?.message || "Failed to submit lead",
     });
   }
 }

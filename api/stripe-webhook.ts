@@ -1,6 +1,6 @@
 import type { IncomingMessage, ServerResponse } from "http";
 import Stripe from "stripe";
-import { sendDiscordNotification } from "./_utils/discord";
+import { sendDiscordNotification } from "./_utils/discord.ts";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2023-10-16" as any,
@@ -75,7 +75,7 @@ async function handlePaymentSuccess(session: Stripe.Checkout.Session) {
 
   // Send Discord Notification
   await sendDiscordNotification({
-    title: "💰 New HVAC Audit Sale!",
+    title: "Lead System Audit (Paid/Success)",
     color: 0x00FF00, // Green
     fields: [
       { name: "Customer", value: name, inline: true },
@@ -84,7 +84,7 @@ async function handlePaymentSuccess(session: Stripe.Checkout.Session) {
       { name: "Payment Link", value: session.payment_intent as string || "Check Stripe Dashboard", inline: false },
       { name: "Intake Link", value: `${process.env.APP_URL}/hvac-audit-intake`, inline: false },
     ],
-    description: "A customer just purchased the HVAC Lead System Audit. They should be redirected to the intake form now.",
+    description: "A Lead System Audit payment has been completed successfully.",
   });
 }
 

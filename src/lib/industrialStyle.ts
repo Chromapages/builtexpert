@@ -16,10 +16,7 @@ export const industrialMeshStyle: CSSProperties = {
 };
 
 export const industrialTextGradientStyle: CSSProperties = {
-  background: "linear-gradient(135deg, #ffffff 0%, #94a3b8 100%)",
-  WebkitBackgroundClip: "text",
-  backgroundClip: "text",
-  WebkitTextFillColor: "transparent",
+  color: "inherit",
 };
 
 export const industrialDarkMeshStyle: CSSProperties = {

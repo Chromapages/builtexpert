@@ -28,12 +28,14 @@ import { HvacAuditLanding } from "@/pages/HvacAuditLanding";
 import { HvacAuditIntake } from "@/pages/HvacAuditIntake";
 import { HvacAuditThankYou } from "@/pages/HvacAuditThankYou";
 import { Audit } from "@/pages/Audit";
+import { AuditSuccess } from "@/pages/AuditSuccess";
 import { Checklist } from "@/pages/Checklist";
 import { ThankYou } from "@/pages/ThankYou";
 import { lazy, Suspense } from "react";
 const StudioPage = lazy(() => import("@/pages/StudioPage"));
 
 import { LoadingBar } from "@/components/ui/LoadingBar";
+import { TransitionProvider } from "@/components/providers/TransitionProvider";
 
 export default function App() {
   return (
@@ -41,41 +43,44 @@ export default function App() {
       <LoadingBar />
       <ScrollToTop />
       <Analytics />
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
-          <Route path="contractor-lead-fix" element={<LeadMagnet />} />
-          <Route path="hvac-lead-system-audit" element={<HvacAuditLanding />} />
-          <Route path="hvac-audit-intake" element={<HvacAuditIntake />} />
-          <Route path="hvac-audit-thank-you" element={<HvacAuditThankYou />} />
-          <Route path="services" element={<Services />} />
-          <Route path="services/:slug" element={<ServiceDetail />} />
-          <Route path="process" element={<Process />} />
-          <Route path="work" element={<Work />} />
-          <Route path="work/:slug" element={<CaseStudy />} />
-          <Route path="privacy" element={<Privacy />} />
-          <Route path="terms" element={<Terms />} />
-          <Route path="about" element={<About />} />
-          <Route path="pricing" element={<Pricing />} />
-          <Route path="contact" element={<Contact />} />
-          <Route path="thank-you" element={<ThankYou />} />
-          <Route path="journal" element={<Blog />} />
-          <Route path="journal/:slug" element={<PostDetail />} />
-          <Route path="who-we-help" element={<WhoWeHelp />} />
-          <Route path="who-we-help/:slug" element={<TradeDetail />} />
-          <Route path="audit" element={<Audit />} />
-          <Route path="checklist" element={<Checklist />} />
-          <Route
-            path="studio/*"
-            element={
-              <Suspense fallback={<div className="flex h-screen items-center justify-center bg-zinc-950 text-white font-headline">Loading Studio...</div>}>
-                <StudioPage />
-              </Suspense>
-            }
-          />
-          <Route path="*" element={<NotFound />} />
-        </Route>
-      </Routes>
+      <TransitionProvider>
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Home />} />
+            <Route path="contractor-lead-fix" element={<LeadMagnet />} />
+            <Route path="hvac-lead-system-audit" element={<HvacAuditLanding />} />
+            <Route path="hvac-audit-intake" element={<HvacAuditIntake />} />
+            <Route path="hvac-audit-thank-you" element={<HvacAuditThankYou />} />
+            <Route path="services" element={<Services />} />
+            <Route path="services/:slug" element={<ServiceDetail />} />
+            <Route path="process" element={<Process />} />
+            <Route path="work" element={<Work />} />
+            <Route path="work/:slug" element={<CaseStudy />} />
+            <Route path="privacy" element={<Privacy />} />
+            <Route path="terms" element={<Terms />} />
+            <Route path="about" element={<About />} />
+            <Route path="pricing" element={<Pricing />} />
+            <Route path="contact" element={<Contact />} />
+            <Route path="thank-you" element={<ThankYou />} />
+            <Route path="journal" element={<Blog />} />
+            <Route path="journal/:slug" element={<PostDetail />} />
+            <Route path="who-we-help" element={<WhoWeHelp />} />
+            <Route path="who-we-help/:slug" element={<TradeDetail />} />
+            <Route path="audit" element={<Audit />} />
+            <Route path="audit/success" element={<AuditSuccess />} />
+            <Route path="checklist" element={<Checklist />} />
+            <Route
+              path="studio/*"
+              element={
+                <Suspense fallback={<div className="flex h-screen items-center justify-center bg-zinc-950 text-white font-headline">Loading Studio...</div>}>
+                  <StudioPage />
+                </Suspense>
+              }
+            />
+            <Route path="*" element={<NotFound />} />
+          </Route>
+        </Routes>
+      </TransitionProvider>
     </BrowserRouter>
   );
 }

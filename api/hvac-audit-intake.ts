@@ -1,5 +1,5 @@
 import type { IncomingMessage, ServerResponse } from "http";
-import { submitAuditIntake } from "../src/lib/sanity.client";
+import { submitAuditIntake } from "../src/lib/sanity.client.ts";
 
 // SendGrid configurations
 const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY;
@@ -162,6 +162,5 @@ export default async function handler(
     );
   }
 }
-
 
 

@@ -51,7 +51,7 @@ export function HomeHero({
               For Electricians & HVAC Contractors
             </span>
 
-            <h1 className="mb-6 font-headline text-4xl font-light leading-[1.02] tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl">
+            <h1 className="mb-6 font-headline text-4xl font-light leading-[1.02] tracking-tighter text-white sm:text-5xl md:text-6xl lg:text-7xl">
               {headline}
             </h1>
             <p className="mb-10 max-w-lg text-base font-light leading-relaxed text-zinc-300 sm:text-lg">

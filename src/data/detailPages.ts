@@ -17,7 +17,9 @@ export interface ServiceDetailContent {
   badge: string;
   summary: string;
   intro: string;
+  problemSolved: string;
   whoItsFor: string[];
+  whoItsNotFor: string[];
   deliverables: string[];
   outcomes: string[];
   nicheFit: string[];
@@ -26,6 +28,7 @@ export interface ServiceDetailContent {
   faq: FAQEntry[];
   ctaLabel: string;
   ctaHref: string;
+  whatHappensNext: string;
   secondaryCtaLabel: string;
   secondaryCtaHref: string;
 }
@@ -40,6 +43,9 @@ export interface TradeDetailContent {
   proofPoints: string[];
   serviceAngles: string[];
   audienceFit: string[];
+  problemSolved: string;
+  whoItsNotFor: string[];
+  whatHappensNext: string;
   pricing: PricingDetails;
   faq: FAQEntry[];
   ctaLabel: string;
@@ -110,10 +116,16 @@ export const SERVICE_DETAILS: Record<string, ServiceDetailContent> = {
       "A high-conversion website built to explain the offer, reduce friction, and move qualified visitors into booked work.",
     intro:
       "This is the foundation. We shape the structure around how contractors are actually hired: fast answers, proof of work, clear service areas, and a conversion path that feels easy to trust.",
+    problemSolved: "Most contractor sites are 'brochures' that look okay but don't sell. We solve the trust gap and the conversion bottleneck.",
     whoItsFor: [
       "Contractors with an outdated site that is costing them jobs",
       "Teams that need a stronger first impression before the call",
       "Businesses ready to turn the website into a sales asset",
+    ],
+    whoItsNotFor: [
+      "Solopreneurs looking for a $500 Wix site",
+      "Lowest-bidder projects where quality is a secondary concern",
+      "Businesses without a clear service offering or service area",
     ],
     deliverables: [
       "Homepage, service pages, and trust sections tailored to your offer",
@@ -140,6 +152,7 @@ export const SERVICE_DETAILS: Record<string, ServiceDetailContent> = {
     faq: SERVICE_FAQS,
     ctaLabel: "Book A Growth Call",
     ctaHref: "/contact",
+    whatHappensNext: "15-min discovery call -> System Roadmap -> Core Build Kickoff.",
     secondaryCtaLabel: "See Pricing",
     secondaryCtaHref: "/pricing",
   },
@@ -151,10 +164,16 @@ export const SERVICE_DETAILS: Record<string, ServiceDetailContent> = {
       "Focused landing pages for paid traffic, seasonal offers, and high-intent service campaigns.",
     intro:
       "Landing pages work when the message is narrow. We cut out the noise, keep the page tight, and give paid traffic a clear next step that is easy to act on.",
+    problemSolved: "Paid ads often point to generic homepages, wasting 50-70% of clicks. We fix the message-match and stop the ad-spend bleed.",
     whoItsFor: [
       "Contractors running Google Ads or local service ads",
       "Teams promoting seasonal or emergency offers",
       "Businesses that need a campaign page with a sharper conversion path",
+    ],
+    whoItsNotFor: [
+      "Contractors without an active advertising budget",
+      "Teams looking for a full website replacement",
+      "Businesses with long, complex multi-step buying cycles",
     ],
     deliverables: [
       "Offer-first page structure with one conversion goal",
@@ -184,6 +203,7 @@ export const SERVICE_DETAILS: Record<string, ServiceDetailContent> = {
     faq: SERVICE_FAQS,
     ctaLabel: "Plan A Campaign",
     ctaHref: "/contact?service=landing-pages",
+    whatHappensNext: "Strategy session -> Ad Group alignment -> Page launch in 10 days.",
     secondaryCtaLabel: "Audit My Funnel",
     secondaryCtaHref: "/audit",
   },
@@ -195,10 +215,16 @@ export const SERVICE_DETAILS: Record<string, ServiceDetailContent> = {
       "A local search strategy built to make the right service pages show up when the job is urgent.",
     intro:
       "Local SEO should do more than move a ranking. It should help the right customer find the right page, believe they found the right team, and contact you before the competitor does.",
+    problemSolved: "You 'own' your home city but are invisible 10 miles away. We build authority in your actual service area, not just your office address.",
     whoItsFor: [
       "Contractors competing in crowded local search results",
       "Companies with service areas they want to expand",
       "Teams that need better visibility for high-value services",
+    ],
+    whoItsNotFor: [
+      "National brands without local storefronts or specific city hubs",
+      "Businesses looking for 'quick fix' overnight rankings",
+      "Contractors who already dominate their entire 50-mile radius",
     ],
     deliverables: [
       "Keyword and service-area map built around real buying intent",
@@ -228,21 +254,28 @@ export const SERVICE_DETAILS: Record<string, ServiceDetailContent> = {
     faq: SERVICE_FAQS,
     ctaLabel: "Start With An Audit",
     ctaHref: "/audit",
+    whatHappensNext: "Visibility gap analysis -> GBP optimization -> Targeted city page rollout.",
     secondaryCtaLabel: "View Services",
     secondaryCtaHref: "/services",
   },
-  "lead-system-audits": {
-    slug: "lead-system-audits",
+  "lead-system-audit": {
+    slug: "lead-system-audit",
     title: "Lead System Audits That Show The Bottleneck",
     badge: "Entry Offer",
     summary:
       "A diagnostic review of the site, funnel, and follow-up flow so you know what to fix first.",
     intro:
       "Before you rebuild anything, we identify the real bottleneck. Sometimes the site is the issue. Sometimes it is the follow-up. Often it is both. The audit makes that visible.",
+    problemSolved: "You're spending on ads or SEO but can't tell which part of the chain is broken. We find the 'Lead Leaks' with a manual, 47-point diagnostic.",
     whoItsFor: [
       "Teams that want clarity before they invest in a rebuild",
       "Businesses that suspect the site is underperforming",
       "Contractors who need a practical first step",
+    ],
+    whoItsNotFor: [
+      "People looking for a free automated SEO report",
+      "Business owners who aren't ready to invest based on findings",
+      "Teams without an existing digital presence to audit",
     ],
     deliverables: [
       "Manual review of the website and conversion flow",
@@ -278,21 +311,28 @@ export const SERVICE_DETAILS: Record<string, ServiceDetailContent> = {
     faq: SERVICE_FAQS,
     ctaLabel: "Start The Audit",
     ctaHref: "/audit",
+    whatHappensNext: "Secure payment -> 48-hour manual teardown -> Video audit review call.",
     secondaryCtaLabel: "Book A Call",
     secondaryCtaHref: "/contact?ref=audit",
   },
-  "ongoing-growth-support": {
-    slug: "ongoing-growth-support",
+  "growth-support": {
+    slug: "growth-support",
     title: "Ongoing Growth Support For Teams That Want Momentum",
     badge: "Retainer",
     summary:
       "Ongoing support for contractors who want a website that keeps improving instead of going stale.",
     intro:
       "Launch is not the finish line. If you want the site to keep earning, we keep iterating on service pages, content, calls-to-action, and tracking so the system keeps compounding.",
+    problemSolved: "Websites often die the day they launch. We solve the 'launch and forget' syndrome by continuously tuning your system for peak lead generation.",
     whoItsFor: [
       "Teams that already have a good base but want more volume",
       "Contractors planning content and service-area expansion",
       "Businesses that need regular optimization and reporting",
+    ],
+    whoItsNotFor: [
+      "One-off project seekers who don't want a long-term partner",
+      "Teams with zero leads who need a full foundational rebuild first",
+      "Businesses that don't value data-driven iteration",
     ],
     deliverables: [
       "Monthly improvements to service and location pages",
@@ -328,6 +368,7 @@ export const SERVICE_DETAILS: Record<string, ServiceDetailContent> = {
     faq: SERVICE_FAQS,
     ctaLabel: "Talk About Growth",
     ctaHref: "/contact",
+    whatHappensNext: "Performance baseline -> Content prioritization -> Monthly optimization cycles.",
     secondaryCtaLabel: "Compare Pricing",
     secondaryCtaHref: "/pricing",
   },
@@ -362,6 +403,12 @@ export const TRADE_DETAILS: Record<string, TradeDetailContent> = {
       "Commercial electrical teams",
       "Panel upgrade specialists",
     ],
+    problemSolved: "Urgent electrical needs often drop off because of slow response or unclear trust. We fix the trust-gap so they call you first.",
+    whoItsNotFor: [
+      "Industrial teams focusing solely on factory infrastructure",
+      "Low-voltage-only contractors (data/telecom)",
+    ],
+    whatHappensNext: "Discovery call -> Local footprint audit -> Trade-specific build plan.",
     pricing: DEFAULT_PRICING,
     faq: TRADE_FAQS,
     ctaLabel: "See Electrician Strategy",
@@ -397,6 +444,12 @@ export const TRADE_DETAILS: Record<string, TradeDetailContent> = {
       "Emergency repair teams",
       "System replacement specialists",
     ],
+    problemSolved: "HVAC leads are won or lost in seconds during peak season. We build the speed and clarity you need to own the local market.",
+    whoItsNotFor: [
+      "Commercial-only refrigeration teams",
+      "Manufacturers without a residential service arm",
+    ],
+    whatHappensNext: "Growth call -> Seasonal strategy -> Funnel optimization.",
     pricing: DEFAULT_PRICING,
     faq: TRADE_FAQS,
     ctaLabel: "See HVAC Strategy",
@@ -432,6 +485,12 @@ export const TRADE_DETAILS: Record<string, TradeDetailContent> = {
       "Storm restoration teams",
       "Replacement-focused contractors",
     ],
+    problemSolved: "Roofing is a high-ticket, high-caution purchase. We move homeowners from 'maybe' to 'estimate request' by solving the trust barrier.",
+    whoItsNotFor: [
+      "Commercial-only flat roofers with no residential focus",
+      "Suppliers or wholesalers",
+    ],
+    whatHappensNext: "Strategy session -> Trust-led build -> SEO footprint launch.",
     pricing: DEFAULT_PRICING,
     faq: TRADE_FAQS,
     ctaLabel: "See Roofing Strategy",
@@ -467,6 +526,12 @@ export const TRADE_DETAILS: Record<string, TradeDetailContent> = {
       "Drain and emergency repair teams",
       "Install and replacement specialists",
     ],
+    problemSolved: "Plumbing urgency creates a conversion opportunity. We make sure your site is the easiest path for a customer in a crisis.",
+    whoItsNotFor: [
+      "Municipal infrastructure contractors",
+      "Fixture-only showroom retailers",
+    ],
+    whatHappensNext: "Consultation -> Efficiency review -> Lead-optimized build.",
     pricing: DEFAULT_PRICING,
     faq: TRADE_FAQS,
     ctaLabel: "See Plumbing Strategy",
@@ -502,6 +567,12 @@ export const TRADE_DETAILS: Record<string, TradeDetailContent> = {
       "Insulation and air-sealing teams",
       "Energy audit specialists",
     ],
+    problemSolved: "Home performance is an education-heavy sale. We turn complex science into an obvious homeowner investment.",
+    whoItsNotFor: [
+      "Contractors who do not perform audits or efficiency checks",
+      "New construction-only insulation teams",
+    ],
+    whatHappensNext: "Discovery call -> Audit Roadmap -> Education-first build.",
     pricing: DEFAULT_PRICING,
     faq: TRADE_FAQS,
     ctaLabel: "See Home Performance Strategy",
@@ -537,6 +608,12 @@ export const TRADE_DETAILS: Record<string, TradeDetailContent> = {
       "Electrical contractors expanding into EV work",
       "Teams targeting high-intent local installs",
     ],
+    problemSolved: "EV buyers are searching for clarity before they buy. We make your team the local authority for residential charging.",
+    whoItsNotFor: [
+      "Commercial parking lot charger contractors",
+      "B2B-only fleet management teams",
+    ],
+    whatHappensNext: "Growth call -> EV market analysis -> Conversion setup.",
     pricing: DEFAULT_PRICING,
     faq: TRADE_FAQS,
     ctaLabel: "See EV Strategy",
@@ -572,6 +649,12 @@ export const TRADE_DETAILS: Record<string, TradeDetailContent> = {
       "HVAC teams moving into electrification",
       "Energy-focused residential contractors",
     ],
+    problemSolved: "Heat pumps are a high-trust, high-rebate sale. We align your offer with the incentives and the efficiency narrative.",
+    whoItsNotFor: [
+      "Boiler-only service companies",
+      "Retail-only appliance stores",
+    ],
+    whatHappensNext: "Discovery session -> Electrification strategy -> Launch.",
     pricing: DEFAULT_PRICING,
     faq: TRADE_FAQS,
     ctaLabel: "See Heat Pump Strategy",
@@ -607,6 +690,12 @@ export const TRADE_DETAILS: Record<string, TradeDetailContent> = {
       "Residential electricians",
       "Teams targeting premium electrical work",
     ],
+    problemSolved: "Major electrical upgrades need major trust. We position your panel services as the essential upgrade for a modern home.",
+    whoItsNotFor: [
+      "Handyman services without electrical licensing",
+      "Commercial utility contractors",
+    ],
+    whatHappensNext: "Discovery call -> System Audit -> Premium Service Build.",
     pricing: DEFAULT_PRICING,
     faq: TRADE_FAQS,
     ctaLabel: "See Panel Strategy",

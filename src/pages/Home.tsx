@@ -15,6 +15,8 @@ import { HomeHero } from "@/components/features/HomeHero";
 import { HeroSkeleton } from "@/components/ui/HeroSkeleton";
 import { CardSkeleton } from "@/components/ui/CardSkeleton";
 import { TestimonialSkeleton } from "@/components/ui/TestimonialSkeleton";
+import { Button } from "@/components/ui/Button";
+
 
 const HERO_IMG = "/images/hero/hero-industrial.png";
 
@@ -444,7 +446,7 @@ export function Home() {
             {isLoading && !homeData ? (
               Array.from({ length: 4 }).map((_, i) => <CardSkeleton key={i} />)
             ) : (
-              SYSTEM_SERVICES.map((item) => (
+              SYSTEM_SERVICES.slice(0, 4).map((item) => (
                 <div
                   key={item.title}
                   className="group flex flex-col overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white transition-all [border-width:0.5px] hover:border-md3-primary/40 hover:shadow-xl hover:shadow-md3-primary/5"
@@ -488,7 +490,22 @@ export function Home() {
               ))
             )}
           </div>
+
+          {!isLoading && (
+            <div className="mt-12 flex justify-center">
+              <Button 
+                onClick={() => navigate("/services")}
+                className="group w-full max-w-xs sm:w-auto"
+                variant="primary"
+                size="lg"
+              >
+                <span>View All Services</span>
+                <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+              </Button>
+            </div>
+          )}
         </section>
+
 
         {/* ── Lead Magnet ── */}
         <section className="border-y border-[#e5e7eb] bg-md3-primary py-16 sm:py-20 lg:py-24 text-md3-on-primary [border-width:0.5px]">

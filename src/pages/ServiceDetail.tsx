@@ -51,6 +51,9 @@ function resolveServiceDetail(slug?: string, serviceData?: any): ServiceDetailCo
     faq: fallback?.faq || [],
     ctaLabel: fallback?.ctaLabel || "Book A Call",
     ctaHref: fallback?.ctaHref || "/contact",
+    problemSolved: fallback?.problemSolved || serviceData?.problemSolved || "",
+    whoItsNotFor: fallback?.whoItsNotFor || serviceData?.whoItsNotFor || [],
+    whatHappensNext: fallback?.whatHappensNext || serviceData?.whatHappensNext || "",
     secondaryCtaLabel: fallback?.secondaryCtaLabel || "See Pricing",
     secondaryCtaHref: fallback?.secondaryCtaHref || "/pricing",
   };
@@ -102,7 +105,7 @@ export function ServiceDetail() {
       <SEO
         title={detail.title}
         description={detail.summary}
-        canonical={`/services/${detail.slug}`}
+        canonicalPath={`/services/${detail.slug}`}
       />
 
       <div
@@ -158,19 +161,38 @@ export function ServiceDetail() {
               </div>
             </AnimateIn>
 
-            <AnimateIn className="rounded-[2rem] border border-md3-outline-variant bg-white p-8 shadow-[0_24px_80px_rgba(16,24,40,0.08)]">
-              <p className="text-[10px] font-bold uppercase tracking-[0.35em] text-md3-primary">
-                Who It Is For
-              </p>
-              <ul className="mt-6 space-y-4">
-                {detail.whoItsFor.map((item) => (
-                  <li key={item} className="flex items-start gap-3 text-sm leading-relaxed text-md3-on-surface-variant">
-                    <Check className="mt-0.5 size-4 shrink-0 text-md3-primary" aria-hidden />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-              <div className="mt-8 rounded-[1.5rem] border border-md3-outline-variant bg-md3-surface-container-low p-6">
+            <AnimateIn className="space-y-6">
+              <div className="rounded-[2rem] border border-md3-outline-variant bg-white p-8 shadow-[0_24px_80px_rgba(16,24,40,0.08)]">
+                <p className="text-[10px] font-bold uppercase tracking-[0.35em] text-md3-primary">
+                  Who It Is For
+                </p>
+                <ul className="mt-6 space-y-4">
+                  {detail.whoItsFor.map((item) => (
+                    <li key={item} className="flex items-start gap-3 text-sm leading-relaxed text-md3-on-surface-variant">
+                      <Check className="mt-0.5 size-4 shrink-0 text-md3-primary" aria-hidden />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {detail.whoItsNotFor && detail.whoItsNotFor.length > 0 && (
+                <div className="rounded-[2rem] border border-md3-outline-variant bg-md3-surface-container-low p-8 opacity-80">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.35em] text-md3-on-surface-variant">
+                    Who It Is NOT For
+                  </p>
+                  <ul className="mt-6 space-y-4">
+                    {detail.whoItsNotFor.map((item) => (
+                      <li key={item} className="flex items-start gap-3 text-xs leading-relaxed text-md3-on-surface-variant/70">
+                        <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-md3-outline" aria-hidden />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              <div className="rounded-[2rem] border border-md3-outline-variant bg-white p-8">
                 <p className="text-[10px] font-bold uppercase tracking-[0.35em] text-md3-primary">
                   Quick Snapshot
                 </p>
@@ -184,6 +206,21 @@ export function ServiceDetail() {
             </AnimateIn>
           </div>
         </section>
+
+        {detail.problemSolved && (
+          <section className="bg-md3-surface-container-low py-20">
+            <div className="site-container">
+              <AnimateIn className="max-w-4xl">
+                <p className="text-[10px] font-bold uppercase tracking-[0.35em] text-md3-primary">
+                  The Problem Solved
+                </p>
+                <h2 className="mt-6 font-headline text-3xl font-light leading-tight tracking-tight text-md3-on-surface sm:text-4xl lg:text-5xl">
+                  {detail.problemSolved}
+                </h2>
+              </AnimateIn>
+            </div>
+          </section>
+        )}
 
         <section className="site-container section-py">
           <AnimateIn>
@@ -267,6 +304,11 @@ export function ServiceDetail() {
             <h2 className="mt-4 font-headline text-3xl font-light tracking-tight text-md3-on-surface sm:text-4xl">
               Ready to turn this service into a lead source?
             </h2>
+            {detail.whatHappensNext && (
+              <p className="mt-8 text-sm font-light uppercase tracking-[0.1em] text-md3-on-surface-variant/60">
+                Next Steps: <span className="font-bold text-md3-on-surface">{detail.whatHappensNext}</span>
+              </p>
+            )}
             <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
               <Link
                 to={detail.ctaHref}

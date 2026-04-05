@@ -1,35 +1,66 @@
 import * as React from "react";
+import { motion, HTMLMotionProps } from "motion/react";
 import { cn } from "@/lib/utils";
+import { useMagnetic } from "@/hooks/useMagnetic";
 
-export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "primary" | "secondary" | "accent" | "ghost";
+export interface ButtonProps extends Omit<HTMLMotionProps<"button">, "ref"> {
+  variant?: "primary" | "secondary" | "accent" | "ghost" | "outline";
   size?: "sm" | "md" | "lg";
+  isMagnetic?: boolean;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant = "primary", size = "md", ...props }, ref) => {
+  ({ className, variant = "primary", size = "md", isMagnetic = true, children, ...props }, ref) => {
+    const { ref: magneticRef, x, y } = useMagnetic(0.2); // Low strength for industrial precision.
+    
+    // Combine magnetic ref with forwarded ref
+    const combinedRef = (node: HTMLButtonElement | null) => {
+      if (typeof ref === "function") ref(node);
+      else if (ref) ref.current = node;
+      if (isMagnetic) {
+        // @ts-ignore
+        magneticRef.current = node;
+      }
+    };
+
     return (
-      <button
-        ref={ref}
+      <motion.button
+        ref={combinedRef}
+        style={isMagnetic ? { x, y } : {}}
+        variants={{
+          hover: { scale: 1.02 },
+          tap: { scale: 0.98 },
+        }}
+        whileHover="hover"
+        whileTap="tap"
         className={cn(
-          "inline-flex items-center justify-center rounded-none font-sans font-medium uppercase tracking-widest transition-all duration-200 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ink focus-visible:ring-offset-2 focus-visible:ring-offset-bg disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98]",
+          "group relative inline-flex items-center justify-center rounded-none font-headline font-bold uppercase tracking-wider transition-colors duration-200 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-md3-primary focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 overflow-hidden",
           {
-            "bg-accent text-white hover:opacity-80":
-              variant === "primary",
-            "border border-ink text-ink hover:bg-ink/5":
-              variant === "secondary",
-            "bg-ink text-white hover:opacity-90": variant === "accent",
-            "text-ink hover:bg-ink/5": variant === "ghost",
+            "bg-md3-primary text-white hover:bg-[#1a1a1a]": variant === "primary",
+            "border border-zinc-200 text-zinc-900 hover:bg-zinc-50": variant === "secondary",
+            "bg-zinc-900 text-white hover:bg-black": variant === "accent",
+            "text-zinc-600 hover:text-zinc-900": variant === "ghost",
+            "border border-white/20 text-white hover:bg-white/10": variant === "outline",
             "h-10 px-5 text-[10px]": size === "sm",
-            "h-12 px-8 text-xs": size === "md",
-            "h-14 px-10 text-sm": size === "lg",
+            "h-12 px-8 text-[11px]": size === "md",
+            "h-14 px-10 text-xs": size === "lg",
           },
-          className,
+          className
         )}
         {...props}
-      />
+      >
+        {/* Tactical Border Glow on Hover */}
+        <span className="absolute inset-0 z-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+           <span className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/50 to-transparent" />
+           <span className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-white/50 to-transparent" />
+        </span>
+
+        <span className="relative z-10 flex items-center gap-2">
+          {children as React.ReactNode}
+        </span>
+      </motion.button>
     );
-  },
+  }
 );
 Button.displayName = "Button";
 

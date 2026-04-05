@@ -1,9 +1,8 @@
 import * as React from "react";
-import { ArrowRight, CheckCircle2, Loader2, X } from "lucide-react";
+import { ArrowRight, CheckCircle2, Loader2, X, Play, Target, BarChart3, AlertCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
 import { SEO } from "@/components/SEO";
-import { getAuditOffer } from "@/lib/sanity.client";
 import { trackEvent } from "@/components/Analytics";
 import {
   INDUSTRIAL,
@@ -12,136 +11,35 @@ import {
 
 type AuditStep = 1 | 2 | 3 | 4;
 
-interface SuccessModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  email: string;
-  turnaround: string;
-}
-
-function SuccessModal({ isOpen, onClose, email, turnaround }: SuccessModalProps) {
-  return (
-    <AnimatePresence>
-      {isOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={onClose}
-            className="absolute inset-0 bg-[#0a1f1f]/80 backdrop-blur-sm"
-          />
-
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="relative w-full max-w-xl overflow-hidden bg-white shadow-[0_30px_100px_rgba(0,0,0,0.25)]"
-            style={{ borderWidth: "0.5px", borderColor: INDUSTRIAL.outline }}
-          >
-            <div className="h-1.5 w-full bg-md3-primary" />
-
-            <div className="relative flex h-32 items-center justify-center overflow-hidden bg-[#0a1f1f]">
-              <div className="absolute inset-0 opacity-[0.05]" style={industrialMeshStyle} />
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ type: "spring", damping: 12, stiffness: 200, delay: 0.2 }}
-                className="relative z-10 flex h-16 w-16 items-center justify-center rounded-full bg-teal-500/10 text-teal-400"
-                style={{ borderWidth: "0.5px", borderColor: "rgba(45,212,191,0.2)" }}
-              >
-                <CheckCircle2 className="size-10" />
-              </motion.div>
-            </div>
-
-            <div className="p-10 text-center">
-              <span className="mb-2 block text-[10px] font-bold uppercase tracking-[0.3em] text-teal-600">
-                Request Received
-              </span>
-              <h2 className="mb-4 font-headline text-3xl font-bold tracking-tight text-[#1a1a1a]">
-                Audit Request Received
-              </h2>
-              <p className="mx-auto mb-8 max-sm text-sm font-light leading-relaxed text-zinc-500">
-                We&apos;ve received your request for a Lead System Audit. We&apos;ll reach out to{" "}
-                <span className="font-semibold text-[#1a1a1a]">{email}</span> within {turnaround} to
-                confirm details and provide the next steps.
-              </p>
-
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <Link
-                  to="/"
-                  className="flex w-full items-center justify-center border border-zinc-200 py-4 text-[11px] font-bold uppercase tracking-[0.2em] text-zinc-600 transition-all hover:bg-zinc-50"
-                >
-                  Back to Home
-                </Link>
-                <Link
-                  to="/contact?ref=audit-success"
-                  className="flex w-full items-center justify-center bg-[#1a1a1a] py-4 text-[11px] font-bold uppercase tracking-[0.2em] text-white transition-all hover:bg-md3-primary"
-                >
-                  Book Strategy Call →
-                </Link>
-              </div>
-
-              <div className="mt-8 border-t pt-8" style={{ borderTopWidth: "0.5px", borderColor: INDUSTRIAL.outline }}>
-                <p className="text-[10px] uppercase tracking-widest text-zinc-400">
-                  Ready to scale faster? <span className="text-zinc-500">Fast-track your growth with a strategy call.</span>
-                </p>
-              </div>
-            </div>
-
-            <button
-              onClick={onClose}
-              className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center text-zinc-400 transition-colors hover:text-white"
-            >
-              <X className="size-5" />
-            </button>
-          </motion.div>
-        </div>
-      )}
-    </AnimatePresence>
-  );
-}
-
-const FALLBACK_AUDIT_AREAS = [
+const AUDIT_AREAS = [
   {
-    icon: "analytics",
-    title: "Competitor Analysis",
-    desc: "See exactly where your local rivals are winning and how to take those rankings back.",
+    icon: <Target className="size-6" />,
+    title: "Competitor Market Share",
+    desc: "We identify the 3 rivals hoarding your local leads and exactly what they're doing to win.",
   },
   {
-    icon: "speed",
-    title: "Performance & Technical Audit",
-    desc: "Identify load speed issues, mobile problems, and technical gaps suppressing your rankings.",
+    icon: <BarChart3 className="size-6" />,
+    title: "Lead-Loss Points",
+    desc: "A manual teardown of your conversion path to find where you're losing 20-40% of potential calls.",
   },
   {
-    icon: "map",
-    title: "Google Maps Audit",
-    desc: "We review your GBP profile against top-ranking local competitors to find quick-win improvements.",
+    icon: <AlertCircle className="size-6" />,
+    title: "Technical SEO Audit",
+    desc: "Finding the hidden speed and ranking errors that no automated tool will ever catch.",
   },
 ];
 
-const FALLBACK_FAQ = [
-  {
-    question: "Is this a sales call?",
-    answer: "No. It's a paid diagnostic that shows you what is broken and what to fix first.",
-  },
-  {
-    question: "How long does the audit take?",
-    answer: "We'll send your personalised breakdown within 2 business days.",
-  },
-  {
-    question: "What do I need to provide?",
-    answer: "Just your name, email, phone number, and website URL.",
-  },
+const WHY_PAID = [
+  "No automated boilerplate reports",
+  "Manual video walkthrough (~15 mins)",
+  "Zero credit-back gimmicks",
+  "A real strategic asset you own",
 ];
 
 export function Audit() {
   const [step, setStep] = React.useState<AuditStep>(1);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
-  const [isDone, setIsDone] = React.useState(false);
   const [submitError, setSubmitError] = React.useState<string>("");
-  const [auditOffer, setAuditOffer] = React.useState<any>(null);
-  const [isLoading, setIsLoading] = React.useState(true);
   const [formData, setFormData] = React.useState({
     website: "",
     company: "",
@@ -152,79 +50,57 @@ export function Audit() {
     phone: "",
   });
 
-  React.useEffect(() => {
-    let active = true;
-
-    async function fetchOffer() {
-      setIsLoading(true);
-      try {
-        const data = await getAuditOffer();
-        if (active && data) setAuditOffer(data);
-      } catch (error) {
-        console.error("Error fetching audit offer:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-
-    fetchOffer();
-
-    return () => {
-      active = false;
-    };
-  }, []);
-
   const nextStep = () => setStep((s) => (s + 1) as AuditStep);
   const prevStep = () => setStep((s) => (s - 1) as AuditStep);
-
-  const auditPrice = auditOffer?.auditPrice ?? 497;
-  const turnaround = auditOffer?.turnaround ?? "2 business days";
-  const headline = auditOffer?.headline ?? "Lead System Audit";
-  const subheadline =
-    auditOffer?.subheadline ??
-    "A manual, deep-dive diagnostic of your entire digital presence. $497 one-time investment to find exactly what's costing you calls.";
-  const auditAreas = auditOffer?.auditAreas?.length > 0 ? auditOffer.auditAreas : FALLBACK_AUDIT_AREAS;
-  const faqItems = auditOffer?.faq?.length > 0 ? auditOffer.faq : FALLBACK_FAQ;
-  const trustStats =
-    auditOffer?.trustStats?.length > 0
-      ? auditOffer.trustStats
-      : [
-          { label: "Price", value: `$${auditPrice}` },
-          { label: "Turnaround", value: turnaround },
-          { label: "Format", value: "Video + action plan" },
-        ];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     setSubmitError("");
+    
     try {
-      const response = await fetch("/api/lead-intake", {
+      // 1. Submit lead details first (capture the lead)
+      const leadResponse = await fetch("/api/lead-intake", {
         method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          leadType: "audit",
-          name: formData.name,
-          email: formData.email,
-          website: formData.website,
-          company: formData.company,
-          phone: formData.phone,
-          trade: formData.trade,
-          leads: formData.leads,
-          source: "audit-page",
-          _gotcha: "",
+          leadType: "audit_initiated",
+          ...formData,
+          source: "audit-page-redesign",
         }),
       });
 
-      if (!response.ok) {
-        throw new Error("Audit submission failed");
+      const leadData = await leadResponse.json().catch(() => ({}));
+      if (!leadResponse.ok) {
+        throw new Error(typeof leadData.error === "string" ? leadData.error : "Failed to capture audit details");
       }
 
-      trackEvent("form_submit", { form: "audit" });
-      setIsDone(true);
-    } catch (error) {
-      console.error("Error submitting audit request:", error);
-      setSubmitError("Something went wrong submitting your audit request. Please try again.");
+      // 2. Create Stripe Checkout Session
+      const response = await fetch("/api/create-audit-session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...formData,
+        }),
+      });
+
+      const data = await response.json().catch(() => ({}));
+      
+      if (!response.ok) {
+        throw new Error(typeof data.error === "string" ? data.error : "Failed to start secure checkout");
+      }
+
+      if (data.error) throw new Error(data.error);
+      if (data.url) {
+        trackEvent("audit_checkout_start", { email: formData.email });
+        window.location.href = data.url;
+        return;
+      }
+
+      throw new Error("Stripe session URL was not returned");
+    } catch (error: any) {
+      console.error("Audit submission error:", error);
+      setSubmitError(error?.message || "We couldn't initiate secure checkout. Please try again or contact support.");
     } finally {
       setIsSubmitting(false);
     }
@@ -233,270 +109,248 @@ export function Audit() {
   return (
     <>
       <SEO
-        title={`Lead System Audit — $${auditPrice}`}
-        description={subheadline}
+        title="Lead System Audit — $497 Strategic Diagnostic"
+        description="A manual, deep-dive diagnostic of your contracting business's digital presence. Find exactly what's costing you calls."
         canonicalPath="/audit"
       />
 
-      <div
-        className="min-h-screen pb-32 pt-24 font-body tracking-tight antialiased"
-        style={industrialMeshStyle}
-      >
-        <SuccessModal
-          isOpen={isDone}
-          onClose={() => setIsDone(false)}
-          email={formData.email}
-          turnaround={turnaround}
-        />
-
-        <div className="mx-auto max-w-3xl px-8">
-          <div className="mb-12 text-center">
-            <div className="mb-4 flex items-center justify-center gap-2">
-              <span className="inline-block rounded-full border border-md3-primary/20 bg-md3-primary/5 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.3em] text-md3-primary">
-                Strategic Entry Offer
+      <div className="min-h-screen bg-white font-body tracking-tight antialiased" style={industrialMeshStyle}>
+        
+        {/* --- Hero / Sales Section --- */}
+        <section className="relative overflow-hidden pt-32 pb-24 border-b" style={{ borderColor: INDUSTRIAL.outline }}>
+          <div className="mx-auto max-w-[1440px] px-8">
+            <div className="max-w-4xl">
+              <span className="mb-6 inline-block rounded-full border border-md3-primary/20 bg-md3-primary/5 px-4 py-1 text-[10px] font-bold uppercase tracking-[0.3em] text-md3-primary">
+                Low-Friction Entry Offer
               </span>
+              <h1 className="mb-8 font-headline text-6xl font-bold tracking-tighter text-[#1a1a1a] md:text-8xl lg:text-9xl uppercase">
+                The Lead System <br />
+                <span className="text-md3-primary">Audit.</span>
+              </h1>
+              <p className="max-w-2xl text-xl font-light leading-relaxed text-zinc-600 md:text-2xl">
+                Before you hire another agency or spend another $1k on Google Ads, find out why your current system isn&apos;t performing. A manual, 47-point diagnostic for <span className="font-semibold text-[#1a1a1a]">$497</span>.
+              </p>
             </div>
-            <h1 className="mb-4 font-headline text-5xl font-bold tracking-tighter text-[#1a1a1a] md:text-6xl">
-              {headline}
-            </h1>
-            <p className="mx-auto max-w-xl text-lg font-light text-zinc-600">
-              {subheadline}
-            </p>
-            <p className="mt-4 text-[11px] font-medium uppercase tracking-[0.2em] text-zinc-400">
-              This is a paid engagement. We do not give strategic audits away free because your situation deserves real attention.
-            </p>
           </div>
+        </section>
 
-          <div className="overflow-hidden rounded-2xl bg-white shadow-xl" style={{ borderWidth: "0.5px", borderColor: INDUSTRIAL.outline }}>
-            <div className="flex h-1.5 w-full bg-zinc-100">
-              <div
-                className="bg-md3-primary transition-all duration-500 ease-in-out"
-                style={{ width: `${(step / 4) * 100}%` }}
-              />
+        {/* --- What's Included --- */}
+        <section className="py-24 border-b" style={{ borderColor: INDUSTRIAL.outline }}>
+          <div className="mx-auto max-w-[1440px] px-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+              {AUDIT_AREAS.map((area, idx) => (
+                <div key={idx} className="group flex flex-col items-start">
+                  <div className="mb-6 flex h-14 w-14 items-center justify-center bg-zinc-50 border transition-all group-hover:bg-md3-primary group-hover:text-white" style={{ borderColor: INDUSTRIAL.outline }}>
+                    {area.icon}
+                  </div>
+                  <h3 className="mb-4 font-headline text-xl font-bold">{area.title}</h3>
+                  <p className="text-zinc-500 font-light leading-relaxed">{area.desc}</p>
+                </div>
+              ))}
             </div>
 
-            <form onSubmit={handleSubmit} className="p-8 md:p-12">
-              {step === 1 && (
-                <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                  <h2 className="mb-8 font-headline text-2xl font-bold text-zinc-800">
-                    What&apos;s your website?
-                  </h2>
-                  <div className="space-y-6">
-                    <div>
-                      <label className="mb-2 block text-[10px] font-bold uppercase tracking-widest text-zinc-400">
-                        Website URL
-                      </label>
-                      <input
-                        required
-                        type="url"
-                        placeholder="https://yourcontractingsite.com"
-                        className="w-full border-b border-zinc-200 py-4 text-xl font-light outline-none transition-colors focus:border-md3-primary"
-                        value={formData.website}
-                        onChange={(e) => setFormData({ ...formData, website: e.target.value })}
-                      />
-                    </div>
-                    <div>
-                      <label className="mb-2 block text-[10px] font-bold uppercase tracking-widest text-zinc-400">
-                        Company Name
-                      </label>
-                      <input
-                        required
-                        type="text"
-                        placeholder="Elite Electricians LLC"
-                        className="w-full border-b border-zinc-200 py-4 text-xl font-light outline-none transition-colors focus:border-md3-primary"
-                        value={formData.company}
-                        onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                      />
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={nextStep}
-                    disabled={!formData.website || !formData.company}
-                    className="mt-12 flex w-full items-center justify-center gap-3 bg-md3-primary py-5 text-[11px] font-bold uppercase tracking-[0.25em] text-white transition-all hover:bg-zinc-800 disabled:opacity-50"
-                  >
-                    Next Step
-                    <ArrowRight className="size-4" />
-                  </button>
-                </div>
-              )}
-
-              {step === 2 && (
-                <div className="animate-in fade-in slide-in-from-right-4 duration-500">
-                  <h2 className="mb-8 font-headline text-2xl font-bold text-zinc-800">
-                    What is your primary trade?
-                  </h2>
-                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    {[
-                      "Residential Electrician",
-                      "Commercial Electrician",
-                      "HVAC / Mechanical",
-                      "Plumbing",
-                      "Home Performance",
-                      "Other Specialty Trade",
-                    ].map((trade) => (
-                      <button
-                        key={trade}
-                        type="button"
-                        onClick={() => {
-                          setFormData({ ...formData, trade });
-                          nextStep();
-                        }}
-                        className={`border p-6 text-left transition-all ${
-                          formData.trade === trade
-                            ? "border-md3-primary bg-md3-primary/5 ring-1 ring-md3-primary"
-                            : "border-zinc-100 hover:border-zinc-300"
-                        }`}
-                        style={{ borderWidth: "0.5px" }}
-                      >
-                        <span className="text-sm font-medium">{trade}</span>
-                      </button>
-                    ))}
-                  </div>
-                  <button
-                    type="button"
-                    onClick={prevStep}
-                    className="mt-8 text-xs font-bold uppercase tracking-widest text-zinc-400 hover:text-zinc-600"
-                  >
-                    ← Back
-                  </button>
-                </div>
-              )}
-
-              {step === 3 && (
-                <div className="animate-in fade-in slide-in-from-right-4 duration-500">
-                  <h2 className="mb-8 font-headline text-2xl font-bold text-zinc-800">
-                    Current monthly lead volume?
-                  </h2>
-                  <div className="grid grid-cols-1 gap-4">
-                    {[
-                      "0–5 leads / month (Starting out)",
-                      "5–15 leads / month (Established)",
-                      "15–50 leads / month (Scaling)",
-                      "50+ leads / month (Dominating)",
-                    ].map((leads) => (
-                      <button
-                        key={leads}
-                        type="button"
-                        onClick={() => {
-                          setFormData({ ...formData, leads });
-                          nextStep();
-                        }}
-                        className={`border p-6 text-left transition-all ${
-                          formData.leads === leads
-                            ? "border-md3-primary bg-md3-primary/5 ring-1 ring-md3-primary"
-                            : "border-zinc-100 hover:border-zinc-300"
-                        }`}
-                        style={{ borderWidth: "0.5px" }}
-                      >
-                        <span className="text-sm font-medium">{leads}</span>
-                      </button>
-                    ))}
-                  </div>
-                  <button
-                    type="button"
-                    onClick={prevStep}
-                    className="mt-8 text-xs font-bold uppercase tracking-widest text-zinc-400 hover:text-zinc-600"
-                  >
-                    ← Back
-                  </button>
-                </div>
-              )}
-
-              {step === 4 && (
-                <div className="animate-in fade-in slide-in-from-right-4 duration-500">
-                  <h2 className="mb-8 font-headline text-2xl font-bold text-zinc-800">
-                    Where should we send the audit?
-                  </h2>
-                  {submitError && (
-                    <div className="mb-6 rounded-xl border border-md3-error/25 bg-md3-error/10 p-4 text-sm text-md3-error">
-                      {submitError}
-                    </div>
-                  )}
-                  <div className="space-y-6">
-                    <div>
-                      <label className="mb-2 block text-[10px] font-bold uppercase tracking-widest text-zinc-400">
-                        Full Name
-                      </label>
-                      <input
-                        required
-                        type="text"
-                        placeholder="John Doe"
-                        className="w-full border-b border-zinc-200 py-4 text-xl font-light outline-none transition-colors focus:border-md3-primary"
-                        value={formData.name}
-                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      />
-                    </div>
-                    <div>
-                      <label className="mb-2 block text-[10px] font-bold uppercase tracking-widest text-zinc-400">
-                        Email Address
-                      </label>
-                      <input
-                        required
-                        type="email"
-                        placeholder="john@company.com"
-                        className="w-full border-b border-zinc-200 py-4 text-xl font-light outline-none transition-colors focus:border-md3-primary"
-                        value={formData.email}
-                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      />
-                    </div>
-                    <div>
-                      <label className="mb-2 block text-[10px] font-bold uppercase tracking-widest text-zinc-400">
-                        Phone Number
-                      </label>
-                      <input
-                        required
-                        type="tel"
-                        placeholder="(555) 000-0000"
-                        className="w-full border-b border-zinc-200 py-4 text-xl font-light outline-none transition-colors focus:border-md3-primary"
-                        value={formData.phone}
-                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      />
-                    </div>
-                  </div>
-
-                  <button
-                    disabled={isSubmitting}
-                    className="mt-12 flex w-full items-center justify-center gap-3 bg-md3-primary py-5 text-[11px] font-bold uppercase tracking-[0.25em] text-white transition-all hover:bg-zinc-800 disabled:opacity-50"
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <Loader2 className="size-4 animate-spin" />
-                        Generating Request...
-                      </>
-                    ) : (
-                      <>
-                        Book My Audit — ${auditPrice}
-                        <ArrowRight className="size-4" />
-                      </>
-                    )}
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={prevStep}
-                    className="mt-8 text-xs font-bold uppercase tracking-widest text-zinc-400 hover:text-zinc-600"
-                  >
-                    ← Back
-                  </button>
-
-                  <p className="mt-8 text-center text-[10px] font-light text-zinc-400">
-                    By clicking above, you agree to our Terms of Service and Privacy Policy. We respect your inbox and will only contact you regarding your audit.
+            <div className="mt-24 grid grid-cols-1 lg:grid-cols-2 gap-16 bg-[#1a1a1a] p-12 text-white">
+               <div>
+                  <h2 className="font-headline font -light text-3xl font-bold mb-6">Why is this $497?</h2>
+                  <p className="text-zinc-400 font-light mb-8">
+                    Free audits are automated lead-magnets. They don&apos;t look at your competitors, they don&apos;t understand your local market dynamics, and they don&apos;t find the &quot;Lead Leaks&quot; in your specific landing pages.
                   </p>
-                </div>
-              )}
-            </form>
+                  <ul className="space-y-4">
+                    {WHY_PAID.map((item, idx) => (
+                      <li key={idx} className="flex items-center gap-3 text-sm font-medium uppercase tracking-widest text-teal-400">
+                        <CheckCircle2 className="size-4" />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+               </div>
+               <div className="relative flex items-center justify-center bg-zinc-900 border border-zinc-800 border-dashed p-8">
+                  <div className="text-center">
+                    <div className="mb-4 inline-flex h-20 w-20 items-center justify-center rounded-full bg-md3-primary/10 text-md3-primary">
+                      <Play className="size-8 fill-current" />
+                    </div>
+                    <p className="text-sm font-bold uppercase tracking-[0.2em]">Sample Audit Video</p>
+                    <p className="text-xs text-zinc-500 mt-2">14 mins of pure strategic value</p>
+                  </div>
+               </div>
+            </div>
           </div>
+        </section>
 
-          <div className="mt-12 flex flex-wrap items-center justify-center gap-8 grayscale opacity-50">
-            <div className="text-[10px] font-bold uppercase tracking-widest">Trusted by contractors across</div>
-            {trustStats.map((stat: any) => (
-              <div key={stat.label} className="font-headline text-xs font-bold">
-                {stat.value}
+        {/* --- The Audit Form --- */}
+        <section id="book-now" className="py-24">
+          <div className="mx-auto max-w-3xl px-8">
+            <div className="mb-12 text-center">
+              <h2 className="font-headline text-4xl font-bold tracking-tight mb-4">Initialize Your Audit</h2>
+              <p className="text-zinc-500 font-light">Tell us about your business. We collect the data first, then you securely pay via Stripe.</p>
+            </div>
+
+            <div className="overflow-hidden bg-white shadow-2xl border" style={{ borderColor: INDUSTRIAL.outline }}>
+              <div className="h-1.5 w-full bg-zinc-100">
+                <div
+                  className="bg-md3-primary transition-all duration-500"
+                  style={{ width: `${(step / 4) * 100}%` }}
+                />
               </div>
-            ))}
+
+              <form onSubmit={handleSubmit} className="p-10 md:p-16">
+                {step === 1 && (
+                  <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}>
+                    <h3 className="mb-8 font-headline text-2xl font-bold uppercase tracking-tight">The Business Assets</h3>
+                    <div className="space-y-8">
+                      <div>
+                        <label className="mb-2 block text-[10px] font-bold uppercase tracking-widest text-zinc-400">Website URL</label>
+                        <input
+                          required
+                          type="url"
+                          placeholder="https://yourcontractingsite.com"
+                          className="w-full border-b border-zinc-200 py-4 text-xl font-light outline-none transition-colors focus:border-md3-primary"
+                          value={formData.website}
+                          onChange={(e) => setFormData({ ...formData, website: e.target.value })}
+                        />
+                      </div>
+                      <div>
+                        <label className="mb-2 block text-[10px] font-bold uppercase tracking-widest text-zinc-400">Company Name</label>
+                        <input
+                          required
+                          type="text"
+                          placeholder="Elite Mechanical"
+                          className="w-full border-b border-zinc-200 py-4 text-xl font-light outline-none transition-colors focus:border-md3-primary"
+                          value={formData.company}
+                          onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+                        />
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={nextStep}
+                      disabled={!formData.website || !formData.company}
+                      className="mt-12 flex w-full items-center justify-center gap-3 bg-[#1a1a1a] py-5 text-[11px] font-bold uppercase tracking-[0.25em] text-white transition-all hover:bg-md3-primary disabled:opacity-50"
+                    >
+                      Step 2: The Trade
+                      <ArrowRight className="size-4" />
+                    </button>
+                  </motion.div>
+                )}
+
+                {step === 2 && (
+                  <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}>
+                    <h3 className="mb-8 font-headline text-2xl font-bold uppercase tracking-tight">What is your primary trade?</h3>
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                      {[
+                        "HVAC / Mechanical",
+                        "Electrical",
+                        "Plumbing",
+                        "Home Performance",
+                        "Solar / Energy",
+                        "General Contracting",
+                      ].map((trade) => (
+                        <button
+                          key={trade}
+                          type="button"
+                          onClick={() => {
+                            setFormData({ ...formData, trade });
+                            nextStep();
+                          }}
+                          className={`border p-6 text-left transition-all ${
+                            formData.trade === trade
+                              ? "border-md3-primary bg-md3-primary/5 ring-1 ring-md3-primary"
+                              : "border-zinc-100 hover:border-zinc-300"
+                          }`}
+                        >
+                          <span className="text-sm font-medium">{trade}</span>
+                        </button>
+                      ))}
+                    </div>
+                    <button onClick={prevStep} type="button" className="mt-8 text-xs font-bold uppercase tracking-widest text-zinc-400 hover:text-zinc-600">← Back</button>
+                  </motion.div>
+                )}
+
+                {step === 3 && (
+                  <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}>
+                    <h3 className="mb-8 font-headline text-2xl font-bold uppercase tracking-tight">Current monthly lead volume?</h3>
+                    <div className="grid grid-cols-1 gap-4">
+                      {[
+                        "0–10 leads / month",
+                        "10–30 leads / month",
+                        "30–100 leads / month",
+                        "100+ leads / month",
+                      ].map((leads) => (
+                        <button
+                          key={leads}
+                          type="button"
+                          onClick={() => {
+                            setFormData({ ...formData, leads });
+                            nextStep();
+                          }}
+                          className={`border p-6 text-left transition-all ${
+                            formData.leads === leads
+                              ? "border-md3-primary bg-md3-primary/5 ring-1 ring-md3-primary"
+                              : "border-zinc-100 hover:border-zinc-300"
+                          }`}
+                        >
+                          <span className="text-sm font-medium">{leads}</span>
+                        </button>
+                      ))}
+                    </div>
+                    <button onClick={prevStep} type="button" className="mt-8 text-xs font-bold uppercase tracking-widest text-zinc-400 hover:text-zinc-600">← Back</button>
+                  </motion.div>
+                )}
+
+                {step === 4 && (
+                  <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}>
+                    <h3 className="mb-8 font-headline text-2xl font-bold uppercase tracking-tight">Audit Point of Contact</h3>
+                    {submitError && <div className="mb-6 bg-red-50 p-4 font-medium text-red-600 border border-red-100 text-sm">{submitError}</div>}
+                    <div className="space-y-6">
+                      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                        <div>
+                          <label className="mb-2 block text-[10px] font-bold uppercase tracking-widest text-zinc-400">Name</label>
+                          <input required type="text" className="w-full border-b border-zinc-200 py-3 text-lg outline-none focus:border-md3-primary" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
+                        </div>
+                        <div>
+                          <label className="mb-2 block text-[10px] font-bold uppercase tracking-widest text-zinc-400">Phone</label>
+                          <input required type="tel" className="w-full border-b border-zinc-200 py-3 text-lg outline-none focus:border-md3-primary" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} />
+                        </div>
+                      </div>
+                      <div>
+                        <label className="mb-2 block text-[10px] font-bold uppercase tracking-widest text-zinc-400">Work Email</label>
+                        <input required type="email" className="w-full border-b border-zinc-200 py-3 text-lg outline-none focus:border-md3-primary" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} />
+                      </div>
+                    </div>
+                    <button
+                      disabled={isSubmitting}
+                      className="mt-12 flex w-full items-center justify-center gap-3 bg-md3-primary py-5 text-[11px] font-bold uppercase tracking-[0.25em] text-white transition-all hover:bg-[#1a1a1a] disabled:opacity-50"
+                    >
+                      {isSubmitting ? <><Loader2 className="animate-spin" /> Redirecting to Secure Payment...</> : "Complete Secure Booking — $497"}
+                    </button>
+                    <button onClick={prevStep} type="button" className="mt-8 text-xs font-bold uppercase tracking-widest text-zinc-400 hover:text-zinc-600">← Back</button>
+                  </motion.div>
+                )}
+              </form>
+            </div>
           </div>
-        </div>
+        </section>
+
+        {/* --- FAQ --- */}
+        <section className="py-24 bg-zinc-50 border-t" style={{ borderColor: INDUSTRIAL.outline }}>
+           <div className="mx-auto max-w-[1440px] px-8">
+              <h2 className="font-headline text-3xl font-bold mb-12 uppercase">Audit FAQ</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                 {[
+                   { q: "Is this a recurring fee?", a: "No. This is a one-time diagnostic fee of $497. There are no ongoing commitments unless you decide to work with us later." },
+                   { q: "How long until I get the result?", a: "Standard turnaround is 48 business hours. We manually record your audit video and draft the action plan within that timeframe." },
+                   { q: "What if I don't have a website yet?", a: "Then we audit your competitors and your mapping presence to show you exactly what the market demands for your first build." },
+                   { q: "Can I use this for multiple companies?", a: "This price covers a single brand audit. For multi-location or franchise groups, contact us for a custom quote." }
+                 ].map((item, idx) => (
+                   <div key={idx}>
+                      <h4 className="font-bold text-sm uppercase tracking-widest mb-3 text-zinc-500">{item.q}</h4>
+                      <p className="text-zinc-600 font-light leading-relaxed">{item.a}</p>
+                   </div>
+                 ))}
+              </div>
+           </div>
+        </section>
+
       </div>
     </>
   );

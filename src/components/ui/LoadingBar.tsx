@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "motion/react";
+import { EASINGS } from "@/lib/animation";
 
 export function LoadingBar() {
   const location = useLocation();
@@ -10,7 +11,7 @@ export function LoadingBar() {
     setIsLoading(true);
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 600); // Short duration for a snappy feel
+    }, 400); // Snappier 400ms for Industrial OS feel.
 
     return () => clearTimeout(timer);
   }, [location.pathname]);
@@ -22,16 +23,8 @@ export function LoadingBar() {
           initial={{ scaleX: 0, opacity: 1, originX: 0 }}
           animate={{ scaleX: 1, opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.5, ease: "easeInOut" }}
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            right: 0,
-            height: "3px",
-            background: "#006A6A", // MD3 Primary / Industrial Teal
-            zIndex: 9999,
-          }}
+          transition={{ duration: 0.4, ease: EASINGS.industrial }}
+          className="fixed left-0 right-0 top-0 z-[9999] h-[2px] bg-md3-primary"
         />
       )}
     </AnimatePresence>
