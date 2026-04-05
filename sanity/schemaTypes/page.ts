@@ -1,4 +1,4 @@
-import { defineType, defineField } from "sanity";
+import { defineType, defineField, defineArrayMember } from "sanity";
 import { DocumentIcon } from "@sanity/icons";
 
 export const page = defineType({
@@ -60,8 +60,7 @@ export const page = defineType({
             { name: "content", title: "Content", type: "array", of: [{ type: "block" }] },
           ],
         },
-        { type: "reference", name: "caseStudyRef", title: "Featured Case Studies", to: [{ type: "caseStudy" }] },
-        { type: "reference", name: "testimonialRef", title: "Featured Testimonials", to: [{ type: "testimonial" }] },
+        defineArrayMember({ type: "reference", to: [{ type: "caseStudy" }, { type: "testimonial" }] }),
         {
           type: "object",
           name: "ctaSection",

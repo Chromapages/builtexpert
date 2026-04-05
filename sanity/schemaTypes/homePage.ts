@@ -84,6 +84,17 @@ export const homePage = defineType({
       ],
     }),
     defineField({
+      name: "services",
+      title: "Services Section",
+      type: "array",
+      of: [
+        {
+          type: "reference",
+          to: [{ type: "service" }],
+        },
+      ],
+    }),
+    defineField({
       name: "seo",
       title: "SEO Overrides",
       type: "object",

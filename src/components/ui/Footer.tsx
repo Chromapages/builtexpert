@@ -37,12 +37,17 @@ export function Footer() {
       </h2>
       <div className="mx-auto grid max-w-[1440px] grid-cols-1 gap-10 px-4 py-16 sm:px-6 sm:grid-cols-2 lg:grid-cols-5 lg:px-8">
         <div className="md:col-span-1">
-          <Link
-            to="/"
-            className="mb-6 block text-xl font-bold text-white"
-          >
-            BuiltExpert
-          </Link>
+          <div className="mb-6">
+            <Link
+              to="/"
+              className="block text-xl font-bold text-white tracking-tight"
+            >
+              BuiltExpert
+            </Link>
+            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-md3-primary/60">
+              A Chromapages LLC Brand
+            </span>
+          </div>
           <p className="mb-6 font-body text-sm leading-relaxed text-zinc-500">
             High-performance growth systems for contractors.
           </p>
@@ -142,7 +147,7 @@ export function Footer() {
 
       <div className="mx-auto max-w-[1440px] border-t border-zinc-800 px-4 pb-8 pt-8 sm:px-6 lg:px-8">
         <p className="font-body text-xs text-zinc-500">
-          © {new Date().getFullYear()} BuiltExpert. All rights reserved.
+          © {new Date().getFullYear()} BuiltExpert. A Chromapages LLC Venture. All rights reserved.
         </p>
       </div>
     </footer>

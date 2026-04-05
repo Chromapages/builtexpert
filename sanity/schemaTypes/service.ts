@@ -140,6 +140,19 @@ export const service = defineType({
       initialValue: "default",
     }),
     defineField({
+      name: "cardImage",
+      title: "Card Image",
+      type: "image",
+      options: { hotspot: true },
+      description: "Hyper-realistic image for the service card (Services section and Overview)."
+    }),
+    defineField({
+      name: "materialIcon",
+      title: "Material Icon name",
+      type: "string",
+      description: "Material Symbol name (e.g. search, web, flash_on, article, location_on)."
+    }),
+    defineField({
       name: "faqRefs",
       title: "Related FAQs",
       type: "array",

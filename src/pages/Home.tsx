@@ -1,6 +1,7 @@
 import * as React from "react";
-import { ArrowDown, ArrowRight, CornerDownRight, Star } from "lucide-react";
+import { ArrowDown, ArrowRight, CornerDownRight, Star, CheckCircle2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
+import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
 import { SEO } from "@/components/SEO";
 import {
@@ -40,7 +41,7 @@ const SYSTEM_SERVICES = [
     icon: "search",
     title: "Lead System Audit",
     body: "A manual diagnostic that shows you what is leaking leads, where the bottleneck lives, and what to fix first.",
-    imgSrc: "/images/home/service-web-design.png",
+    imgSrc: "/images/home/service-audit-new.webp",
     imgAlt: "Lead System Audit Preview",
     href: "/audit",
   },
@@ -48,7 +49,7 @@ const SYSTEM_SERVICES = [
     icon: "web",
     title: "Contractor Websites",
     body: "A high-conversion site built to turn local traffic into calls, estimates, and booked work.",
-    imgSrc: "/images/home/service-web-design.png",
+    imgSrc: "/images/home/service-websites-new.webp",
     imgAlt: "BuiltExpert Conversion Web Design Preview",
     href: "/services/contractor-websites",
   },
@@ -56,7 +57,7 @@ const SYSTEM_SERVICES = [
     icon: "article",
     title: "Landing Pages",
     body: "Focused campaign pages for one job, one audience, and one conversion goal.",
-    imgSrc: "/images/home/service-seo.png",
+    imgSrc: "/images/home/service-landing-new.webp",
     imgAlt: "Service-Specific SEO Rankings Preview",
     href: "/services/landing-pages",
   },
@@ -64,7 +65,7 @@ const SYSTEM_SERVICES = [
     icon: "location_on",
     title: "Local SEO",
     body: "We build the visibility to help the right customers find you in the right city at the right time.",
-    imgSrc: "/images/home/service-local-maps.png",
+    imgSrc: "/images/home/service-local-seo-new.webp",
     imgAlt: "Local Map Pack #1 Ranking Preview",
     href: "/services/local-seo",
   },
@@ -72,7 +73,7 @@ const SYSTEM_SERVICES = [
     icon: "flash_on",
     title: "Growth Support",
     body: "Ongoing optimization, tracking, and support so the system keeps getting better after launch.",
-    imgSrc: "/images/home/service-automation.png",
+    imgSrc: "/images/home/service-growth-new.webp",
     imgAlt: "CRM Automation and Lead Management Preview",
     href: "/services/growth-support",
   },
@@ -124,6 +125,54 @@ const WHO_CARDS: {
 // Testimonials HIDDEN for launch v1 until real ones are added to Sanity
 const TESTIMONIALS: any[] = [];
 
+const PROCESS_STEPS = [
+  {
+    n: "01",
+    t: "Audit",
+    timeframe: "Week 1",
+    d: "A manual 47-point diagnostic of your digital presence. We score your site, local rankings, and competitor gaps to find where you're leaking leads.",
+    deliverable: "47-point site scorecard",
+    docCode: "AUD-47",
+    tagline: "DIAGNOSTIC PHASE",
+  },
+  {
+    n: "02",
+    t: "Strategy",
+    timeframe: "Week 1",
+    d: "We map the exact high-intent jobs you want (HVAC, Electrical, Roofing), then build a custom keyword playbook to capture them exclusive to you.",
+    deliverable: "Custom growth roadmap",
+    docCode: "STRAT-01",
+    tagline: "MARKET MAPPING",
+  },
+  {
+    n: "03",
+    t: "Build",
+    timeframe: "Weeks 2–5",
+    d: "Your high-conversion site, content funnels, and CRM integrations — engineered from the ground up for speed, trust, and conversion.",
+    deliverable: "Full site + integrations",
+    docCode: "PROD-X",
+    tagline: "SYSTEM ENGINEERING",
+  },
+  {
+    n: "04",
+    t: "Launch",
+    timeframe: "Week 6",
+    d: "The switch is flipped. Call tracking, attribution analytics, and lead routing fire from day one. You start seeing which phone calls came from which ads.",
+    deliverable: "Live system + tracking",
+    docCode: "REL-01",
+    tagline: "SYSTEM DEPLOYMENT",
+  },
+  {
+    n: "05",
+    t: "Optimize",
+    timeframe: "Ongoing",
+    d: "We don't just launch and leave. We adjust every month based on what's ringing, what's booking, and how to lower your cost-per-lead.",
+    deliverable: "Monthly delta report",
+    docCode: "OPT-MTH",
+    tagline: "YIELD OPTIMIZATION",
+  },
+];
+
 const FAQ_ITEMS: { q: string; a: string }[] = [
   {
     q: "How are you different from HomeAdvisor or Angie's List?",
@@ -155,7 +204,33 @@ export function Home() {
   const [testimonials, setTestimonials] = React.useState<any[]>(TESTIMONIALS);
   const [faqItems, setFaqItems] = React.useState(FAQ_ITEMS.map((item) => ({ question: item.q, answer: item.a, category: "general" })));
   const [isLoading, setIsLoading] = React.useState(true);
+  const [activeStep, setActiveStep] = React.useState(0);
   const navigate = useNavigate();
+  const stepRefs = React.useRef<(HTMLDivElement | null)[]>([]);
+
+  React.useEffect(() => {
+    // Standard observer for highlighting the sticky left side
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const index = Number(entry.target.getAttribute("data-step-index"));
+            setActiveStep(index);
+          }
+        });
+      },
+      { 
+        threshold: 0.5, 
+        rootMargin: "-20% 0% -40% 0%" // Highlighting as cards pass the middle
+      }
+    );
+
+    stepRefs.current.forEach((ref) => {
+      if (ref) observer.observe(ref);
+    });
+
+    return () => observer.disconnect();
+  }, []);
 
   React.useEffect(() => {
     async function fetchData() {
@@ -221,7 +296,7 @@ export function Home() {
     ? urlFor(homeData.hero.backgroundImage).url() 
     : HERO_IMG;
 
-  const heroVideoUrl = homeData?.hero?.videoUrl;
+  const heroVideoUrl = homeData?.hero?.videoUrl || "/assets/hero-vid.mp4";
 
   return (
     <>
@@ -281,7 +356,22 @@ export function Home() {
 
 
         {/* ── Who We Help ── */}
-        <section className="site-container py-16 sm:py-20 lg:py-24" id="who-we-help">
+        <section className="site-container py-24 sm:py-32" id="who-we-help">
+          <div className="mb-20 max-w-3xl">
+            <span className="mb-4 block text-[10px] font-bold uppercase tracking-[0.3em] text-md3-primary">
+              Targeted Expertise
+            </span>
+            <h2
+              className="font-headline text-4xl font-light leading-[1.1] tracking-tight sm:text-5xl md:text-6xl"
+              style={{ color: INDUSTRIAL.charcoal }}
+            >
+              Marketing Systems Built for <br className="hidden lg:block"/>
+              <span className="font-bold text-md3-primary">Fast-Growing Trades.</span>
+            </h2>
+            <p className="mt-8 text-lg font-light leading-relaxed text-zinc-600">
+              We don&apos;t work with generalists. We work with specialists who need a reliable, exclusive lead engine to scale their local market.
+            </p>
+          </div>
           <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
             {WHO_CARDS.map((card) => (
               <div
@@ -432,15 +522,22 @@ export function Home() {
         </section>
 
         {/* ── Services ── */}
-        <section className="site-container py-16 sm:py-20 lg:py-24">
-          <div className="mb-16 text-center">
+        {/* ── Services: Authority Layer Header ── */}
+        <section className="site-container py-24 sm:py-32" id="services">
+          <div className="mb-20 ml-auto max-w-3xl text-right">
+            <span className="mb-4 block text-[10px] font-bold uppercase tracking-[0.3em] text-md3-primary">
+              The Core System
+            </span>
             <h2
-              className="font-headline text-3xl font-light tracking-tight md:text-4xl"
+              className="font-headline text-4xl font-light leading-[1.1] tracking-tight sm:text-5xl md:text-6xl"
               style={{ color: INDUSTRIAL.charcoal }}
             >
-              The System We Build for You
+              The Engineered System <br className="hidden lg:block"/>
+              <span className="font-bold text-md3-primary">Built for Revenue.</span>
             </h2>
-            <div className="mx-auto mt-4 h-px w-24 bg-md3-primary" />
+            <p className="mt-8 text-lg font-light leading-relaxed text-zinc-600">
+              We don&apos;t just build websites; we engineer conversion engines. Every component of our system is designed to turn cold traffic into high-intent estimates.
+            </p>
           </div>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {isLoading && !homeData ? (
@@ -509,52 +606,58 @@ export function Home() {
 
         {/* ── Lead Magnet ── */}
         <section className="border-y border-[#e5e7eb] bg-md3-primary py-16 sm:py-20 lg:py-24 text-md3-on-primary [border-width:0.5px]">
-          <div className="site-container grid items-center gap-10 lg:gap-16 lg:grid-cols-2">
-            <div>
-              <h2 className="mb-5 font-headline text-3xl font-light text-md3-on-primary sm:text-4xl sm:mb-6">
+          <div className="site-container">
+            <div className="mx-auto mb-16 max-w-5xl text-center">
+              <h2 className="mb-6 font-headline text-3xl font-light text-md3-on-primary sm:text-4xl md:text-5xl">
                 Find Out Exactly Why Your Phone Isn&apos;t Ringing
               </h2>
-              <p className="mb-8 text-lg text-md3-primary-fixed">
+              <p className="mx-auto max-w-2xl text-lg text-md3-primary-fixed">
                 We&apos;ll spend 20 minutes reviewing your site by hand — no automated tools.
                 You&apos;ll get a plain-English breakdown of what&apos;s costing you jobs and what we&apos;d fix first.
               </p>
-              <ul className="mb-10 space-y-4">
-                {[
-                  "Where You're Losing Calls Right Now",
-                  "Why Your Competitor Is Ranking Above You",
-                  "What Those Missed Jobs Are Costing You Per Month",
-                ].map((line) => (
-                  <li key={line} className="flex items-center gap-3">
-                    <span className="material-symbols-outlined text-md3-primary-fixed">check_circle</span>
-                    <span>{line}</span>
-                  </li>
-                ))}
-              </ul>
-              <Link
-                to="/contact?ref=audit"
-                className="inline-flex rounded-none bg-white px-8 py-4 font-bold text-md3-primary transition-all hover:bg-md3-primary-fixed-dim"
-              >
-                Start The $497 Audit
-              </Link>
             </div>
-            <div className="relative max-w-full overflow-hidden">
-              <div className="max-w-full overflow-hidden rounded-2xl bg-md3-on-primary-fixed-variant p-6 shadow-2xl">
-                <div className="mb-6 flex items-center gap-2 border-b border-md3-primary-container pb-4">
-                  <div className="h-3 w-3 rounded-full bg-md3-error" />
-                  <div className="h-3 w-3 rounded-full bg-yellow-400" />
-                  <div className="h-3 w-3 rounded-full bg-green-500" />
-                </div>
-                <div className="space-y-4">
-                  <div className="h-4 w-3/4 rounded bg-md3-primary-container/30" />
-                  <div className="h-4 w-1/2 rounded bg-md3-primary-container/30" />
-                  <div className="grid grid-cols-2 gap-4 pt-4">
-                    <div className="flex h-20 flex-col items-center justify-center rounded-xl bg-md3-primary-container/20">
-                      <span className="text-xs font-bold text-md3-primary-fixed">SEO Health</span>
-                      <span className="font-headline text-2xl font-black text-white">42%</span>
-                    </div>
-                    <div className="flex h-20 flex-col items-center justify-center rounded-xl bg-md3-primary-container/20">
-                      <span className="text-xs font-bold text-md3-primary-fixed">Leads/Mo</span>
-                      <span className="font-headline text-2xl font-black text-white">8</span>
+            
+            <div className="grid items-center gap-10 lg:gap-16 lg:grid-cols-2">
+              <div>
+                <ul className="mb-10 space-y-4">
+                  {[
+                    "Where You're Losing Calls Right Now",
+                    "Why Your Competitor Is Ranking Above You",
+                    "What Those Missed Jobs Are Costing You Per Month",
+                  ].map((line) => (
+                    <li key={line} className="flex items-center gap-3">
+                      <span className="material-symbols-outlined text-md3-primary-fixed">check_circle</span>
+                      <span>{line}</span>
+                    </li>
+                  ))}
+                </ul>
+                <Link
+                  to="/contact?ref=audit"
+                  className="inline-flex rounded-none bg-white px-10 py-5 text-sm font-bold text-md3-primary transition-all hover:bg-md3-primary-fixed-dim"
+                >
+                  Start The $497 Audit
+                </Link>
+              </div>
+
+              <div className="relative max-w-full overflow-hidden">
+                <div className="max-w-full overflow-hidden rounded-2xl bg-md3-on-primary-fixed-variant p-6 shadow-2xl">
+                  <div className="mb-6 flex items-center gap-2 border-b border-md3-primary-container pb-4">
+                    <div className="h-3 w-3 rounded-full bg-md3-error" />
+                    <div className="h-3 w-3 rounded-full bg-yellow-400" />
+                    <div className="h-3 w-3 rounded-full bg-green-500" />
+                  </div>
+                  <div className="space-y-4">
+                    <div className="h-4 w-3/4 rounded bg-md3-primary-container/30" />
+                    <div className="h-4 w-1/2 rounded bg-md3-primary-container/30" />
+                    <div className="grid grid-cols-2 gap-4 pt-4">
+                      <div className="flex h-20 flex-col items-center justify-center rounded-xl bg-md3-primary-container/20">
+                        <span className="text-xs font-bold text-md3-primary-fixed">SEO Health</span>
+                        <span className="font-headline text-2xl font-black text-white">42%</span>
+                      </div>
+                      <div className="flex h-20 flex-col items-center justify-center rounded-xl bg-md3-primary-container/20">
+                        <span className="text-xs font-bold text-md3-primary-fixed">Leads/Mo</span>
+                        <span className="font-headline text-2xl font-black text-white">8</span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -563,106 +666,319 @@ export function Home() {
           </div>
         </section>
 
-        {/* ── Process ── */}
-        <section className="site-container py-16 sm:py-20 lg:py-24">
-          <div className="mb-20 text-center">
-            <h2
-              className="font-headline text-3xl font-light tracking-tight md:text-4xl"
-              style={{ color: INDUSTRIAL.charcoal }}
-            >
-              How We Go From &apos;Nobody&apos;s Calling&apos; to &apos;Booked 3 Weeks Out&apos;
-            </h2>
-            <div className="mx-auto mt-4 h-px w-24 bg-md3-primary" />
-          </div>
-          <div className="relative grid gap-6 grid-cols-2 sm:grid-cols-3 md:grid-cols-5">
-            <div className="absolute left-0 top-8 -z-10 hidden h-px w-full md:block bg-[#e5e7eb]" />
-            {[
-              { n: "1", t: "Audit", timeframe: "Week 1", d: "We score your site, local rankings, and competitor gaps against 47 checkpoints.", deliverable: "47-point site scorecard" },
-              { n: "2", t: "Strategy", timeframe: "Week 1", d: "We map the exact jobs you want, then build the custom playbook to get them.", deliverable: "Custom growth roadmap" },
-              { n: "3", t: "Build", timeframe: "Weeks 2–5", d: "Your new site, content pages, and CRM integrations — built from scratch.", deliverable: "Full site + integrations" },
-              { n: "4", t: "Launch", timeframe: "Week 6", d: "Your site goes live. Call tracking and analytics fire from day one.", deliverable: "Live site + tracking" },
-              { n: "5", t: "Optimize", timeframe: "Ongoing", d: "We adjust every month based on what's ringing, what's booking, and what's not.", deliverable: "Monthly results report" },
-            ].map((step) => (
-              <div key={step.n} className="space-y-3">
-                <div className="flex h-16 w-16 items-center justify-center rounded-full border-4 border-[#e5e7eb] bg-white font-headline text-xl font-light text-md3-primary shadow-md">
-                  {step.n}
-                </div>
-                <p className="text-xs font-bold uppercase tracking-wider text-md3-primary">{step.timeframe}</p>
-                <h4 className="font-semibold" style={{ color: INDUSTRIAL.charcoal }}>{step.t}</h4>
-                <p className="text-sm font-light" style={{ color: INDUSTRIAL.muted }}>{step.d}</p>
-                <p className="flex items-start gap-1.5 text-xs opacity-70" style={{ color: INDUSTRIAL.muted }}>
-                  <CornerDownRight className="mt-0.5 size-3.5 shrink-0 opacity-80" aria-hidden />
-                  <span>{step.deliverable}</span>
-                </p>
-              </div>
-            ))}
+        {/* ── Process: Sticky Narrative Redesign ── */}
+        <section 
+          className="relative min-h-screen border-y border-[#e5e7eb] bg-zinc-50 py-24 sm:py-32 [border-width:0.5px]" 
+          id="process"
+        >
+          {/* Section Header */}
+          <div className="site-container mb-24 lg:mb-32">
+            <div className="max-w-3xl">
+              <span className="mb-4 block text-[10px] font-bold uppercase tracking-[0.3em] text-md3-primary">
+                The Methodology
+              </span>
+              <h2
+                className="font-headline text-4xl font-light leading-[1.1] tracking-tight sm:text-5xl md:text-6xl"
+                style={{ color: INDUSTRIAL.charcoal }}
+              >
+                How We Go From &apos;Nobody&apos;s Calling&apos; to <br className="hidden lg:block"/>
+                <span className="font-bold text-md3-primary">Booked 3 Weeks Out</span>
+              </h2>
+            </div>
           </div>
 
-          {/* HI-2 — Mid-page CTA (process section is highest-intent content; no CTA was conversion loss) */}
-          <div className="mt-16 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
-            <Link
-              to="/audit"
-              className="inline-flex items-center gap-2 rounded-none bg-md3-primary px-8 py-5 text-[11px] font-bold uppercase tracking-[0.25em] text-white transition-all hover:bg-[#1a1a1a]"
+          <div className="site-container grid gap-12 lg:grid-cols-[5fr_7fr] lg:gap-24">
+            
+            {/* Left Column: Sticky Context (Desktop Only) */}
+            <div className="hidden lg:block">
+              <div className="sticky top-40">
+                <div className="relative">
+                  {/* Vertical Progress Line Background */}
+                  <div className="absolute left-1.5 top-0 h-[400px] w-px bg-zinc-200" />
+                  
+                  {/* Animated Progress Line — tracks scroll progress through the cards */}
+                  <div 
+                    className="absolute left-1.5 top-0 w-px bg-md3-primary transition-all duration-700 ease-out" 
+                    style={{ height: `${((activeStep + 1) / PROCESS_STEPS.length) * 400}px` }}
+                  />
+
+                  <div className="space-y-12 pl-12">
+                    {PROCESS_STEPS.map((step, i) => (
+                      <div 
+                        key={step.n} 
+                        className={cn(
+                          "transition-all duration-500",
+                          activeStep === i 
+                            ? "translate-x-2 opacity-100" 
+                            : "opacity-20 blur-[1px]"
+                        )}
+                      >
+                        <span className="font-headline text-8xl font-black leading-none tracking-tighter" style={{ color: activeStep === i ? INDUSTRIAL.primary : '#e5e7eb' }}>
+                          {step.n}
+                        </span>
+                        <div className="mt-2">
+                          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-400">Phase {step.n}</p>
+                          <h4 className="font-headline text-2xl font-bold tracking-tight" style={{ color: INDUSTRIAL.charcoal }}>{step.t}</h4>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Column: Scrollable Detail Cards */}
+            <div className="space-y-12 sm:space-y-24 lg:space-y-48">
+              {PROCESS_STEPS.map((step, i) => (
+                <div
+                  key={step.n}
+                  ref={(el) => { stepRefs.current[i] = el; }}
+                  data-step-index={i}
+                  className="group relative"
+                >
+                  {/* Mobile Mobile Step Number */}
+                  <div className="mb-6 flex items-center gap-4 lg:hidden">
+                    <span className="flex h-10 w-10 items-center justify-center rounded-full bg-md3-primary font-headline text-lg font-bold text-white">
+                      {i + 1}
+                    </span>
+                    <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-md3-primary">
+                      Phase {step.n}
+                    </span>
+                  </div>
+
+                  {/* The Narrative Card */}
+                  <div 
+                    className="relative overflow-hidden rounded-3xl border border-[#e5e7eb] bg-white p-8 sm:p-12 shadow-sm transition-all [border-width:0.5px] group-hover:border-md3-primary/30 group-hover:shadow-xl group-hover:shadow-md3-primary/5"
+                    style={{ ...industrialMeshStyle, backgroundImage: 'none' }} // Blueprint detail
+                  >
+                    {/* Industrial Blueprint Background (Subtle) */}
+                    <div className="pointer-events-none absolute inset-0 opacity-[0.03] grayscale transition-opacity group-hover:opacity-[0.05]">
+                      <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                          <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                            <path d="M 40 0 L 0 0 0 40" fill="none" stroke="currentColor" strokeWidth="1"/>
+                          </pattern>
+                        </defs>
+                        <rect width="100%" height="100%" fill="url(#grid)" />
+                      </svg>
+                    </div>
+
+                    <div className="relative z-10">
+                      <div className="mb-10 flex flex-wrap items-center justify-between gap-4">
+                        <span className="inline-flex rounded-full border border-md3-primary/20 bg-md3-primary/5 px-4 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-md3-primary">
+                          {step.tagline}
+                        </span>
+                        <div className="flex items-center gap-2 font-mono text-[10px] font-bold text-zinc-400">
+                          <span className="h-1.5 w-1.5 rounded-full bg-zinc-300" />
+                          SPEC_{step.docCode}
+                        </div>
+                      </div>
+
+                      <h3 className="mb-6 font-headline text-3xl font-bold tracking-tight sm:text-4xl" style={{ color: INDUSTRIAL.charcoal }}>
+                        {step.t}
+                      </h3>
+                      
+                      <p className="mb-10 text-lg font-light leading-relaxed text-zinc-600">
+                        {step.d}
+                      </p>
+
+                      <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between border-t border-zinc-100 pt-8">
+                        <div>
+                          <p className="mb-1 text-[9px] font-bold uppercase tracking-[0.2em] text-zinc-400">Critical Deliverable</p>
+                          <div className="flex items-center gap-2">
+                            <CornerDownRight className="size-4 text-md3-primary" />
+                            <span className="text-sm font-semibold" style={{ color: INDUSTRIAL.charcoal }}>{step.deliverable}</span>
+                          </div>
+                        </div>
+                        <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-zinc-400">
+                          <span className="material-symbols-outlined text-[18px]">schedule</span>
+                          {step.timeframe}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Condensed High-Impact Decision Module */}
+          <div className="site-container mt-20 lg:mt-32">
+            <motion.div 
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              className="relative isolate overflow-hidden rounded-[2rem] border border-white/10 bg-zinc-900 px-8 py-12 text-center text-white sm:py-16 lg:py-20 shadow-2xl"
             >
-              Start The Audit
-              <ArrowRight className="size-4" />
-            </Link>
-            <span className="text-sm font-light" style={{ color: INDUSTRIAL.muted }}>
-              $497 · No obligation · Response in 48h
-            </span>
+              {/* Background Layers */}
+              <div className="absolute inset-0 -z-30">
+                <motion.img 
+                  src="/images/cta-bg.png"
+                  alt="Industrial Construction"
+                  className="h-full w-full object-cover opacity-20 grayscale transition-all duration-700"
+                  initial={{ scale: 1.1 }}
+                  whileInView={{ scale: 1 }}
+                  transition={{ duration: 1.5, ease: "easeOut" }}
+                />
+                <div className="absolute inset-0 bg-zinc-950/60" />
+              </div>
+
+              {/* Animated Blueprint Mesh Background */}
+              <div className="absolute inset-0 -z-10 opacity-[0.08] grayscale">
+                <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <pattern id="cta-grid" width="60" height="60" patternUnits="userSpaceOnUse">
+                      <path d="M 60 0 L 0 0 0 60" fill="none" stroke="currentColor" strokeWidth="0.5"/>
+                    </pattern>
+                  </defs>
+                  <motion.rect 
+                    width="100%" height="150%" fill="url(#cta-grid)" 
+                    animate={{ y: [0, -60] }}
+                    transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+                  />
+                </svg>
+              </div>
+
+              {/* Glassmorphic Overlays */}
+              <div className="absolute -top-24 -left-24 h-96 w-96 rounded-full bg-md3-primary/10 blur-[120px] pointer-events-none" />
+              <div className="absolute -bottom-24 -right-24 h-96 w-96 rounded-full bg-white/5 blur-[100px] pointer-events-none" />
+
+              <div className="relative z-10 mx-auto max-w-3xl">
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.2 }}
+                  className="mb-6 inline-flex items-center gap-2 rounded-full border border-md3-primary/30 bg-md3-primary/10 px-5 py-1.5 text-[9px] font-black uppercase tracking-[0.3em] text-md3-primary-fixed shadow-inner"
+                >
+                  <span className="h-1 w-1 rounded-full bg-md3-primary animate-pulse" />
+                  High-Intent Diagnostic
+                </motion.div>
+
+                <h3 className="mb-6 font-headline text-3xl font-black leading-[1.1] tracking-tighter text-zinc-100 sm:text-4xl md:text-5xl">
+                  Ready to start <br className="hidden sm:block" />
+                  <span className="bg-gradient-to-r from-md3-primary to-[#4FD1C5] bg-clip-text text-transparent">Phase 01?</span>
+                </h3>
+                
+                <p className="mx-auto mb-10 max-w-lg text-base font-light leading-relaxed text-zinc-300 opacity-90">
+                  Every week you wait, your competitor is getting calls that should be yours. 
+                  Start the audit and we&apos;ll build your 47-point project blueprint within 48 hours.
+                </p>
+
+                <div className="flex flex-col items-center justify-center gap-6 md:flex-row">
+                  <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.98 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                  >
+                    <Link
+                      to="/audit"
+                      className="group relative inline-flex items-center gap-4 overflow-hidden rounded-full bg-white px-8 py-5 text-[10px] font-black uppercase tracking-[0.25em] text-zinc-900 shadow-2xl transition-all hover:bg-zinc-100"
+                    >
+                      <span className="relative z-10">Claim Your Audit</span>
+                      <ArrowRight className="relative z-10 size-3.5 transition-transform group-hover:translate-x-1" />
+                      
+                      {/* Magnetic Inner Glow */}
+                      <div className="absolute inset-0 -z-10 translate-y-full bg-zinc-100/50 blur-xl transition-transform group-hover:translate-y-0" />
+                    </Link>
+                  </motion.div>
+
+                  <div className="text-left">
+                    <p className="bg-gradient-to-r from-white to-white/50 bg-clip-text text-lg font-bold text-transparent">$497 One-Time</p>
+                    <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-zinc-400">48h Delivery • No Retainer</p>
+                  </div>
+                </div>
+
+                <div className="mt-12 flex flex-wrap items-center justify-center gap-x-10 gap-y-4 grayscale opacity-30">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="size-3.5 text-md3-primary" />
+                    <span className="text-[9px] font-bold uppercase tracking-wider">Site Health Score</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="size-3.5 text-md3-primary" />
+                    <span className="text-[9px] font-bold uppercase tracking-wider">Gap Analysis</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="size-3.5 text-md3-primary" />
+                    <span className="text-[9px] font-bold uppercase tracking-wider">48h Blueprint</span>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
           </div>
         </section>
 
-        {/* ── Testimonials — QW-4: moved BEFORE FAQ (was after, most visitors never saw it) ── */}
-        <section className="border-t border-[#e5e7eb] bg-white/60 py-16 sm:py-20 lg:py-24 backdrop-blur-sm [border-top-width:0.5px]">
+        {/* ── Testimonials: Authority Layer Redesign ── */}
+        <section className="bg-zinc-50 py-24 sm:py-32 lg:py-40">
           <div className="site-container">
-            <h2
-              className="mb-4 text-center font-headline text-3xl font-light tracking-tight md:text-4xl"
-              style={{ color: INDUSTRIAL.charcoal }}
-            >
-              Real Contractors. Real Numbers.
-            </h2>
-            <div className="mx-auto mb-6 h-px w-24 bg-md3-primary" />
-            <p
-              className="mb-16 text-center text-lg font-light"
-              style={{ color: INDUSTRIAL.muted }}
-            >
-              These contractors stopped relying on referrals. Here&apos;s what happened next.
-            </p>
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div className="mb-20 ml-auto max-w-3xl text-right">
+              <span className="mb-4 block text-[10px] font-bold uppercase tracking-[0.3em] text-md3-primary">
+                The Result Proof
+              </span>
+              <h2
+                className="font-headline text-4xl font-light leading-[1.1] tracking-tight sm:text-5xl md:text-6xl"
+                style={{ color: INDUSTRIAL.charcoal }}
+              >
+                Real Contractors.<br />
+                <span className="font-bold text-md3-primary">Real Economic Growth.</span>
+              </h2>
+              <p className="mt-8 text-lg font-light leading-relaxed text-zinc-600">
+                Our systems are engineered for one goal: booked jobs. These contractors stopped chasing leads and started owning their markets.
+              </p>
+            </div>
+
+            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
               {isLoading && testimonials.length === 0 ? (
                 Array.from({ length: 3 }).map((_, i) => <TestimonialSkeleton key={i} />)
               ) : (
                 testimonials.slice(0, 3).map((t, idx) => (
-                  <div
+                  <motion.div
                     key={t.name || idx}
-                    className="group flex flex-col gap-6 rounded-2xl border border-[#e5e7eb] bg-white p-8 shadow-sm transition-all [border-width:0.5px] hover:border-md3-primary/40 hover:shadow-xl hover:shadow-md3-primary/5"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: idx * 0.1, duration: 0.5 }}
+                    className="group relative flex flex-col items-start bg-white p-10 transition-all duration-300 hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.04)]"
                   >
-                    <div className="flex gap-1.5">
-                      {Array.from({ length: t.rating || 5 }).map((_, i) => (
-                        <Star
-                          key={i}
-                          className="size-3.5 fill-yellow-400 text-yellow-400"
-                          aria-hidden
-                        />
-                      ))}
+                    {/* Technical Ref Code */}
+                    <div className="mb-8 flex w-full items-center justify-between border-b border-zinc-50 pb-4">
+                      <span className="font-mono text-[9px] font-bold tracking-widest text-zinc-300 uppercase">REP_CODE: SPEC_CASE_{2024 + idx}</span>
+                      <div className="flex gap-1">
+                        {Array.from({ length: t.rating || 5 }).map((_, i) => (
+                          <Star key={i} className="size-2.5 fill-md3-primary text-md3-primary" />
+                        ))}
+                      </div>
                     </div>
+
+                    {/* Result-First Headline */}
+                    <h3 className="mb-6 font-headline text-3xl font-black tracking-tighter text-zinc-900 group-hover:text-md3-primary transition-colors">
+                      {t.resultHighlight || t.highlight || "Verified Growth"}
+                    </h3>
+
                     <blockquote 
-                      className="flex-1 text-[15px] font-light leading-relaxed italic" 
-                      style={{ color: INDUSTRIAL.charcoal }}
+                      className="mb-8 flex-1 text-base font-light leading-relaxed text-zinc-600"
                     >
                       &ldquo;{t.quote || t.content}&rdquo;
                     </blockquote>
-                    <div className="inline-flex self-start rounded-full bg-md3-primary/5 px-4 py-1.5 text-[11px] font-bold uppercase tracking-wider text-md3-primary">
-                      {t.resultHighlight || t.highlight}
+
+                    <div className="mt-auto w-full pt-8">
+                      <div className="flex items-center gap-4">
+                        {/* Placeholder Avatar if needed, or structured name */}
+                        <div className="flex flex-col">
+                          <p className="font-bold leading-tight text-zinc-900">{t.name}</p>
+                          <p className="text-[11px] font-bold uppercase tracking-wider text-zinc-400">
+                            {t.trade || t.role} &middot; {t.location}
+                          </p>
+                        </div>
+                      </div>
+                      
+                      {/* Industrial Detail */}
+                      <div className="mt-6 flex items-center gap-2">
+                        <div className="h-px flex-1 bg-zinc-100" />
+                        <span className="text-[9px] font-black uppercase tracking-[0.2em] text-md3-primary">Verified System Result</span>
+                      </div>
                     </div>
-                    <div className="mt-2 border-t border-[#e5e7eb] pt-6 [border-top-width:0.5px]">
-                      <p className="font-bold leading-none mb-1" style={{ color: INDUSTRIAL.charcoal }}>{t.name}</p>
-                      <p className="text-[13px] font-light leading-none" style={{ color: INDUSTRIAL.muted }}>
-                        {t.trade || t.role} · {t.location}
-                      </p>
-                    </div>
-                  </div>
+                  </motion.div>
                 ))
               )}
             </div>
@@ -678,6 +994,19 @@ export function Home() {
         {/* ── Final CTA ── */}
         <section className="site-container pb-20 sm:pb-28 lg:pb-32 pt-6 sm:pt-8">
           <div className="relative w-full overflow-hidden bg-white border border-[#e5e7eb] [border-width:0.5px] p-8 sm:p-10 md:p-16 lg:p-20 text-left">
+            {/* Background Layers */}
+            <div className="absolute inset-0 -z-0">
+              <motion.img 
+                src="/images/final-cta-bg.png"
+                alt="Architectural Studio"
+                className="h-full w-full object-cover opacity-40 grayscale transition-all duration-700"
+                initial={{ scale: 1.05 }}
+                whileInView={{ scale: 1 }}
+                transition={{ duration: 2, ease: "easeOut" }}
+              />
+              <div className="absolute inset-0 bg-white/30" />
+            </div>
+
             <div className="relative z-10 max-w-2xl">
               <h2
                 className="mb-8 font-headline text-3xl sm:text-4xl font-light leading-tight tracking-tight md:text-5xl"
@@ -708,9 +1037,10 @@ export function Home() {
                 </Link>
               </div>
             </div>
-            <div className="pointer-events-none absolute bottom-0 right-0 top-0 hidden w-1/2 select-none overflow-hidden opacity-[0.03] lg:block">
+            {/* Architectural Grid Details */}
+            <div className="pointer-events-none absolute bottom-0 right-0 top-0 hidden w-1/2 select-none overflow-hidden opacity-[0.05] lg:block">
               <svg
-                className="h-full w-full scale-150 text-[#1a1a1a]"
+                className="h-full w-full scale-150 text-md3-primary"
                 viewBox="0 0 100 100"
                 aria-hidden={true}
               >

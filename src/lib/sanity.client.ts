@@ -214,6 +214,13 @@ export async function getHomePage() {
     hero {
       ...,
       "videoUrl": heroVideo.asset->url
+    },
+    services[]->{
+      title,
+      "body": description,
+      "icon": materialIcon,
+      "imgSrc": cardImage.asset->url,
+      "href": "/services/" + slug.current
     }
   }`);
 }
