@@ -1,0 +1,49 @@
+import { defineType, defineField } from "sanity";
+import { DocumentIcon } from "@sanity/icons";
+
+
+export const post = defineType({
+  name: "post",
+  title: "Post",
+  type: "document",
+  icon: DocumentIcon,
+
+  fields: [
+    defineField({
+      name: "title",
+      title: "Title",
+      type: "string",
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: "slug",
+      title: "Slug",
+      type: "slug",
+      options: { source: "title", maxLength: 96 },
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: "author",
+      title: "Author",
+      type: "reference",
+      to: [{ type: "author" }],
+    }),
+    defineField({
+      name: "mainImage",
+      title: "Main image",
+      type: "image",
+      options: { hotspot: true },
+    }),
+    defineField({
+      name: "publishedAt",
+      title: "Published at",
+      type: "datetime",
+    }),
+    defineField({
+      name: "body",
+      title: "Body",
+      type: "array",
+      of: [{ type: "block" }, { type: "image", options: { hotspot: true } }],
+    }),
+  ],
+});

@@ -1,8 +1,13 @@
 import * as React from "react";
+import { Link } from "react-router-dom";
 import { SEO } from "@/components/SEO";
 import { Section } from "@/components/ui/Section";
 import { AnimateIn } from "@/components/ui/AnimateIn";
 import { Card } from "@/components/ui/Card";
+import { HeaderSection } from "@/components/ui/HeaderSection";
+import { CTASection } from "@/components/ui/CTASection";
+import { industrialMeshStyle } from "@/lib/industrialStyle";
+import { getPosts } from "@/lib/sanity.client";
 
 const BLOG_POSTS = [
     {
@@ -28,7 +33,45 @@ const BLOG_POSTS = [
     }
 ];
 
+function formatPublishedDate(value?: string) {
+  if (!value) return "Recently";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "Recently";
+  return date.toLocaleDateString("en-US", { month: "long", year: "numeric" });
+}
+
 export function Blog() {
+  const [posts, setPosts] = React.useState(BLOG_POSTS);
+
+  React.useEffect(() => {
+    let active = true;
+
+    async function fetchPosts() {
+      try {
+        const data = await getPosts();
+        if (active && data?.length > 0) {
+          setPosts(
+            data.map((post: any) => ({
+              title: post.title,
+              excerpt: "Read the latest note on growth, performance, and clarity.",
+              date: formatPublishedDate(post.publishedAt),
+              category: "Journal",
+              slug: post.slug,
+            })),
+          );
+        }
+      } catch (error) {
+        console.error("Error fetching posts:", error);
+      }
+    }
+
+    fetchPosts();
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
     return (
         <>
             <SEO
@@ -36,45 +79,52 @@ export function Blog() {
                 description="Notes on design, performance, and digital strategy for growth-focused businesses."
                 canonical="/journal"
             />
-            <Section className="pt-32 pb-16">
-                <div className="max-w-3xl">
-                    <AnimateIn>
-                        <p className="text-[10px] font-bold uppercase tracking-[0.35em] text-muted mb-4">
-                            Journal
-                        </p>
-                        <h1 className="text-5xl md:text-7xl font-display font-light text-ink mb-6 uppercase leading-none">
-                            Notes On Clarity, Performance, And Growth.
-                        </h1>
-                        <p className="text-lg md:text-xl text-muted leading-relaxed max-w-prose">
-                            Editorial insight on digital strategy, front-end execution, and the decisions that actually improve outcomes.
-                        </p>
-                    </AnimateIn>
-                </div>
-            </Section>
+            
+            <HeaderSection 
+                badge="Journal"
+                title={
+                    <>
+                        Notes On Clarity, <br />
+                        <span className="font-bold text-md3-primary">Performance, & Growth.</span>
+                    </>
+                }
+                description="Editorial insight on digital strategy, engineering execution, and the decisions that actually improve outcomes for trades."
+                imageSrc="/images/blog-hero.png"
+                imageAlt="Industrial Engineering Journal"
+            />
 
-            <Section background="white">
-                <AnimateIn stagger staggerChildren={0.1} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {BLOG_POSTS.map((post) => (
-                        <Card key={post.slug} className="flex flex-col h-full group">
-                            <div className="space-y-4 flex-grow">
-                                <div className="flex justify-between items-center">
-                                    <span className="text-[10px] font-bold text-accent uppercase tracking-[0.25em]">{post.category}</span>
-                                    <span className="text-[10px] text-muted uppercase tracking-[0.2em]">{post.date}</span>
-                                </div>
-                                <h3 className="text-2xl font-display font-medium text-ink uppercase group-hover:text-accent transition-colors">
-                                    {post.title}
-                                </h3>
-                                <p className="text-muted leading-relaxed text-sm">
-                                    {post.excerpt}
-                                </p>
-                            </div>
-                            <div className="mt-8 pt-6 border-t border-border text-[10px] font-bold uppercase tracking-[0.25em] text-muted">
-                                Coming soon...
-                            </div>
-                        </Card>
-                    ))}
-                </AnimateIn>
-            </Section>
+            <div style={industrialMeshStyle} className="pb-24">
+              <Section background="white">
+                  <AnimateIn stagger staggerChildren={0.1} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                      {posts.map((post) => (
+                          <Card key={post.slug} className="flex flex-col h-full group">
+                              <div className="space-y-4 flex-grow">
+                                  <div className="flex justify-between items-center">
+                                      <span className="text-[10px] font-bold text-accent uppercase tracking-[0.25em]">{post.category}</span>
+                                      <span className="text-[10px] text-muted uppercase tracking-[0.2em]">{post.date}</span>
+                                  </div>
+                                  <h3 className="text-2xl font-display font-medium text-ink uppercase group-hover:text-accent transition-colors">
+                                      {post.title}
+                                  </h3>
+                                  <p className="text-muted leading-relaxed text-sm">
+                                      {post.excerpt}
+                                  </p>
+                              </div>
+                              <div className="mt-8 pt-6 border-t border-border">
+                                  <Link 
+                                      to={`/journal/${post.slug}`}
+                                      className="text-[10px] font-bold uppercase tracking-[0.25em] text-accent hover:underline inline-flex items-center gap-2"
+                                  >
+                                      Read Article <span className="text-sm">→</span>
+                                  </Link>
+                              </div>
+                          </Card>
+                      ))}
+                  </AnimateIn>
+
+                  <CTASection />
+              </Section>
+            </div>
         </>
     );
 }

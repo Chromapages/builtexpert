@@ -1,7 +1,9 @@
 @import "tailwindcss";
 
 @theme {
-  /* Material Design 3 — contractor homepage (canonical design system) */
+  /* ============================================================
+     Material Design 3 — contractor homepage (canonical design system)
+     ============================================================ */
   --color-md3-primary: #006565;
   --color-md3-on-primary: #ffffff;
   --color-md3-primary-container: #008080;
@@ -29,10 +31,24 @@
   --color-md3-inverse-on-surface: #f3f0ef;
   --color-md3-error: #ba1a1a;
   --color-md3-tertiary: #495b6f;
+  --color-md3-tertiary-container: #627488;
   --color-md3-on-tertiary: #ffffff;
+  --color-md3-tertiary-fixed-variant: #36485b;
 
   --font-headline: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
   --font-body: "Manrope", ui-sans-serif, system-ui, sans-serif;
+
+  --breakpoint-xs: 320px;
+  --breakpoint-3xl: 1920px;
+  --breakpoint-4xl: 2560px;
+
+  /* Legacy tokens (used by Process, Blog until fully migrated) */
+  --color-ink: #1c1b1b;
+  --color-accent: #006565;
+  --color-bg: #fcf9f8;
+  --color-muted: #6f7979;
+  --color-border: #bdc9c8;
+  --font-display: var(--font-headline);
 }
 
 @layer base {
@@ -108,5 +124,65 @@
     font-feature-settings: "liga";
     -webkit-font-smoothing: antialiased;
     font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+  }
+}
+
+/* ── Layout design tokens ─────────────────────────────────────────────────── */
+:root {
+  --navbar-h: 4rem; /* 64px — matches py-4 + logo height at rest */
+
+  /* Fluid horizontal gutter: 16px → 64px */
+  --site-gutter: clamp(1rem, calc(1.5vw + 0.5rem), 4rem);
+
+  /* Canonical container max-width (matches max-w-[1440px]) */
+  --site-max-w: 90rem;
+
+  /* Wide-screen overrides (3xl: 1920px → screen-2xl; 4xl: 2560px → 1728px) */
+  --site-max-w-3xl: 96rem;  /* 1536px = screen-2xl */
+  --site-max-w-4xl: 108rem; /* 1728px */
+
+  /* Fluid vertical section rhythm: 40px → 112px */
+  --section-gap: clamp(2.5rem, 8vw, 7rem);
+}
+
+/* ── Reusable layout utilities ───────────────────────────────────────────── */
+@layer utilities {
+  /**
+   * .site-container
+   * The canonical full-width → capped container with fluid gutters.
+   */
+  .site-container {
+    width: 100%;
+    max-width: var(--site-max-w);
+    margin-inline: auto;
+    padding-inline: var(--site-gutter);
+  }
+
+  @media (min-width: 1920px) {
+    .site-container {
+      max-width: var(--site-max-w-3xl);
+    }
+  }
+
+  @media (min-width: 2560px) {
+    .site-container {
+      max-width: var(--site-max-w-4xl);
+    }
+  }
+
+  /**
+   * .section-py
+   * Fluid vertical section padding — scales smoothly between mobile and desktop
+   */
+  .section-py {
+    padding-block: var(--section-gap);
+  }
+
+  /**
+   * .prose-region
+   * Narrower container for text-heavy blocks (optimal 65ch reading width at scale).
+   */
+  .prose-region {
+    max-width: 48rem;
   }
 }

@@ -32,12 +32,8 @@ const Section = React.forwardRef<HTMLElement, SectionProps>(
         )}
         {...props}
       >
-        <div
-          className={cn(
-            "mx-auto max-w-7xl px-4 sm:px-6 lg:px-8",
-            containerClassName,
-          )}
-        >
+        {/* site-container: the canonical layout class defined in index.css */}
+        <div className={cn("site-container", containerClassName)}>
           {children}
         </div>
       </section>

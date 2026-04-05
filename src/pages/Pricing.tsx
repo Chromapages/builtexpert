@@ -1,61 +1,83 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ArrowDown } from "lucide-react";
 import { Link } from "react-router-dom";
 import { SEO } from "@/components/SEO";
+import { HeaderSection } from "@/components/ui/HeaderSection";
 import { Accordion } from "@/components/ui/Accordion";
+import { CTASection } from "@/components/ui/CTASection";
 import {
-  INDUSTRIAL,
   industrialMeshStyle,
   industrialTextGradientStyle,
 } from "@/lib/industrialStyle";
+import { INDUSTRIAL } from "@/lib/industrialStyle";
+import { ROICalculator } from "@/components/features/ROICalculator";
+import { OSSection } from "@/components/features/OSSection";
+import { getFaqItems, getPricingTiers, getOsSection } from "@/lib/sanity.client";
+import type { OSSectionData } from "@/components/features/OSSection";
 
-// ─── Prices ───────────────────────────────────────────────────────────────────
+// ─── Prices (Fallback) ───────────────────────────────────────────────────────────
 
-const MONTHLY = { visibility: 750, growth: 1497, expansion: 2497 };
-const ANNUAL = { visibility: 675, growth: 1347, expansion: 2247 };
+const FALLBACK_TIERS = [
+  {
+    name: "Support",
+    monthlyPrice: 750,
+    annualPrice: 675,
+    tagline: "1 service area targeted",
+    includes: [
+      "Website Hosting & Security",
+      "Technical Maintenance",
+      "GBP Monthly Optimization",
+      "Quarterly SEO Health Check",
+      "Performance Email Reports",
+    ],
+  },
+  {
+    name: "Growth",
+    monthlyPrice: 1500,
+    annualPrice: 1350,
+    tagline: "Up to 3 service areas targeted",
+    includes: [
+      "Everything in Visibility",
+      "Monthly Content Updates (1 page)",
+      "Ongoing Local SEO Campaign",
+      "Conversion Rate Optimization",
+      "Monthly Growth Strategy Call",
+      "Lead Source Tracking & Analytics",
+    ],
+  },
+  {
+    name: "Expansion",
+    monthlyPrice: 3000,
+    annualPrice: 2700,
+    tagline: "Up to 8 service areas targeted",
+    includes: [
+      "Everything in Growth",
+      "New City Landing Page (1/mo)",
+      "Dedicated Account Manager",
+      "Custom Competitor Tracking",
+      "Bi-Weekly Strategy Sync",
+      "Priority Support Desk",
+    ],
+  },
+];
 
 // ─── FAQ ──────────────────────────────────────────────────────────────────────
 
 const FAQ_ITEMS = [
   {
+    title: "Why is the Lead System Audit a paid offer?",
+    content:
+      "Most free 'audits' are just automated reports that tell you what you already know. Our $497 audit is a manual, strategic deep-dive into your specific market and competitors. We find the technical blockers and messaging gaps that are actually costing you money. There is no credit-back gimmick; the value is in the diagnosis and the recommendations.",
+    },
+  {
     title: "Do I have to pay for a growth retainer after my site is built?",
     content:
-      "No. The Chromapages build is a one-time investment. Once your site is live, you own it 100%. Many contractors choose to add a monthly retainer to keep climbing the rankings and increasing lead volume, but it is never required.",
+      "No. Our high-performance website builds are a one-time investment. Once your site is live, you own it 100%. Many contractors choose to add a monthly retainer to keep climbing the rankings and increasing lead volume, but it is never required.",
   },
   {
-    title: "What is the difference between Chromapages and BuiltExpert?",
+    title: "What is BuiltExpert?",
     content:
-      "Chromapages is our build and design division — we construct the foundation (your website and local authority assets). BuiltExpert is our growth division — we provide the ongoing fuel (SEO, content, and conversion optimisation) to make that foundation generate leads month after month.",
-  },
-  {
-    title: "Is there a long-term contract for the monthly plans?",
-    content:
-      "Monthly retainers are month-to-month with 30 days' notice to cancel. The Launch & Grow Bundle runs for 12 months to cover the absorbed website build cost. We earn your business every month through results, not legal lock-ins.",
-  },
-  {
-    title: "What is the Launch & Grow Bundle?",
-    content:
-      "It's our no-upfront-fee option. Instead of paying $7,500 for a website build plus $1,497/mo for growth support, you pay $1,997/mo for 12 months — the build cost is absorbed into the monthly fee. Total cost is $23,964, saving around $1,500 vs paying separately. After 12 months it rolls to the standard Growth retainer at $1,497/mo.",
-  },
-  {
-    title: "How does annual pricing work?",
-    content:
-      "Committing to 12 months on any growth retainer earns you 10% off. Growth drops from $1,497/mo to $1,347/mo — saving $1,800 over the year. Expansion drops from $2,497/mo to $2,247/mo — saving $3,000. You can pay monthly or upfront annually; just let us know when we talk.",
-  },
-  {
-    title: "What does 'service areas targeted' mean on the Expansion plan?",
-    content:
-      "Each service area is a city, suburb, or geographic zone we actively optimise for — dedicated landing pages, local keyword campaigns, Google Maps targeting. Growth covers up to 3 areas. Expansion covers up to 8, with a new area launched each month until you hit your target coverage.",
-  },
-  {
-    title: "What is the Enterprise / Regional Dominance tier?",
-    content:
-      "For multi-location operators, regional HVAC companies, or franchise networks targeting more than 8 service areas. We build a custom strategy covering your full geographic footprint — dedicated account management, advanced reporting, and priority delivery. Pricing is based on scope.",
-  },
-  {
-    title: "What if I already have a website?",
-    content:
-      "You don't need a Chromapages build to start a growth retainer. Many clients pair our monthly SEO and CRO work with their existing site. If your current site is holding performance back, we'll tell you honestly — and you decide whether to rebuild.",
+      "BuiltExpert is the premier growth partner for trade contractors. We specialize in building high-performance digital infrastructure—from contractor websites to local SEO and conversion-focused landing pages—that turns searches into booked jobs. Everything we do is built for speed, conversion, and measurable ROI.",
   },
   {
     title: "Do I own the website if I cancel?",
@@ -65,7 +87,7 @@ const FAQ_ITEMS = [
   {
     title: "How is this different from a regular marketing agency?",
     content:
-      "Most agencies sell you traffic. We build systems that convert traffic into booked jobs — website, SEO, lead capture, and conversion optimisation working together. We measure success in calls and jobs, not impressions and clicks.",
+      "Most agencies sell you traffic. We build systems that convert traffic into booked jobs—website, SEO, lead capture, and conversion optimisation working together. We measure success in calls and jobs, not impressions and clicks.",
   },
 ];
 
@@ -73,354 +95,298 @@ const FAQ_ITEMS = [
 
 export function Pricing() {
   const [isAnnual, setIsAnnual] = useState(false);
-  const prices = isAnnual ? ANNUAL : MONTHLY;
-  const fmt = (n: number) => n.toLocaleString();
+  const [tiers, setTiers] = useState<any[]>([]);
+  const [osSection, setOsSection] = useState<OSSectionData | null>(null);
+  const [faqItems, setFaqItems] = useState(FAQ_ITEMS);
 
-  const annualSaving = (tier: keyof typeof MONTHLY) =>
-    ((MONTHLY[tier] - ANNUAL[tier]) * 12).toLocaleString();
-  const annualTotal = (tier: keyof typeof MONTHLY) =>
-    (ANNUAL[tier] * 12).toLocaleString();
+  useEffect(() => {
+    async function fetchPricing() {
+      try {
+        const data = await getPricingTiers();
+        if (data && data.length > 0) {
+          setTiers(data);
+        }
+      } catch (error) {
+        console.error("Error fetching pricing tiers:", error);
+      }
+    }
+    fetchPricing();
+  }, []);
+
+  useEffect(() => {
+    async function fetchOsSection() {
+      try {
+        const data = await getOsSection();
+        setOsSection(data);
+      } catch (error) {
+        console.error("Error fetching OS section:", error);
+      }
+    }
+    fetchOsSection();
+  }, []);
+
+  useEffect(() => {
+    async function fetchFaqs() {
+      try {
+        const data = await getFaqItems("pricing");
+        if (data && data.length > 0) {
+          setFaqItems(
+            data.map((item: any) => ({
+              title: item.question,
+              content: item.answer,
+            })),
+          );
+        }
+      } catch (error) {
+        console.error("Error fetching pricing FAQs:", error);
+      }
+    }
+    fetchFaqs();
+  }, []);
+
+  const fmt = (n: number) => n?.toLocaleString() || "0";
+
+  // If no tiers loaded yet, show nothing or skeleton (optional)
+  // For now, if tiers is empty, we don't render the cards to avoid layout shift
+  
+  const getPrice = (tier: any) => isAnnual ? tier.annualPrice : tier.monthlyPrice;
+  const getAnnualSaving = (tier: any) =>
+    ((tier.monthlyPrice - tier.annualPrice) * 12).toLocaleString();
+  const getAnnualTotal = (tier: any) =>
+    (tier.annualPrice * 12).toLocaleString();
+
+  const activeTiers = tiers.length > 0 ? tiers : FALLBACK_TIERS;
 
   return (
     <>
       <SEO
         title="Pricing"
-        description="Contractor growth plans from $1,497/mo — website build included. No long-term contracts. Cancel anytime. Annual pricing available."
-        canonical="/pricing"
+        description="Contractor growth plans from $750/mo — website build included. No long-term contracts. Cancel anytime. Annual pricing available."
+        canonicalPath="/pricing"
       />
 
-      <div
-        className="pb-32 pt-24 font-body tracking-tight antialiased [letter-spacing:-0.01em]"
-        style={industrialMeshStyle}
-      >
+      <div className="font-body tracking-tight antialiased [letter-spacing:-0.01em] [&_h1]:normal-case [&_h2]:normal-case [&_h3]:normal-case selection:bg-md3-primary-container selection:text-md3-on-primary-container">
+        
+        <HeaderSection 
+          badge="Pricing & Offers"
+          title={
+            <>
+              Everything We Build. <br />
+              <span className="font-bold text-md3-primary">
+                What Each One Costs.
+              </span>
+            </>
+          }
+          description="No packages. No bundles. Just five ways we work with contractors—from a $497 diagnostic to full-scale growth support."
+          imageSrc="/images/pricing-hero.png"
+          imageAlt="Industrial Growth Metrics"
+        />
 
-        {/* ── Hero ─────────────────────────────────────────────────────────── */}
-        <section className="mx-auto mb-24 max-w-7xl px-8">
-          <div className="max-w-4xl">
-            <span className="mb-6 block text-[10px] font-bold uppercase tracking-[0.3em] text-md3-primary">
-              Contractor Growth Tiers
-            </span>
-            <h1 className="mb-10 font-headline text-6xl font-light leading-[1.08] tracking-tighter md:text-8xl md:leading-[1.06]">
-              <span
-                className="block overflow-visible pb-[0.12em]"
-                style={industrialTextGradientStyle}
-              >
-                More calls. More jobs.
+        <div className="pb-32 pt-24" style={industrialMeshStyle}>
+
+        {/* ── Build & Setup Tiers ──────────────────────────────────────────── */}
+        <section id="audit-offer" className="mx-auto mb-24 max-w-[1440px] px-4 sm:px-8 lg:px-12 2xl:px-16 3xl:max-w-screen-2xl 4xl:max-w-[1728px]">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 bg-white border border-zinc-100 shadow-xl overflow-hidden">
+            <div className="p-12">
+              <span className="mb-4 inline-block bg-md3-primary/5 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-md3-primary border border-md3-primary/20 rounded-full">
+                Entry Offer
               </span>
-              <span className="block font-bold text-md3-primary">
-                Pick your tier.
-              </span>
-            </h1>
-            <p
-              className="mb-10 max-w-xl text-lg font-light leading-relaxed"
-              style={{ color: INDUSTRIAL.muted }}
-            >
-              Every tier includes a new high-converting website and Google Maps
-              optimisation — no separate setup fee. We measure success in booked
-              jobs, not impressions.
-            </p>
-            <div className="flex flex-wrap items-center gap-6">
-              <a
-                href="#build-tiers"
-                className="inline-flex items-center gap-2 bg-[#1a1a1a] px-8 py-4 text-[11px] font-bold uppercase tracking-[0.3em] text-white transition-all hover:bg-md3-primary"
-              >
-                See the tiers
-                <ArrowDown className="size-4 shrink-0" aria-hidden />
-              </a>
-              <Link
-                to="/contact"
-                className="border-b py-4 text-[11px] font-bold uppercase tracking-[0.3em] text-[#1a1a1a] [border-bottom-width:0.5px] transition-all hover:border-md3-primary hover:text-md3-primary"
-                style={{ borderColor: INDUSTRIAL.outline }}
-              >
-                Book a free 15-min audit
-              </Link>
+              <h2 className="font-headline text-4xl font-bold tracking-tight text-[#1a1a1a]">
+                Lead System Audit
+              </h2>
+              <p className="mt-6 text-lg font-light text-zinc-600 leading-relaxed">
+                Before you spend another dollar on ads or SEO, find out exactly where your system is broken. We manually audit your site, your local search rankings, and your conversion path.
+              </p>
+              <div className="mt-8 space-y-4">
+                {[
+                  "Detailed Video Breakdown of your site and local SEO",
+                  "Direct Competitor Comparison (who is winning and why)",
+                  "Technical 'Lead Leak' Report showing lost opportunities",
+                  "Prioritized Action Plan for your next 90 days",
+                  "No credit-back gimmick — just a clear diagnosis and next step"
+                ].map((item) => (
+                  <div key={item} className="flex items-start gap-3">
+                    <span className="material-symbols-outlined mt-0.5 text-base text-teal-600">check</span>
+                    <span className="text-sm font-light text-zinc-600">{item}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="bg-zinc-50 p-12 flex flex-col justify-center items-center text-center lg:border-l border-zinc-100">
+              <div className="mb-8">
+                <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-zinc-400">One-Time Investment</span>
+                <div className="mt-2 flex items-baseline justify-center gap-1">
+                  <span className="text-6xl font-bold tracking-tighter text-[#1a1a1a]">$497</span>
+                </div>
+              </div>
+              <div className="w-full space-y-4">
+                <Link
+                  to="/audit"
+                  className="block w-full bg-[#1a1a1a] py-5 text-center text-[11px] font-bold uppercase tracking-[0.25em] text-white transition-all hover:bg-md3-primary"
+                >
+                  Start The Audit
+                </Link>
+                <Link
+                  to="/checklist"
+                  className="block text-[11px] font-bold uppercase tracking-[0.2em] text-zinc-400 hover:text-md3-primary transition-colors"
+                >
+                  Not sure yet? Get the checklist first →
+                </Link>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* ── Build & Setup Tiers ──────────────────────────────────────────── */}
-        <section id="build-tiers" className="mx-auto mb-16 max-w-7xl px-8">
+        {/* ── Core Delivery Offers ────────────────────────────────────────── */}
+        <section id="core-offers" className="mx-auto mb-32 max-w-[1440px] px-4 sm:px-8 lg:px-12 2xl:px-16 3xl:max-w-screen-2xl 4xl:max-w-[1728px]">
           <div className="mb-12">
-            <span className="mb-4 inline-block bg-teal-50 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-teal-700">
-              Phase 01 — One-Time
+            <span className="mb-4 inline-block bg-zinc-100 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-600">
+              Core Delivery
             </span>
             <h2 className="font-headline text-4xl font-bold tracking-tight text-[#1a1a1a]">
-              Need a new site first? Start here.
+              High-Performance Infrastructure.
             </h2>
-            <p className="mt-4 max-w-2xl text-lg font-light text-zinc-600">
-              A one-time investment to build your contractor authority online. No
-              ongoing obligation — you own everything we build, and you can add
-              growth support later or never.
-            </p>
           </div>
 
           <div
             className="grid grid-cols-1 gap-px overflow-hidden bg-[#e5e7eb] lg:grid-cols-3"
             style={{ borderWidth: "0.5px", borderColor: INDUSTRIAL.outline }}
           >
-            {/* Starter */}
+            {/* Contractor Websites */}
             <div className="flex flex-col justify-between bg-white p-12">
               <div>
                 <h3 className="mb-8 text-xs font-bold uppercase tracking-[0.2em] text-zinc-400">
-                  Starter Plan
+                  Contractor Websites
                 </h3>
                 <div className="mb-6">
-                  <span className="text-5xl font-light tracking-tighter text-[#1a1a1a]">
-                    $4,500
+                  <span className="text-4xl font-light tracking-tighter text-[#1a1a1a]">
+                    $4,200 – $12k+
                   </span>
-                  <p className="mt-2 text-[10px] font-bold uppercase tracking-widest text-zinc-400">
-                    One-time
-                  </p>
                 </div>
+                <p className="mb-8 text-sm font-light text-zinc-500 leading-relaxed">
+                  Elite, trade-specific sites designed to rank locally and convert visitors into booked appointments. No templates.
+                </p>
                 <ul className="mb-12 space-y-4 text-sm text-[#1a1a1a]">
                   {[
-                    "Custom 5-Page Marketing Website",
-                    "Lead Capture System & Form Setup",
-                    "Mobile & Performance Optimization",
-                    "Core Local SEO Foundations",
-                    "Google Business Profile Setup",
+                    "Custom Design & Content Strategy",
+                    "Trade-Specific Lead Capture Funnels",
+                    "Technical Local SEO Foundations",
+                    "Performance-Obsessed Mobile Build",
+                    "Full CMS for Team/Project Management",
                   ].map((item) => (
                     <li key={item} className="flex items-start gap-3">
-                      <span className="material-symbols-outlined mt-0.5 text-base text-md3-primary">
-                        check
-                      </span>
+                      <span className="material-symbols-outlined mt-0.5 text-base text-md3-primary">check</span>
                       <span className="font-light">{item}</span>
                     </li>
                   ))}
                 </ul>
               </div>
               <Link
-                to="/contact?plan=starter"
+                to="/services/contractor-websites"
                 className="block w-full border py-4 text-center text-[10px] font-bold uppercase tracking-[0.2em] text-[#1a1a1a] transition-all hover:bg-[#1a1a1a] hover:text-white"
                 style={{ borderWidth: "0.5px", borderColor: INDUSTRIAL.outline }}
               >
-                Start Starter Plan
+                Learn More
               </Link>
             </div>
 
-            {/* Growth Build */}
+            {/* Landing Pages */}
             <div className="relative flex flex-col justify-between bg-zinc-50 p-12 lg:z-10 lg:scale-105 lg:shadow-xl">
-              <div className="absolute right-0 top-0 p-8">
-                <span className="bg-md3-primary px-3 py-1 text-[9px] font-bold uppercase tracking-[0.2em] text-white">
-                  Recommended
-                </span>
-              </div>
               <div>
                 <h3 className="mb-8 text-xs font-bold uppercase tracking-[0.2em] text-md3-primary">
-                  Growth Plan
+                  Landing Pages
                 </h3>
                 <div className="mb-6">
-                  <span className="text-5xl font-bold tracking-tighter text-[#1a1a1a]">
-                    $7,500
+                  <span className="text-4xl font-bold tracking-tighter text-[#1a1a1a]">
+                    $1,500 – $2,500
                   </span>
-                  <p className="mt-2 text-[10px] font-bold uppercase tracking-widest text-md3-primary">
-                    One-time
-                  </p>
                 </div>
+                <p className="mb-8 text-sm font-light text-zinc-500 leading-relaxed">
+                  High-converting 'Service + City' pages designed specifically for your paid ad campaigns (Google/Facebook).
+                </p>
                 <ul className="mb-12 space-y-4 text-sm text-[#1a1a1a]">
                   {[
-                    "Custom 10-Page Marketing Website",
-                    "Advanced Conversion Setup (CRO)",
-                    "3× Targeted Service Pages",
-                    "3× Geographic Landing Pages",
-                    "Full Lead Tracking & Analytics",
-                    "GBP Strategy & Optimization",
+                    "Ad-to-Checkout Optimized Flow",
+                    "A/B Testing of Messaging & CTAs",
+                    "Lightning Fast Page Speeds",
+                    "Custom Dynamic Tracking Setup",
+                    "Trade-Focused Copywriting",
                   ].map((item) => (
                     <li key={item} className="flex items-start gap-3">
-                      <span className="material-symbols-outlined mt-0.5 text-base text-md3-primary">
-                        check
-                      </span>
+                      <span className="material-symbols-outlined mt-0.5 text-base text-md3-primary">check</span>
                       <span className="font-light">{item}</span>
                     </li>
                   ))}
                 </ul>
               </div>
               <Link
-                to="/contact?plan=growth-build"
+                to="/services/landing-pages"
                 className="block w-full bg-md3-primary py-4 text-center text-[10px] font-bold uppercase tracking-[0.2em] text-white transition-all hover:bg-[#1a1a1a]"
               >
-                Start Growth Plan
+                Get Started
               </Link>
             </div>
 
-            {/* Authority */}
+            {/* Local SEO */}
             <div className="flex flex-col justify-between bg-white p-12">
               <div>
                 <h3 className="mb-8 text-xs font-bold uppercase tracking-[0.2em] text-zinc-400">
-                  Authority Plan
+                  Local SEO Setup
                 </h3>
                 <div className="mb-6">
-                  <span className="text-5xl font-light tracking-tighter text-[#1a1a1a]">
-                    $12,000
+                  <span className="text-4xl font-light tracking-tighter text-[#1a1a1a]">
+                    $2,500+
                   </span>
-                  <p className="mt-2 text-[10px] font-bold uppercase tracking-widest text-zinc-400">
-                    One-time
-                  </p>
                 </div>
+                <p className="mb-8 text-sm font-light text-zinc-500 leading-relaxed">
+                  We claim, optimize, and signal your Google Business Profile to dominate the "Map Pack" in your target city.
+                </p>
                 <ul className="mb-12 space-y-4 text-sm text-[#1a1a1a]">
                   {[
-                    "Full Content Architecture & Sitemap",
-                    "Up to 20 Custom Marketing Pages",
-                    "Advanced Lead Routing & Automation",
-                    "Multi-City SEO Strategy",
-                    "Financing & Rebate Page Systems",
-                    "Dedicated Project Manager",
+                    "Full GBP Audit & Optimization",
+                    "Local Keyword Research & Strategy",
+                    "Citation Building & Cleanup",
+                    "Review Automation System Setup",
+                    "Technical Schema Markup",
                   ].map((item) => (
                     <li key={item} className="flex items-start gap-3">
-                      <span className="material-symbols-outlined mt-0.5 text-base text-md3-primary">
-                        check
-                      </span>
+                      <span className="material-symbols-outlined mt-0.5 text-base text-md3-primary">check</span>
                       <span className="font-light">{item}</span>
                     </li>
                   ))}
                 </ul>
               </div>
               <Link
-                to="/contact?plan=authority"
+                to="/services/local-seo"
                 className="block w-full border py-4 text-center text-[10px] font-bold uppercase tracking-[0.2em] text-[#1a1a1a] transition-all hover:bg-[#1a1a1a] hover:text-white"
                 style={{ borderWidth: "0.5px", borderColor: INDUSTRIAL.outline }}
               >
-                Start Authority Plan
+                Learn More
               </Link>
             </div>
           </div>
-
-          {/* Build section independent CTA */}
-          <div className="mt-10 flex flex-wrap items-center gap-6">
-            <Link
-              to="/contact?ref=build"
-              className="inline-flex items-center gap-2 border border-[#1a1a1a] px-8 py-4 text-[11px] font-bold uppercase tracking-[0.3em] text-[#1a1a1a] transition-all hover:bg-[#1a1a1a] hover:text-white"
-            >
-              Talk to us about a build
-            </Link>
-            <a
-              href="#growth-tiers"
-              className="border-b py-4 text-[11px] font-bold uppercase tracking-[0.3em] text-zinc-500 [border-bottom-width:0.5px] transition-all hover:border-md3-primary hover:text-md3-primary"
-              style={{ borderColor: INDUSTRIAL.outline }}
-            >
-              Already have a site? Jump to monthly plans ↓
-            </a>
-          </div>
         </section>
 
-        {/* ── Launch & Grow Bundle ─────────────────────────────────────────── */}
-        <section className="mx-auto mb-32 max-w-7xl px-8">
-          <div
-            className="overflow-hidden"
-            style={{
-              background: "#0a1f1f",
-              borderWidth: "0.5px",
-              borderColor: "#163030",
-            }}
-          >
-            <div className="grid grid-cols-1 lg:grid-cols-2">
-              {/* Left: copy */}
-              <div className="p-12 lg:p-16">
-                <span
-                  className="mb-4 inline-block px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-teal-400"
-                  style={{ background: "rgba(13,148,136,0.15)" }}
-                >
-                  No upfront fee option
-                </span>
-                <h2 className="mb-4 font-headline text-3xl font-bold tracking-tight text-white lg:text-4xl">
-                  Launch & Grow Bundle
-                </h2>
-                <p className="mb-8 max-w-md text-base font-light leading-relaxed text-zinc-400">
-                  Can't write a $7,500 cheque today? We absorb the website build
-                  into your monthly fee. Full Growth retainer from day one — no
-                  upfront payment, 12-month term.
-                </p>
-                <ul className="mb-10 space-y-3 text-sm">
-                  {[
-                    "Website build included — no lump sum required",
-                    "Full Growth retainer active from day one",
-                    "12-month commitment · rolls to standard Growth after",
-                    "Save ~$1,500 vs paying build + retainer separately",
-                    "Full site ownership transfers on completion",
-                  ].map((item) => (
-                    <li key={item} className="flex items-start gap-3 text-zinc-300">
-                      <span className="material-symbols-outlined mt-0.5 text-sm text-teal-400">
-                        check
-                      </span>
-                      <span className="font-light">{item}</span>
-                    </li>
-                  ))}
-                </ul>
-                <Link
-                  to="/contact?plan=bundle"
-                  className="inline-block bg-teal-600 px-8 py-4 text-[11px] font-bold uppercase tracking-[0.3em] text-white transition-all hover:bg-teal-500"
-                >
-                  Tell me more →
-                </Link>
-              </div>
-
-              {/* Right: price breakdown */}
-              <div
-                className="flex flex-col justify-center p-12 lg:border-l lg:p-16"
-                style={{ borderLeftWidth: "0.5px", borderColor: "#163030" }}
-              >
-                <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-teal-400">
-                  Bundle price
-                </p>
-                <div className="mb-1 flex items-end gap-2">
-                  <span className="font-headline text-6xl font-light tracking-tighter text-white">
-                    $1,997
-                  </span>
-                  <span className="mb-2 text-lg text-zinc-500">/mo</span>
-                </div>
-                <p className="mb-8 text-sm font-light text-zinc-500">
-                  for 12 months · $23,964 total
-                </p>
-                <div
-                  className="space-y-3 border-t pt-6 text-sm"
-                  style={{ borderColor: "#163030" }}
-                >
-                  <div className="flex justify-between text-zinc-500">
-                    <span>Growth Build (à la carte)</span>
-                    <span>$7,500</span>
-                  </div>
-                  <div className="flex justify-between text-zinc-500">
-                    <span>Growth retainer × 12 months</span>
-                    <span>$17,964</span>
-                  </div>
-                  <div
-                    className="flex justify-between border-t pt-3"
-                    style={{ borderColor: "#163030" }}
-                  >
-                    <span className="font-semibold text-zinc-300">À la carte total</span>
-                    <span className="font-semibold text-zinc-300">$25,464</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="font-bold text-teal-400">Bundle saving</span>
-                    <span className="font-bold text-teal-400">~$1,500</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ── Growth Retainer Tiers ────────────────────────────────────────── */}
-        <section id="growth-tiers" className="mx-auto mb-16 max-w-7xl px-8">
+        {/* ── Ongoing Growth Support ────────────────────────────────────────── */}
+        <section id="growth-tiers" className="mx-auto mb-16 max-w-[1440px] px-4 sm:px-8 lg:px-12 2xl:px-16 3xl:max-w-screen-2xl 4xl:max-w-[1728px]">
           <div className="mb-10">
             <span className="mb-4 inline-block bg-teal-50 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-teal-700">
-              Phase 02 — Monthly
+              Continuity — Monthly Retainer
             </span>
             <h2 className="font-headline text-4xl font-bold tracking-tight text-[#1a1a1a]">
-              Ongoing growth support.
+              Ongoing Growth Support.
             </h2>
-            {/* ROI framing */}
             <p className="mt-4 max-w-2xl text-lg font-light text-zinc-600">
-              One extra HVAC install or electrical job per month covers the
-              Growth retainer.{" "}
-              <span className="font-medium text-[#1a1a1a]">
-                We typically generate 8–25 additional leads in the first 90 days.
-              </span>
+              One extra HVAC install or electrical job per month covers the 
+              Growth retainer. We focus on rapid, measurable impact in your local service area.
             </p>
             <p className="mt-2 max-w-2xl text-sm font-light text-zinc-500">
-              Works with your existing site or any Chromapages build. Month-to-month
-              on all plans.
+              Works with your existing site or any BuiltExpert build. Month-to-month on all plans.
             </p>
+          </div>
+
+          <div className="mb-16">
+            <ROICalculator />
           </div>
 
           {/* Annual / Monthly toggle */}
@@ -462,160 +428,113 @@ export function Pricing() {
             className="grid grid-cols-1 gap-px overflow-hidden bg-[#e5e7eb] lg:grid-cols-3"
             style={{ borderWidth: "0.5px", borderColor: INDUSTRIAL.outline }}
           >
-            {/* Visibility */}
-            <div className="flex flex-col justify-between bg-white p-12">
-              <div>
-                <h3 className="mb-8 text-xs font-bold uppercase tracking-[0.2em] text-zinc-400">
-                  Visibility
-                </h3>
-                <div className="mb-2">
-                  <span className="text-4xl font-light tracking-tighter text-[#1a1a1a]">
-                    ${fmt(prices.visibility)}
-                  </span>
-                  <span className="ml-2 text-sm text-zinc-400">/ mo</span>
-                </div>
-                {isAnnual ? (
-                  <p className="mb-5 text-[10px] font-bold uppercase tracking-widest text-teal-600">
-                    ${annualTotal("visibility")}/yr · save ${annualSaving("visibility")}
-                  </p>
-                ) : (
-                  <p className="mb-5 text-[10px] font-light uppercase tracking-widest text-zinc-400">
-                    or ${ANNUAL.visibility}/mo billed annually
-                  </p>
-                )}
-                <p className="mb-6 text-[11px] font-light text-zinc-500">
-                  1 service area targeted
-                </p>
-                <ul className="mb-12 space-y-3 text-sm text-[#1a1a1a]">
-                  {[
-                    "Website Hosting & Security",
-                    "Technical Maintenance",
-                    "GBP Monthly Optimization",
-                    "Quarterly SEO Health Check",
-                    "Performance Email Reports",
-                  ].map((item) => (
-                    <li key={item} className="flex items-start gap-2">
-                      <span className="material-symbols-outlined mt-0.5 text-sm text-teal-600">
-                        check
-                      </span>
-                      <span className="font-light">{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <Link
-                to={`/contact?growth=visibility${isAnnual ? "&billing=annual" : ""}`}
-                className="block w-full border py-3 text-center text-[10px] font-bold uppercase tracking-[0.2em] text-[#1a1a1a] transition-all hover:bg-[#1a1a1a] hover:text-white"
-                style={{ borderWidth: "0.5px", borderColor: INDUSTRIAL.outline }}
-              >
-                Start Visibility
-              </Link>
-            </div>
+            {activeTiers.map((tier, idx) => {
+              const isGrowth = tier.name.toLowerCase() === "growth";
+              const isExpansion = tier.name.toLowerCase() === "expansion";
+              const currentPrice = isAnnual ? tier.annualPrice : tier.monthlyPrice;
+              const slug = tier.name.toLowerCase().replace(/\s+/g, "-");
 
-            {/* Growth Retainer */}
-            <div className="relative flex flex-col justify-between bg-zinc-50 p-12 lg:z-10 lg:scale-105 lg:shadow-xl">
-              <div className="absolute right-0 top-0 p-8">
-                <span className="bg-md3-primary px-3 py-1 text-[9px] font-bold uppercase tracking-[0.2em] text-white">
-                  Most Popular
-                </span>
-              </div>
-              <div>
-                <h3 className="mb-8 text-xs font-bold uppercase tracking-[0.2em] text-md3-primary">
-                  Growth
-                </h3>
-                <div className="mb-2">
-                  <span className="text-4xl font-bold tracking-tighter text-[#1a1a1a]">
-                    ${fmt(prices.growth)}
-                  </span>
-                  <span className="ml-2 text-sm text-zinc-400">/ mo</span>
-                </div>
-                {isAnnual ? (
-                  <p className="mb-5 text-[10px] font-bold uppercase tracking-widest text-teal-600">
-                    ${annualTotal("growth")}/yr · save ${annualSaving("growth")}
-                  </p>
-                ) : (
-                  <p className="mb-5 text-[10px] font-light uppercase tracking-widest text-zinc-400">
-                    or ${ANNUAL.growth}/mo billed annually
-                  </p>
-                )}
-                <p className="mb-6 text-[11px] font-light text-zinc-500">
-                  Up to 3 service areas targeted
-                </p>
-                <ul className="mb-12 space-y-3 text-sm text-[#1a1a1a]">
-                  {[
-                    "Everything in Visibility",
-                    "Monthly Content Updates (1 page)",
-                    "Ongoing Local SEO Campaign",
-                    "Conversion Rate Optimization",
-                    "Monthly Growth Strategy Call",
-                    "Lead Source Tracking & Analytics",
-                  ].map((item) => (
-                    <li key={item} className="flex items-start gap-2">
-                      <span className="material-symbols-outlined mt-0.5 text-sm text-teal-600">
-                        check
+              return (
+                <div
+                  key={tier._id || tier.name}
+                  className={`flex flex-col justify-between p-12 ${
+                    isGrowth
+                      ? "relative bg-zinc-50 lg:z-10 lg:scale-105 lg:shadow-xl"
+                      : isExpansion
+                      ? "bg-[#1a1a1a] text-white shadow-2xl"
+                      : "bg-white"
+                  }`}
+                >
+                  {isGrowth && (
+                    <div className="absolute right-0 top-0 p-8">
+                      <span className="bg-md3-primary px-3 py-1 text-[9px] font-bold uppercase tracking-[0.2em] text-white">
+                        Most Popular
                       </span>
-                      <span className="font-light">{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <Link
-                to={`/contact?growth=growth${isAnnual ? "&billing=annual" : ""}`}
-                className="block w-full bg-[#1a1a1a] py-3 text-center text-[10px] font-bold uppercase tracking-[0.2em] text-white transition-all hover:bg-md3-primary"
-              >
-                Start Growth Retainer
-              </Link>
-            </div>
+                    </div>
+                  )}
+                  <div>
+                    <h3
+                      className={`mb-8 text-xs font-bold uppercase tracking-[0.2em] ${
+                        isGrowth || isExpansion ? "text-md3-primary" : "text-zinc-400"
+                      }`}
+                    >
+                      {tier.name}
+                    </h3>
+                    <div className="mb-2">
+                      <span
+                        className={`text-4xl tracking-tighter ${
+                          isGrowth ? "font-bold text-[#1a1a1a]" : isExpansion ? "font-light text-white" : "font-light text-[#1a1a1a]"
+                        }`}
+                      >
+                        ${fmt(currentPrice)}
+                      </span>
+                      <span
+                        className={`ml-2 text-sm ${
+                          isExpansion ? "text-zinc-500" : "text-zinc-400"
+                        }`}
+                      >
+                        / mo
+                      </span>
+                    </div>
 
-            {/* Expansion */}
-            <div className="flex flex-col justify-between bg-[#1a1a1a] p-12 text-white shadow-2xl">
-              <div>
-                <h3 className="mb-8 text-xs font-bold uppercase tracking-[0.2em] text-md3-primary">
-                  Expansion
-                </h3>
-                <div className="mb-2">
-                  <span className="text-4xl font-light tracking-tighter text-white">
-                    ${fmt(prices.expansion)}
-                  </span>
-                  <span className="ml-2 text-sm text-zinc-500">/ mo</span>
+                    {isAnnual ? (
+                      <p
+                        className={`mb-5 text-[10px] font-bold uppercase tracking-widest ${
+                          isExpansion ? "text-teal-400" : "text-teal-600"
+                        }`}
+                      >
+                        ${getAnnualTotal(tier)}/yr · save ${getAnnualSaving(tier)}
+                      </p>
+                    ) : (
+                      <p
+                        className={`mb-5 text-[10px] font-light uppercase tracking-widest ${
+                          isExpansion ? "text-zinc-600" : "text-zinc-400"
+                        }`}
+                      >
+                        or ${tier.annualPrice}/mo billed annually
+                      </p>
+                    )}
+
+                    <p
+                      className={`mb-6 text-[11px] font-light ${
+                        isExpansion ? "text-zinc-400" : "text-zinc-500"
+                      }`}
+                    >
+                      {tier.tagline}
+                    </p>
+
+                    <ul className={`mb-12 space-y-3 text-sm ${isExpansion ? "text-zinc-300" : "text-[#1a1a1a]"}`}>
+                      {tier.includes?.map((item: string) => (
+                        <li key={item} className="flex items-start gap-2">
+                          <span
+                            className={`material-symbols-outlined mt-0.5 text-sm ${
+                              isExpansion ? "text-md3-primary" : "text-teal-600"
+                            }`}
+                          >
+                            check
+                          </span>
+                          <span className="font-light">{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <Link
+                    to={`/contact?growth=${slug}${isAnnual ? "&billing=annual" : ""}`}
+                    className={`block w-full py-3 text-center text-[10px] font-bold uppercase tracking-[0.2em] transition-all ${
+                      isGrowth
+                        ? "bg-[#1a1a1a] text-white hover:bg-md3-primary"
+                        : isExpansion
+                        ? "bg-md3-primary text-white hover:bg-white hover:text-[#1a1a1a]"
+                        : "border text-[#1a1a1a] hover:bg-[#1a1a1a] hover:text-white"
+                    }`}
+                    style={!isGrowth && !isExpansion ? { borderWidth: "0.5px", borderColor: INDUSTRIAL.outline } : {}}
+                  >
+                    Start {tier.name}
+                  </Link>
                 </div>
-                {isAnnual ? (
-                  <p className="mb-5 text-[10px] font-bold uppercase tracking-widest text-teal-400">
-                    ${annualTotal("expansion")}/yr · save ${annualSaving("expansion")}
-                  </p>
-                ) : (
-                  <p className="mb-5 text-[10px] font-light uppercase tracking-widest text-zinc-600">
-                    or ${ANNUAL.expansion}/mo billed annually
-                  </p>
-                )}
-                <p className="mb-6 text-[11px] font-light text-zinc-400">
-                  Up to 8 service areas · new area added each month
-                </p>
-                <ul className="mb-12 space-y-3 text-sm">
-                  {[
-                    "Everything in Growth",
-                    "Up to 8 Service Areas Targeted",
-                    "New City / Area Launched Monthly",
-                    "Advanced Automation Support",
-                    "Lead Qualification Logic",
-                    "Direct Support Channel",
-                  ].map((item) => (
-                    <li key={item} className="flex items-start gap-2">
-                      <span className="material-symbols-outlined mt-0.5 text-sm text-md3-primary">
-                        check
-                      </span>
-                      <span className="font-light text-zinc-300">{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <Link
-                to={`/contact?growth=expansion${isAnnual ? "&billing=annual" : ""}`}
-                className="block w-full bg-md3-primary py-4 text-center text-[10px] font-bold uppercase tracking-[0.2em] text-white transition-all hover:bg-white hover:text-[#1a1a1a]"
-              >
-                Start Expansion
-              </Link>
-            </div>
+              );
+            })}
           </div>
 
           {/* Enterprise / Regional Dominance */}
@@ -651,20 +570,28 @@ export function Pricing() {
               to="/contact"
               className="inline-flex items-center gap-2 bg-[#1a1a1a] px-8 py-4 text-[11px] font-bold uppercase tracking-[0.3em] text-white transition-all hover:bg-md3-primary"
             >
-              Book a free 15-min audit
+              Book My Audit
             </Link>
-            <a
-              href="#build-tiers"
+            <Link
+              to="/checklist"
               className="border-b py-4 text-[11px] font-bold uppercase tracking-[0.3em] text-zinc-500 [border-bottom-width:0.5px] transition-all hover:border-md3-primary hover:text-md3-primary"
               style={{ borderColor: INDUSTRIAL.outline }}
             >
-              ↑ View build plans
-            </a>
+              Free Checklist →
+            </Link>
           </div>
         </section>
 
+        {/* ── BuiltExpert OS Callout ───────────────────────────────────────── */}
+        <section
+          id="os-section"
+          className="mx-auto mb-32 max-w-[1440px] px-4 sm:px-8 lg:px-12 2xl:px-16 3xl:max-w-screen-2xl 4xl:max-w-[1728px]"
+        >
+          <OSSection data={osSection} variant="pricing" />
+        </section>
+
         {/* ── Trust bar ────────────────────────────────────────────────────── */}
-        <section className="mx-auto mb-32 max-w-7xl px-8">
+        <section className="mx-auto mb-32 max-w-[1440px] px-4 sm:px-8 lg:px-12 2xl:px-16 3xl:max-w-screen-2xl 4xl:max-w-[1728px]">
           <div
             className="flex flex-wrap items-center justify-center gap-8 bg-white px-8 py-6 text-center"
             style={{ borderWidth: "0.5px", borderColor: INDUSTRIAL.outline }}
@@ -673,7 +600,7 @@ export function Pricing() {
               { stat: "No setup fee", detail: "Website build is included" },
               { stat: "30-day out", detail: "Cancel any time" },
               { stat: "You own it", detail: "Assets transfer if you leave" },
-              { stat: "15-min audit", detail: "Free, no obligation" },
+              { stat: "15-min audit", detail: "Paid diagnostic, no obligation" },
             ].map(({ stat, detail }) => (
               <div key={stat} className="px-4">
                 <p
@@ -694,7 +621,7 @@ export function Pricing() {
         </section>
 
         {/* ── Comparison table ─────────────────────────────────────────────── */}
-        <section className="mx-auto mb-32 max-w-7xl px-8">
+        <section className="mx-auto mb-32 max-w-[1440px] px-4 sm:px-8 lg:px-12 2xl:px-16 3xl:max-w-screen-2xl 4xl:max-w-[1728px]">
           <div className="mb-16">
             <h2
               className="mb-4 font-headline text-3xl font-light tracking-tight"
@@ -717,11 +644,16 @@ export function Pricing() {
                   }}
                 >
                   <th className="w-[30%] py-8 font-semibold">Service Coverage</th>
-                  <th className="w-[17%] py-8 text-center">Visibility</th>
-                  <th className="w-[17%] py-8 text-center">Growth</th>
-                  <th className="w-[17%] bg-[#1a1a1a] py-8 text-center text-white">
-                    Expansion
-                  </th>
+                  {activeTiers.map((tier, idx) => (
+                    <th
+                      key={tier.name}
+                      className={`w-[17%] py-8 text-center ${
+                         tier.name.toLowerCase() === "expansion" ? "bg-[#1a1a1a] text-white" : ""
+                      }`}
+                    >
+                      {tier.name}
+                    </th>
+                  ))}
                   <th className="w-[19%] py-8 text-center">Enterprise</th>
                 </tr>
               </thead>
@@ -729,9 +661,9 @@ export function Pricing() {
                 {[
                   {
                     feature: "Monthly price",
-                    v: "$750",
-                    g: "$1,497",
-                    e: "$2,497",
+                    v: `$${fmt(activeTiers[0]?.monthlyPrice || 0)}`,
+                    g: `$${fmt(activeTiers[1]?.monthlyPrice || 0)}`,
+                    e: `$${fmt(activeTiers[2]?.monthlyPrice || 0)}`,
                     ent: "Custom",
                     eBold: true,
                     highlight: true,
@@ -763,7 +695,7 @@ export function Pricing() {
                     feature: "Local SEO Keyword Campaign",
                     v: "—",
                     g: "50 Keywords",
-                    e: "150+ Keywords",
+                    e: "Comprehensive Keyword Targeting",
                     ent: "Custom",
                     eBold: true,
                   },
@@ -797,7 +729,7 @@ export function Pricing() {
                     style={{
                       borderBottomWidth: "0.5px",
                       borderColor: INDUSTRIAL.outline,
-                      background: row.highlight ? INDUSTRIAL.surface : undefined,
+                      background: row.highlight ? "#f9fafb" : undefined,
                     }}
                   >
                     <td
@@ -853,6 +785,17 @@ export function Pricing() {
           </div>
         </section>
 
+          {/* OS soft callout below table */}
+          <p className="mt-8 text-sm text-zinc-500">
+            Need the full machine?{" "}
+            <Link
+              to="/services"
+              className="font-semibold text-md3-primary transition-colors hover:text-teal-600"
+            >
+              Learn about BuiltExpert OS →
+            </Link>
+          </p>
+
         {/* ── FAQ ──────────────────────────────────────────────────────────── */}
         <section className="mx-auto mb-32 max-w-4xl px-8">
           <div className="mb-16">
@@ -864,80 +807,12 @@ export function Pricing() {
             </h2>
             <div className="h-px w-24 bg-md3-primary" />
           </div>
-          <Accordion items={FAQ_ITEMS} />
+          <Accordion items={faqItems} />
         </section>
 
-        {/* ── Final CTA ────────────────────────────────────────────────────── */}
-        <section className="mx-auto max-w-7xl px-8">
-          <div
-            className="relative overflow-hidden bg-white p-16 md:p-24"
-            style={{ borderWidth: "0.5px", borderColor: INDUSTRIAL.outline }}
-          >
-            <div className="relative z-10 max-w-2xl">
-              <h2
-                className="mb-8 font-headline text-4xl font-light leading-tight tracking-tight md:text-6xl"
-                style={{ color: INDUSTRIAL.charcoal }}
-              >
-                Not sure which tier?{" "}
-                <span className="font-bold">Let's talk for 15 minutes.</span>
-              </h2>
-              <p
-                className="mb-12 text-lg font-light leading-relaxed"
-                style={{ color: INDUSTRIAL.muted }}
-              >
-                We'll look at your current presence, your competitors, and your
-                goals. No sales pressure — just a clear picture of what it would
-                take to grow your call volume.
-              </p>
-              <div className="flex flex-wrap gap-8">
-                <Link
-                  to="/contact"
-                  className="bg-[#1a1a1a] px-10 py-5 text-[11px] font-bold uppercase tracking-[0.3em] text-white transition-all hover:bg-md3-primary"
-                >
-                  Book Free 15-Min Audit
-                </Link>
-                <Link
-                  to="/work"
-                  className="border-b border-[#e5e7eb] py-5 text-[11px] font-bold uppercase tracking-[0.3em] text-[#1a1a1a] [border-bottom-width:0.5px] transition-all hover:border-md3-primary hover:text-md3-primary"
-                >
-                  View Case Files
-                </Link>
-              </div>
-            </div>
-            <div className="pointer-events-none absolute bottom-0 right-0 top-0 hidden w-1/2 select-none overflow-hidden opacity-[0.03] lg:block">
-              <svg
-                className="h-full w-full scale-150 text-[#1a1a1a]"
-                viewBox="0 0 100 100"
-                aria-hidden={true}
-              >
-                <path
-                  d="M0 0 L100 100 M100 0 L0 100 M50 0 V100 M0 50 H100"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="0.1"
-                />
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="40"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="0.1"
-                />
-                <rect
-                  x="25"
-                  y="25"
-                  width="50"
-                  height="50"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="0.1"
-                />
-              </svg>
-            </div>
-          </div>
-        </section>
+        <CTASection />
 
+        </div>
       </div>
     </>
   );

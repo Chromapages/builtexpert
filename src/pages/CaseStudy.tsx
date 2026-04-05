@@ -6,11 +6,79 @@ import { AnimateIn } from "@/components/ui/AnimateIn";
 import { Button } from "@/components/ui/Button";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { CASE_STUDIES } from "@/data/caseStudies";
+import { getCaseStudyBySlug } from "@/lib/sanity.client";
+
+function normalizeStudy(study: any) {
+  if (!study) return null;
+
+  const resultItems = Array.isArray(study.results)
+    ? study.results.map((item: any) => ({
+        label: item.metric || item.label || "Result",
+        value: item.value || "Impact",
+      }))
+    : [];
+
+  const fallback = {
+    id: study.slug || study._id,
+    slug: study.slug,
+    client: study.clientName || study.client || "Project",
+    category: study.trade || study.industry || "Case Study",
+    industry: study.industry || study.trade || "Contractor",
+    result: resultItems[0]?.value || study.result || "Case study available",
+    services: Array.isArray(study.serviceTypes) ? study.serviceTypes : [],
+    timeline: study.timeline || "Project timeline varies",
+    image: study.image || study.heroImage?.asset?.url || "/images/work-hero.png",
+    problem: study.problem || "The challenge is documented in the full case study.",
+    solution: study.approach || study.build || "The solution is documented in the full case study.",
+    stats:
+      resultItems.length > 0
+        ? resultItems
+        : [
+            { label: "Impact", value: study.result || "See full case study" },
+            { label: "Scope", value: study.trade || study.industry || "Contractor" },
+            { label: "Services", value: Array.isArray(study.serviceTypes) ? study.serviceTypes.join(", ") : "Strategy" },
+          ],
+  };
+
+  return fallback;
+}
 
 export function CaseStudy() {
   const { slug } = useParams();
-  const [isLoading] = React.useState(false);
-  const study = slug ? CASE_STUDIES[slug] : null;
+  const [isLoading, setIsLoading] = React.useState(true);
+  const [studyData, setStudyData] = React.useState<any>(null);
+
+  React.useEffect(() => {
+    let active = true;
+
+    async function fetchStudy() {
+      if (!slug) {
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        const data = await getCaseStudyBySlug(slug);
+        if (active && data) setStudyData(data);
+      } catch (error) {
+        console.error("Error fetching case study:", error);
+      } finally {
+        if (active) setIsLoading(false);
+      }
+    }
+
+    fetchStudy();
+
+    return () => {
+      active = false;
+    };
+  }, [slug]);
+
+  const study = React.useMemo(() => {
+    const sanityStudy = normalizeStudy(studyData);
+    if (sanityStudy) return sanityStudy;
+    return slug ? CASE_STUDIES[slug] : null;
+  }, [slug, studyData]);
 
   if (!study) {
     return (
@@ -31,7 +99,7 @@ export function CaseStudy() {
     "@type": "Article",
     headline: `${study.client} Case Study: ${study.result}`,
     description: study.problem,
-    image: `https://builtexpert.com${study.image}`,
+    image: study.image?.startsWith("http") ? study.image : `https://builtexpert.com${study.image}`,
     author: {
       "@type": "Person",
       name: "Eric Black",

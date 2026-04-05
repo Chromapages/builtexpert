@@ -5,7 +5,7 @@ import ReactGA from "react-ga4";
 import { reportWebVitals } from "@/lib/performance";
 
 // Replace with actual GA4 Measurement ID
-const GA_MEASUREMENT_ID = "G-XXXXXXXXXX";
+const GA_MEASUREMENT_ID = import.meta.env.VITE_GA_MEASUREMENT_ID || "G-XXXXXXXXXX";
 
 export const Analytics = () => {
     const location = useLocation();
@@ -31,3 +31,21 @@ export const Analytics = () => {
 
     return null;
 };
+
+export function trackEvent(event: string, params?: Record<string, any>) {
+  ReactGA.event(event, params);
+}
+
+export function trackPhoneClick(phone: string, location?: string) {
+  ReactGA.event("phone_click", {
+    phone,
+    location,
+  });
+}
+
+export function trackEmailClick(email: string, location?: string) {
+  ReactGA.event("email_click", {
+    email,
+    location,
+  });
+}

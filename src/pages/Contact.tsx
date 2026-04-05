@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import type {
   ChangeEvent,
   FocusEvent,
@@ -8,6 +9,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { Link, useSearchParams } from "react-router-dom";
 import { SEO } from "@/components/SEO";
 import { cn } from "@/lib/utils";
+import { trackEmailClick, trackEvent } from "@/components/Analytics";
 import {
   INDUSTRIAL,
   industrialMeshStyle,
@@ -17,55 +19,58 @@ import {
 // ─── Service type map (handles ?service= and ?tier= params) ──────────────────
 
 const SERVICE_OPTIONS = [
-  { value: "Electrician", label: "Electrician" },
-  { value: "HVAC", label: "HVAC" },
-  { value: "Plumbing", label: "Plumbing" },
-  { value: "Other", label: "Other" },
+  { value: "audit", label: "Lead System Audit" },
+  { value: "contractor-websites", label: "Contractor Website" },
+  { value: "landing-pages", label: "Landing Pages" },
+  { value: "local-seo", label: "Local SEO" },
+  { value: "growth-support", label: "Growth Support" },
+  { value: "not-sure-yet", label: "Not Sure Yet" },
 ] as const;
 
 type ServiceType = (typeof SERVICE_OPTIONS)[number]["value"];
 
 function resolveServiceType(param: string | null): ServiceType {
-  if (!param) return "Electrician";
+  if (!param) return "audit";
   const map: Record<string, ServiceType> = {
-    electrician: "Electrician",
-    hvac: "HVAC",
-    plumbing: "Plumbing",
-    "website-redesign": "Electrician",
-    "local-seo": "Electrician",
-    "landing-pages": "Electrician",
-    "lead-capture": "Electrician",
-    "ongoing-growth": "Electrician",
+    audit: "audit",
+    "lead-system-audit": "audit",
+    contractor: "contractor-websites",
+    "contractor-websites": "contractor-websites",
+    websites: "contractor-websites",
+    "website-redesign": "contractor-websites",
+    "landing-pages": "landing-pages",
+    "local-seo": "local-seo",
+    "growth-support": "growth-support",
+    "ongoing-growth": "growth-support",
+    "not-sure": "not-sure-yet",
   };
-  return map[param.toLowerCase()] ?? "Electrician";
+  return map[param.toLowerCase()] ?? "audit";
 }
 
 // ─── Context-aware hero copy ──────────────────────────────────────────────────
 
-function getContextCopy(tier: string | null, ref: string | null) {
-  if (tier === "foundation")
+function getContextCopy(serviceLabel: string | null, ref: string | null) {
+  if (serviceLabel) {
     return {
-      badge: "Foundation Tier Selected",
-      sub: "Fill out the form below and we'll confirm your start date, website scope, and first call within one business day.",
+      badge: `${serviceLabel} Selected`,
+      sub: "Fill out the form below and we’ll confirm scope within one business day.",
     };
-  if (tier === "growth")
+  }
+  if (ref === "audit") {
     return {
-      badge: "Growth Tier Selected",
-      sub: "Fill out the form and we'll reach out within one business day to confirm your onboarding and kick off your new site.",
+      badge: "Lead System Audit Requested",
+      sub: "Fill out the form and we’ll send a personalised breakdown of your site — what’s broken, what competitors are doing, and what to fix first.",
     };
-  if (tier === "dominance")
+  }
+  if (ref === "growth") {
     return {
-      badge: "Applying for Dominance",
-      sub: "Our team reviews Dominance applications manually. Fill out the form — we'll be in touch within 24 hours.",
+      badge: "Growth Support Requested",
+      sub: "Fill out the form and we’ll reach out within one business day to discuss scope, timing, and fit.",
     };
-  if (ref === "audit")
-    return {
-      badge: "Free Audit Requested",
-      sub: "Fill out the form and we'll send a personalised video breakdown of your site — what's broken, what competitors are doing, and what to fix first.",
-    };
+  }
   return {
     badge: null,
-    sub: "Fill out the form below. We'll review your site and send a free video audit within 2 business days — no obligation.",
+    sub: "Fill out the form below. We’ll review your site and send a tailored response within 2 business days.",
   };
 }
 
@@ -106,13 +111,15 @@ interface FormErrors {
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export function Contact() {
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const tierParam = searchParams.get("tier");
   const refParam = searchParams.get("ref");
   const serviceParam = searchParams.get("service");
 
-  const ctx = getContextCopy(tierParam, refParam);
   const defaultService = resolveServiceType(serviceParam ?? tierParam);
+  const selectedServiceLabel = SERVICE_OPTIONS.find((option) => option.value === defaultService)?.label || null;
+  const ctx = getContextCopy(selectedServiceLabel, refParam);
 
   const [formState, setFormState] = useState<FormState>({
     name: "",
@@ -175,25 +182,27 @@ export function Contact() {
     setErrors({});
 
     try {
-      const response = await fetch("https://formspree.io/f/mqakvjwe", {
+      const response = await fetch("/api/lead-intake", {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify({
+          leadType: "contact",
           name: formState.name,
           email: formState.email,
-          companyWebsite: formState.website,
+          website: formState.website,
           serviceType: formState.serviceType,
           goals: formState.goals,
-          tier: tierParam ?? undefined,
           source: refParam ?? undefined,
-          subject: "Free Website & SEO Audit Request",
+          _gotcha: "",
         }),
       });
 
       if (response.ok) {
+        trackEvent("form_submit", { form: "contact", service_type: formState.serviceType });
         setIsSuccess(true);
         setFormState({ name: "", email: "", website: "", serviceType: defaultService, goals: "" });
         setTouched({});
+        setTimeout(() => navigate("/thank-you", { replace: true }), 900);
       } else {
         setErrors({ submit: "Something went wrong. Please try again or email us directly." });
       }
@@ -218,156 +227,107 @@ export function Contact() {
     <>
       <SEO
         title="Contact Us"
-        titleFull="Get Your Free Contractor Site Audit | BuiltExpert"
-        description="Find out exactly why your phone isn't ringing. Free 15-min audit for electricians & HVAC contractors — video breakdown delivered within 2 business days."
-        canonical="/contact"
+        description="Find out exactly why your phone isn't ringing. Paid 15-min audit for contractors — video breakdown delivered within 2 business days."
+        canonicalPath="/contact"
       />
 
-      <div
-        className="pb-32 pt-24 font-body tracking-tight antialiased [letter-spacing:-0.01em] [&_h1]:normal-case [&_h2]:normal-case [&_h3]:normal-case [&_h4]:normal-case selection:bg-md3-primary-container selection:text-md3-on-primary-container"
-        style={industrialMeshStyle}
-      >
-        {/* Hero */}
-        <section className="mx-auto mb-24 max-w-7xl px-8">
-          <div className="grid grid-cols-1 items-start gap-16 lg:grid-cols-2">
-
-            {/* Left — headline + context */}
-            <div className="max-w-2xl">
-              {ctx.badge ? (
-                <span className="mb-6 inline-block bg-md3-primary/10 px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.3em] text-md3-primary">
-                  {ctx.badge}
-                </span>
-              ) : (
-                <span className="mb-6 block text-[10px] font-bold uppercase tracking-[0.3em] text-md3-primary">
-                  Free Audit
-                </span>
-              )}
-              <h1 className="mb-8 font-headline text-5xl font-light leading-[1.08] tracking-tighter md:text-7xl md:leading-[1.06]">
-                <span
-                  className="block overflow-visible pb-[0.12em]"
-                  style={industrialTextGradientStyle}
-                >
-                  Find out exactly why
-                </span>
-                <span className="mt-1 block">
-                  your{" "}
-                  <span className="font-bold text-md3-primary">phone isn&apos;t</span>{" "}
-                  ringing.
-                </span>
-              </h1>
-              <p
-                className="mb-12 max-w-lg text-lg font-light leading-relaxed"
-                style={{ color: INDUSTRIAL.muted }}
-              >
-                {ctx.sub}
-              </p>
-
-              {/* Stats strip */}
-              <div
-                className="flex flex-wrap items-start gap-8 border-t pt-8"
-                style={{ borderColor: INDUSTRIAL.outline }}
-              >
-                {[
-                  { val: "3.2×", label: "Avg Lead Increase", detail: "in first 90 days" },
-                  { val: "150+", label: "Active Partners", detail: "electricians & HVAC" },
-                  { val: "94%", label: "Retention Rate", detail: "rolling 12-month" },
-                ].map(({ val, label, detail }, i, arr) => (
-                  <>
-                    <div key={label}>
-                      <p className="mb-1 font-headline text-3xl font-light tracking-tighter text-md3-primary">
-                        {val}
-                      </p>
-                      <p className="text-[10px] font-bold uppercase tracking-[0.2em]" style={{ color: INDUSTRIAL.muted }}>
-                        {label}
-                      </p>
-                      <p className="text-[10px] font-light" style={{ color: INDUSTRIAL.muted }}>
-                        {detail}
-                      </p>
-                    </div>
-                    {i < arr.length - 1 && (
-                      <div key={`div-${i}`} className="h-10 w-px self-start mt-2" style={{ backgroundColor: INDUSTRIAL.outline }} />
-                    )}
-                  </>
-                ))}
-              </div>
-            </div>
-
-            {/* Right — what happens next */}
-            <div>
-              <div
-                className="bg-white p-8 shadow-sm"
-                style={{ borderWidth: "0.5px", borderColor: INDUSTRIAL.outline }}
-              >
-                <p className="mb-6 text-[10px] font-bold uppercase tracking-[0.3em] text-md3-primary">
-                  What happens after you submit
+      <div className="font-body tracking-tight antialiased [letter-spacing:-0.01em] [&_h1]:normal-case [&_h2]:normal-case [&_h3]:normal-case selection:bg-md3-primary-container selection:text-md3-on-primary-container">
+        {/* Cinematic Hero */}
+        <section className="relative overflow-hidden py-24 lg:py-32" style={{ borderBottomWidth: "0.5px", borderColor: INDUSTRIAL.outline }}>
+          <div className="absolute inset-0 z-0">
+            <img 
+              src="/images/contact-hero.png" 
+              alt="Technical Audit" 
+              className="h-full w-full object-cover" 
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-zinc-950 via-zinc-950/80 to-zinc-950/40" />
+          </div>
+          
+          <div className="relative z-20 mx-auto max-w-[1728px] px-6 lg:px-8">
+            <div className="grid grid-cols-1 items-start gap-16 lg:grid-cols-2">
+              {/* Left — headline + context */}
+              <div className="max-w-2xl text-white">
+                {ctx.badge ? (
+                  <span className="mb-6 inline-block bg-md3-primary px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.3em] text-white">
+                    {ctx.badge}
+                  </span>
+                ) : (
+                  <span className="mb-6 block text-[10px] font-bold uppercase tracking-[0.3em] text-md3-primary">
+                    Lead System Audit
+                  </span>
+                )}
+                <h1 className="mb-8 font-headline text-5xl font-light leading-[1.08] tracking-tighter text-white md:text-7xl md:leading-[1.06]">
+                Find out exactly why your <span className="font-bold text-md3-primary">phone isn&apos;t</span> ringing.
+                </h1>
+                <p className="mb-12 max-w-lg text-lg font-light leading-relaxed text-zinc-300">
+                  {ctx.sub}
                 </p>
-                <div className="space-y-6">
+
+                {/* Stats strip */}
+                <div className="flex flex-wrap items-start gap-8 border-t pt-8" style={{ borderColor: "rgba(255,255,255,0.1)" }}>
                   {[
-                    {
-                      step: "01",
-                      title: "We review your site",
-                      body: "Our team manually audits your website, Google Maps presence, and top 3 local competitors.",
-                    },
-                    {
-                      step: "02",
-                      title: "We record your breakdown",
-                      body: "You get a personalised video walkthrough of exactly what's costing you leads — no fluff, just specifics.",
-                    },
-                    {
-                      step: "03",
-                      title: "You decide what's next",
-                      body: "No pressure. The audit is yours to keep. If you want to work together, we'll talk options. If not, you still got a free roadmap.",
-                    },
-                  ].map((item) => (
-                    <div key={item.step} className="flex gap-5">
-                      <span className="shrink-0 font-headline text-2xl font-light tracking-tighter text-md3-primary/30">
-                        {item.step}
-                      </span>
-                      <div>
-                        <p className="mb-1 font-headline text-base font-semibold" style={{ color: INDUSTRIAL.charcoal }}>
-                          {item.title}
+                    { val: "High", label: "Avg Lead Increase", detail: "in first 90 days" },
+                    { val: "Proven", label: "Active Partners", detail: "growth-minded contractors" },
+                  ].map(({ val, label, detail }, i, arr) => (
+                    <>
+                      <div key={label}>
+                        <p className="mb-1 font-headline text-3xl font-light tracking-tighter text-md3-primary">
+                          {val}
                         </p>
-                        <p className="text-sm font-light leading-relaxed" style={{ color: INDUSTRIAL.muted }}>
-                          {item.body}
+                        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-400">
+                          {label}
+                        </p>
+                        <p className="text-[10px] font-light text-zinc-500">
+                          {detail}
                         </p>
                       </div>
-                    </div>
+                      {i < arr.length - 1 && (
+                        <div key={`div-${i}`} className="h-10 w-px self-start mt-2 bg-white/10" />
+                      )}
+                    </>
                   ))}
                 </div>
+              </div>
 
-                {/* Testimonial in the right column */}
-                <div
-                  className="mt-8 rounded-xl bg-md3-primary/5 p-5"
-                  style={{ borderWidth: "0.5px", borderColor: "rgba(0,101,101,0.12)" }}
-                >
-                  <div className="mb-2 flex gap-0.5">
-                    {Array.from({ length: 5 }).map((_, i) => (
-                      <span key={i} className="text-sm text-md3-primary">★</span>
+              {/* Steps */}
+              <div>
+                <div className="bg-white/5 p-8 backdrop-blur-md border border-white/10">
+                  <p className="mb-6 text-[10px] font-bold uppercase tracking-[0.3em] text-md3-primary">
+                    What happens next
+                  </p>
+                  <div className="space-y-6">
+                    {[
+                      { step: "01", title: "Site Review", body: "Manual audit of your site, maps, and top local competitors." },
+                      { step: "02", title: "Video Breakdown", body: "Personalised walkthrough of exactly what's costing you leads." },
+                      { step: "03", title: "Next Steps", body: "No pressure. You decide if you want us to fix it." },
+                    ].map((item) => (
+                      <div key={item.step} className="flex gap-5">
+                        <span className="shrink-0 font-headline text-2xl font-light tracking-tighter text-md3-primary/50">{item.step}</span>
+                        <div>
+                          <p className="mb-1 font-headline text-base font-semibold text-white">{item.title}</p>
+                          <p className="text-sm font-light leading-relaxed text-zinc-400">{item.body}</p>
+                        </div>
+                      </div>
                     ))}
                   </div>
-                  <p className="mb-3 text-sm font-light leading-relaxed" style={{ color: INDUSTRIAL.charcoal }}>
-                    &ldquo;I almost didn&apos;t fill out the form. Did it anyway. Three days later I had a video showing me exactly why I was losing to a smaller competitor. That video alone was worth it.&rdquo;
-                  </p>
-                  <p className="text-[10px] font-bold uppercase tracking-widest" style={{ color: INDUSTRIAL.muted }}>
-                    Derek H. · Electrician · Dallas, TX
-                  </p>
                 </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Audit form */}
-        <section className="mx-auto mb-24 max-w-7xl px-8">
+        {/* Audit form area */}
+        <div className="pb-32 pt-24" style={industrialMeshStyle}>
+          <section className="mx-auto mb-24 max-w-[1440px] px-6 lg:px-8">
           <div className="grid grid-cols-1 gap-16 lg:grid-cols-12">
 
             {/* Left — what's included + objection Q&As */}
             <div className="lg:col-span-5">
-              <h2
-                className="mb-4 font-headline text-4xl font-light tracking-tight"
-                style={{ color: INDUSTRIAL.charcoal }}
-              >
-                Request Your Free Audit
+                <h2
+                  className="mb-4 font-headline text-4xl font-light tracking-tight"
+                  style={{ color: INDUSTRIAL.charcoal }}
+                >
+                Request Your $497 Audit
               </h2>
               <div className="mb-8 h-px w-24 bg-md3-primary" />
               <p className="mb-12 font-light leading-relaxed" style={{ color: INDUSTRIAL.muted }}>
@@ -554,7 +514,7 @@ export function Contact() {
 
                       <div className="space-y-2">
                         <label htmlFor="serviceType" className="text-[10px] font-bold uppercase tracking-[0.2em]" style={{ color: INDUSTRIAL.muted }}>
-                          Your Trade
+                          What do you need?
                         </label>
                         <select
                           id="serviceType" name="serviceType"
@@ -595,7 +555,7 @@ export function Contact() {
                             &ldquo;I&apos;ve worked with three agencies before BuiltExpert. They&apos;re the first ones who could actually explain what they were doing and why. My phone is proof it works.&rdquo;
                           </p>
                           <p className="mt-2 text-[10px] font-bold uppercase tracking-widest" style={{ color: INDUSTRIAL.muted }}>
-                            Ray D. · HVAC Contractor · Charlotte, NC · 3× call volume in 60 days
+                            Ray D. · HVAC Contractor · Charlotte, NC · Significant call volume growth
                           </p>
                         </div>
                       </div>
@@ -606,10 +566,10 @@ export function Contact() {
                           disabled={isSubmitting}
                           className="w-full bg-[#1a1a1a] py-4 text-[11px] font-bold uppercase tracking-[0.2em] text-white transition-all hover:bg-md3-primary disabled:opacity-60"
                         >
-                          {isSubmitting ? "Sending..." : "Get My Free Audit →"}
+                          {isSubmitting ? "Sending..." : "Book My $497 Audit →"}
                         </button>
                         <p className="mt-3 text-center text-xs font-light" style={{ color: INDUSTRIAL.muted }}>
-                          Zero obligation. No sales calls. Video delivered within 2 business days.
+                          Paid diagnostic. No sales pressure. Video delivered within 2 business days.
                         </p>
                         <p className="mt-1 text-center text-[10px] font-light" style={{ color: INDUSTRIAL.muted }}>
                           <Link to="/privacy" className="underline underline-offset-2 hover:text-md3-primary transition-colors">
@@ -626,14 +586,14 @@ export function Contact() {
         </section>
 
         {/* Trust bar */}
-        <section className="mx-auto mb-24 max-w-7xl px-8">
+        <section className="mx-auto mb-24 max-w-[1440px] px-4 sm:px-8 lg:px-12 2xl:px-16 3xl:max-w-screen-2xl 4xl:max-w-[1728px]">
           <div
             className="flex flex-wrap items-center justify-center gap-8 rounded-xl bg-white px-8 py-6 text-center"
             style={{ borderWidth: "0.5px", borderColor: INDUSTRIAL.outline }}
           >
             {[
               { stat: "2 business days", detail: "Video audit turnaround" },
-              { stat: "150+ partners", detail: "Electricians & HVAC contractors" },
+              { stat: "Proven partners", detail: "Electricians & HVAC contractors" },
               { stat: "No obligation", detail: "Audit is yours to keep" },
               { stat: "hello@builtexpert.com", detail: "Direct team access" },
             ].map(({ stat, detail }) => (
@@ -650,7 +610,7 @@ export function Contact() {
         </section>
 
         {/* Final CTA */}
-        <section className="mx-auto max-w-7xl px-8">
+        <section className="mx-auto max-w-[1440px] px-4 sm:px-8 lg:px-12 2xl:px-16 3xl:max-w-screen-2xl 4xl:max-w-[1728px]">
           <div
             className="relative overflow-hidden bg-white p-12 text-left md:p-20"
             style={{ borderWidth: "0.5px", borderColor: INDUSTRIAL.outline }}
@@ -669,6 +629,7 @@ export function Contact() {
               <div className="flex flex-col justify-center gap-6 sm:flex-row md:justify-start">
                 <a
                   href="mailto:hello@builtexpert.com"
+                  onClick={() => trackEmailClick("hello@builtexpert.com", "contact_page")}
                   className="bg-[#1a1a1a] px-10 py-5 text-center text-[11px] font-bold uppercase tracking-[0.3em] text-white transition-all hover:bg-md3-primary"
                 >
                   Email The Team
@@ -692,6 +653,7 @@ export function Contact() {
           </div>
         </section>
       </div>
-    </>
-  );
+    </div>
+  </>
+);
 }

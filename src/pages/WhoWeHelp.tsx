@@ -1,3 +1,4 @@
+import React, { useState, useEffect, useCallback } from "react";
 import type { LucideIcon } from "lucide-react";
 import {
   ArrowRight,
@@ -5,19 +6,24 @@ import {
   Flame,
   Home,
   Plug,
-  Star,
   Thermometer,
   Wrench,
   X,
   Zap,
+  ChevronLeft,
+  ChevronRight,
+  Star
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { SEO } from "@/components/SEO";
+import { HeaderSection } from "@/components/ui/HeaderSection";
+import { CTASection } from "@/components/ui/CTASection";
 import {
   INDUSTRIAL,
   industrialMeshStyle,
   industrialTextGradientStyle,
 } from "@/lib/industrialStyle";
+import { motion, AnimatePresence } from "motion/react";
 
 // ─── Data ────────────────────────────────────────────────────────────────────
 
@@ -28,6 +34,13 @@ const INDUSTRY_ICONS: Record<string, LucideIcon> = {
   "heat-pump-contractors": Flame,
   "panel-upgrade-specialists": Wrench,
   "home-performance-contractors": Home,
+};
+
+const SCHEMATICS: Record<string, string> = {
+  "ev-charger-installers": "/assets/schematics/ev-charger.png",
+  "heat-pump-contractors": "/assets/schematics/heat-pump.png",
+  "panel-upgrade-specialists": "/assets/schematics/smart-panel.png",
+  "home-performance-contractors": "/assets/schematics/home-efficiency.png",
 };
 
 function IndustryIcon({
@@ -65,10 +78,10 @@ const INDUSTRIES: Industry[] = [
     description:
       "We help electrical contractors build the web presence that matches the quality of their work. That means stronger service pages, better local SEO, clearer trust signals, and mobile-first conversion paths built specifically for residential and commercial electrical work.",
     problems: [
-      "Website hasn't been updated in years — loses trust on first scroll",
-      "No-shows from Google Maps because the profile and site don't align",
-      "Generic site copy that doesn't mention panel upgrades, EV charging, or service area",
-      "Contact form goes to spam or an inbox no one checks",
+      "Your site looks like it was built in 2014 — and it's costing you jobs every day",
+      "Google Maps shows you exist, but your website kills the lead before they call",
+      "A site full of copy-paste fluff that says nothing about what you actually do",
+      "Leads go to an inbox nobody's checking — or straight to your spam folder",
       "Zero visibility for high-margin services like whole-home rewires and smart panel installs",
     ],
     whatWeImprove: [
@@ -78,7 +91,7 @@ const INDUSTRIES: Industry[] = [
       "Lead capture connected to ServiceTitan, Housecall Pro, or your CRM",
       "Trust section with licenses, reviews, and before/after project photos",
     ],
-    stat: { value: "3.2×", label: "avg increase in monthly leads" },
+    stat: { value: "Significant", label: "increase in monthly leads" },
     testimonial: {
       quote: "I went from 4 calls a month to 19. My site now closes customers before I even pick up the phone.",
       name: "Chris V.",
@@ -87,7 +100,7 @@ const INDUSTRIES: Industry[] = [
       result: "19 calls/month in 90 days",
     },
     ctaLabel: "View Electrician Website Solutions",
-    ctaHref: "/services",
+    ctaHref: "/who-we-help/electricians",
   },
   {
     id: "hvac-contractors",
@@ -110,7 +123,7 @@ const INDUSTRIES: Industry[] = [
       "Core Web Vitals optimization — 90+ Lighthouse score on mobile",
       "Online booking and instant quote flows integrated into the site",
     ],
-    stat: { value: "94%", label: "avg mobile Lighthouse score after launch" },
+    stat: { value: "90+", label: "Lighthouse performance score" },
     testimonial: {
       quote: "Losing emergency calls to a competitor with a worse service was embarrassing. Three months after launch my Google Maps rank went from page 2 to #1 for AC repair in my city.",
       name: "Marcus T.",
@@ -119,7 +132,7 @@ const INDUSTRIES: Industry[] = [
       result: "#1 Google Maps rank in 90 days",
     },
     ctaLabel: "View HVAC Contractor Solutions",
-    ctaHref: "/services",
+    ctaHref: "/who-we-help/hvac-contractors",
   },
   // ── Secondary ─────────────────────────────────────────────────────────────
   {
@@ -141,9 +154,9 @@ const INDUSTRIES: Industry[] = [
       "Local SEO targeting city-level EV installation keywords",
       "Trust signals: certifications, charger brands supported, and case studies",
     ],
-    stat: { value: "+47%", label: "avg organic traffic on EV-focused pages" },
+    stat: { value: "Top Rank", label: "for high-value EV keywords" },
     ctaLabel: "Talk to Us About EV Installation Sites",
-    ctaHref: "/contact?service=ev-charger",
+    ctaHref: "/who-we-help/ev-charger-installers",
   },
   {
     id: "heat-pump-contractors",
@@ -164,9 +177,9 @@ const INDUSTRIES: Industry[] = [
       "Positioning as the local electrification specialist (not just HVAC)",
       "Case study pages showing real heat pump installs and savings outcomes",
     ],
-    stat: { value: "22%", label: "avg conversion lift with rebate content" },
+    stat: { value: "High ROI", label: "with rebate-focused content" },
     ctaLabel: "Talk to Us About Heat Pump Sites",
-    ctaHref: "/contact?service=heat-pump",
+    ctaHref: "/who-we-help/heat-pump-contractors",
   },
   {
     id: "panel-upgrade-specialists",
@@ -187,9 +200,9 @@ const INDUSTRIES: Industry[] = [
       "Step-by-step process section with realistic timelines and what to expect",
       "Local SEO targeting 'panel upgrade [city]' searches",
     ],
-    stat: { value: "$8,400", label: "avg ticket on panel upgrade leads generated" },
+    stat: { value: "Optimized", label: "for high-ticket electrical work" },
     ctaLabel: "Talk to Us About Panel Upgrade Sites",
-    ctaHref: "/contact?service=panel-upgrade",
+    ctaHref: "/who-we-help/panel-upgrade-specialists",
   },
   {
     id: "home-performance-contractors",
@@ -210,9 +223,9 @@ const INDUSTRIES: Industry[] = [
       "Content hub: blog posts targeting 'how to reduce energy bills' and related keywords",
       "Clear conversion path: free assessment → booking flow → CRM integration",
     ],
-    stat: { value: "2.8×", label: "avg lead velocity after content rebuild" },
+    stat: { value: "Accelerated", label: "lead velocity after content rebuild" },
     ctaLabel: "Talk to Us About Home Performance Sites",
-    ctaHref: "/contact?service=home-performance",
+    ctaHref: "/who-we-help/home-performance-contractors",
   },
 ];
 
@@ -250,7 +263,7 @@ function ImproveList({ items }: { items: readonly string[] }) {
 function PrimaryCard({ industry, flip }: { industry: Industry; flip: boolean }) {
   return (
     <section id={industry.id} className="py-20 lg:py-28" style={{ borderBottomWidth: "0.5px", borderColor: INDUSTRIAL.outline }}>
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+      <div className="mx-auto max-w-[1728px] px-6 lg:px-8">
         <div className={`grid items-start gap-12 lg:grid-cols-2 lg:gap-20 ${flip ? "lg:grid-flow-dense" : ""}`}>
 
           {/* Left: Identity + description + CTA */}
@@ -312,7 +325,7 @@ function PrimaryCard({ industry, flip }: { industry: Industry; flip: boolean }) 
                 className="inline-flex items-center justify-center gap-2 border px-7 py-3.5 text-center text-[11px] font-bold uppercase tracking-[0.25em] transition-all hover:bg-[#1a1a1a] hover:text-white"
                 style={{ borderColor: INDUSTRIAL.outline, color: INDUSTRIAL.charcoal, borderWidth: "0.5px" }}
               >
-                Get A Free Audit
+                Start The Audit
                 <ArrowRight className="size-4 shrink-0" aria-hidden />
               </Link>
             </div>
@@ -341,57 +354,202 @@ function PrimaryCard({ industry, flip }: { industry: Industry; flip: boolean }) 
   );
 }
 
-function SecondaryCard({ industry }: { industry: Industry }) {
+function SecondaryCard({ industry, isCarousel = false }: { industry: Industry; isCarousel?: boolean }) {
+  const schematicUrl = SCHEMATICS[industry.id];
+  
   return (
-    <article id={industry.id} className="rounded-xl bg-white p-8 lg:p-10 flex flex-col" style={{ borderWidth: "0.5px", borderColor: INDUSTRIAL.outline }}>
-      <div className="mb-4 flex items-center gap-3">
-        <IndustryIcon
-          id={industry.id}
-          className="size-8 shrink-0 text-md3-primary"
+    <article 
+      id={industry.id} 
+      className={`group relative flex flex-col overflow-hidden rounded-2xl bg-white transition-all hover:shadow-2xl hover:shadow-black/5 ${isCarousel ? "lg:flex-row min-h-[600px]" : "lg:flex-row"}`} 
+      style={{ borderWidth: "0.5px", borderColor: INDUSTRIAL.outline }}
+    >
+      {/* Left: Technical Schematic Visual */}
+      <div className={`relative flex min-h-[300px] w-full items-center justify-center overflow-hidden ${isCarousel ? "lg:w-[40%]" : "lg:w-[33%]"}`}>
+        <div 
+          className="absolute inset-0 z-0 opacity-[0.07]" 
+          style={{ 
+            backgroundImage: `radial-gradient(${INDUSTRIAL.charcoal} 0.5px, transparent 0.5px)`,
+            backgroundSize: "16px 16px"
+          }} 
         />
-        <span className="rounded-full bg-zinc-100 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.25em] text-zinc-500">
-          Expansion
-        </span>
-      </div>
-
-      <h3 className="mb-2 font-headline text-2xl font-bold tracking-tighter" style={{ color: INDUSTRIAL.charcoal }}>
-        {industry.name}
-      </h3>
-      <p className="mb-4 text-sm font-semibold text-md3-primary">{industry.tagline}</p>
-      <p className="mb-6 text-sm leading-relaxed" style={{ color: INDUSTRIAL.muted }}>
-        {industry.description}
-      </p>
-
-      <div className="mb-6 space-y-6">
-        <div>
-          <p className="mb-3 text-[9px] font-bold uppercase tracking-[0.25em] text-red-400">Common Problems</p>
-          <ProblemList items={industry.problems} />
-        </div>
-        <div>
-          <p className="mb-3 text-[9px] font-bold uppercase tracking-[0.25em] text-md3-primary">What We Improve</p>
-          <ImproveList items={industry.whatWeImprove} />
+        <img 
+          src={schematicUrl} 
+          alt={`${industry.name} Technical Schematic`}
+          className="relative z-10 w-full h-full object-cover mix-blend-multiply transition-transform duration-700 group-hover:scale-105"
+        />
+        {/* Overlay Label */}
+        <div className="absolute left-6 top-6 z-20">
+          <span className="rounded-full bg-md3-primary/10 px-3 py-1 text-[9px] font-bold uppercase tracking-[0.2em] text-md3-primary backdrop-blur-sm border border-md3-primary/10">
+            Tech Spec Rev. 2026
+          </span>
         </div>
       </div>
 
-      {/* Stat */}
-      <div className="mb-7 flex items-center gap-3 rounded-lg bg-md3-surface-container-low px-4 py-3">
-        <span className="font-headline text-2xl font-bold tracking-tight text-md3-primary">{industry.stat.value}</span>
-        <span className="text-[10px] font-bold uppercase tracking-widest" style={{ color: INDUSTRIAL.muted }}>{industry.stat.label}</span>
-      </div>
+      {/* Right: Content Area */}
+      <div className={`flex flex-1 flex-col p-8 lg:p-14 ${isCarousel ? "lg:p-20 justify-center" : "lg:p-12"}`}>
+        <div className="mb-8 flex items-center gap-4">
+          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-md3-primary/5 text-md3-primary">
+            <IndustryIcon id={industry.id} className="size-6" />
+          </div>
+          <div>
+            <h3 className={`font-headline font-bold tracking-tight ${isCarousel ? "text-4xl" : "text-3xl"}`} style={{ color: INDUSTRIAL.charcoal }}>
+              {industry.name}
+            </h3>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-md3-primary">{industry.tagline}</p>
+          </div>
+        </div>
 
-      <div className="mt-auto">
-        <Link
-          to={industry.ctaHref}
-          className="block w-full rounded-none bg-md3-primary py-3 text-center text-[11px] font-bold uppercase tracking-[0.25em] text-md3-on-primary transition-all hover:bg-[#1a1a1a]"
-        >
-          {industry.ctaLabel}
-        </Link>
+        <p className={`mb-10 font-light leading-relaxed text-zinc-500 ${isCarousel ? "text-lg text-pretty" : "text-base"}`}>
+          {industry.description}
+        </p>
+
+        <div className={`mb-10 grid gap-16 ${isCarousel ? "lg:gap-24 sm:grid-cols-2" : "sm:grid-cols-2"}`}>
+          <div>
+            <p className="mb-4 text-[10px] font-bold uppercase tracking-widest text-red-400">Common Problems</p>
+            <ProblemList items={industry.problems} />
+          </div>
+          <div>
+            <p className="mb-4 text-[10px] font-bold uppercase tracking-widest text-md3-primary">What We Improve</p>
+            <ImproveList items={industry.whatWeImprove} />
+          </div>
+        </div>
+
+        <div className="mt-8 flex flex-col items-center gap-6 pt-10 sm:flex-row" style={{ borderTop: `0.5px solid ${INDUSTRIAL.outline}` }}>
+          <div className="flex items-center gap-3">
+            <span className="font-headline text-3xl font-bold tracking-tighter text-md3-primary">{industry.stat.value}</span>
+            <span className="text-[10px] font-bold uppercase leading-tight tracking-widest" style={{ color: INDUSTRIAL.muted }}>{industry.stat.label}</span>
+          </div>
+          
+          <Link
+            to={industry.ctaHref}
+            className="ml-auto w-full rounded-none bg-md3-primary px-10 py-4 text-center text-[11px] font-bold uppercase tracking-[0.3em] text-md3-on-primary shadow-lg transition-all hover:bg-[#1a1a1a] hover:-translate-y-0.5 sm:w-auto"
+          >
+            {industry.ctaLabel}
+          </Link>
+        </div>
       </div>
     </article>
   );
 }
 
-// ─── Page ─────────────────────────────────────────────────────────────────────
+function SecondaryExpansionCarousel() {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [direction, setDirection] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+
+  const next = useCallback(() => {
+    setDirection(1);
+    setCurrentIndex((prev) => (prev + 1) % SECONDARY.length);
+  }, []);
+
+  const prev = useCallback(() => {
+    setDirection(-1);
+    setCurrentIndex((prev) => (prev - 1 + SECONDARY.length) % SECONDARY.length);
+  }, []);
+
+  useEffect(() => {
+    if (isPaused) return;
+    
+    const timer = setInterval(() => {
+      next();
+    }, 4000);
+    
+    return () => clearInterval(timer);
+  }, [next, isPaused]);
+
+  const variants = {
+    enter: (direction: number) => ({
+      x: direction > 0 ? 300 : -300,
+      opacity: 0
+    }),
+    center: {
+      zIndex: 1,
+      x: 0,
+      opacity: 1
+    },
+    exit: (direction: number) => ({
+      zIndex: 0,
+      x: direction < 0 ? 300 : -300,
+      opacity: 0
+    })
+  };
+
+  return (
+    <div 
+      className="group relative"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+    >
+      {/* Navigation Arrows - Outside Card */}
+      <button
+        onClick={prev}
+        className="absolute -left-4 top-1/2 z-20 flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-full border border-zinc-200 bg-white text-zinc-800 opacity-0 shadow-xl transition-all duration-300 hover:scale-110 hover:border-md3-primary hover:bg-md3-primary hover:text-white group-hover:opacity-100 active:scale-95 sm:-left-12 lg:-left-16"
+        aria-label="Previous Industry"
+      >
+        <ChevronLeft className="size-6" />
+      </button>
+
+      <button
+        onClick={next}
+        className="absolute -right-4 top-1/2 z-20 flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-full border border-zinc-200 bg-white text-zinc-800 opacity-0 shadow-xl transition-all duration-300 hover:scale-110 hover:border-md3-primary hover:bg-md3-primary hover:text-white group-hover:opacity-100 active:scale-95 sm:-right-12 lg:-right-16"
+        aria-label="Next Industry"
+      >
+        <ChevronRight className="size-6" />
+      </button>
+
+      <div className="relative min-h-[600px] overflow-hidden rounded-2xl">
+        <AnimatePresence initial={false} custom={direction} mode="wait">
+          <motion.div
+            key={currentIndex}
+            custom={direction}
+            variants={variants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{
+              x: { type: "spring", stiffness: 300, damping: 30 },
+              opacity: { duration: 0.3 }
+            }}
+            className="w-full"
+          >
+            <SecondaryCard industry={SECONDARY[currentIndex]} isCarousel />
+          </motion.div>
+        </AnimatePresence>
+      </div>
+
+
+      {/* Technical Navigation UI - Simplified */}
+      <div className="mt-12 flex flex-col items-center justify-between gap-8 border-t border-zinc-100 pt-8 sm:flex-row">
+        <div className="flex items-center gap-6">
+          <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-zinc-400">
+            TRD // {String(currentIndex + 1).padStart(2, '0')} / {String(SECONDARY.length).padStart(2, '0')}
+          </span>
+          <div className="hidden h-px w-24 bg-zinc-100 sm:block" />
+          <p className="hidden text-[10px] font-bold uppercase tracking-widest text-md3-primary sm:block">
+            {SECONDARY[currentIndex].name} Specification
+          </p>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <div className="flex gap-1.5 px-4">
+            {SECONDARY.map((_, idx) => (
+              <button
+                key={idx}
+                onClick={() => {
+                  setDirection(idx > currentIndex ? 1 : -1);
+                  setCurrentIndex(idx);
+                }}
+                className={`h-1 cursor-pointer transition-all ${idx === currentIndex ? "w-8 bg-md3-primary" : "w-4 bg-zinc-200 hover:bg-zinc-300"}`}
+                aria-label={`Go to industry ${idx + 1}`}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+
+  );
+}
 
 export function WhoWeHelp() {
   return (
@@ -399,116 +557,89 @@ export function WhoWeHelp() {
       <SEO
         title="Who We Help"
         description="BuiltExpert specializes in websites and lead systems for electricians, HVAC contractors, EV charger installers, heat pump contractors, panel upgrade specialists, and home performance companies."
-        canonical="/who-we-help"
+        canonical="/who-we-help" 
       />
+      <div className="font-body tracking-tight antialiased [letter-spacing:-0.01em] [&_h1]:normal-case [&_h2]:normal-case [&_h3]:normal-case selection:bg-md3-primary-container selection:text-md3-on-primary-container">
+        <HeaderSection 
+          badge="Who We Help"
+          title={
+            <>
+              We Know <br />
+              <span className="font-bold text-md3-primary">Your Trade.</span>
+            </>
+          }
+          description="We don't work with every business. We work with growth-minded contractors—electricians, HVAC techs, and specialty trades—who need a website that actually generates calls."
+          imageSrc="/images/who-we-help-hero.png"
+          imageAlt="Industrial Trade Workspace"
+        />
 
-      <div
-        className="font-body tracking-tight antialiased [letter-spacing:-0.01em] [&_h1]:normal-case [&_h2]:normal-case [&_h3]:normal-case selection:bg-md3-primary-container selection:text-md3-on-primary-container"
-        style={industrialMeshStyle}
-      >
-
-        {/* ── Hero ─────────────────────────────────────────────────────────── */}
-        <section className="py-20 lg:py-28" style={{ borderBottomWidth: "0.5px", borderColor: INDUSTRIAL.outline }}>
-          <div className="mx-auto max-w-7xl px-6 lg:px-8">
-            <div className="max-w-3xl">
-              <span className="mb-6 inline-block rounded-full bg-md3-secondary-container px-3 py-1 text-[10px] font-bold uppercase tracking-[0.3em] text-md3-on-secondary-container">
-                Who We Help
-              </span>
-              <h1 className="mb-6 font-headline text-5xl font-light leading-[0.95] tracking-tighter lg:text-7xl">
-                <span className="block" style={industrialTextGradientStyle}>
-                  Built for contractors
-                </span>
-                <span className="mt-1 block font-bold text-md3-primary">
-                  who are serious
-                </span>
-                <span className="block font-light" style={{ color: INDUSTRIAL.charcoal }}>
-                  about growth.
-                </span>
-              </h1>
-              <p className="mb-10 max-w-xl text-lg font-light leading-relaxed" style={{ color: INDUSTRIAL.muted }}>
-                BuiltExpert is not a generalist web agency. We work exclusively with
-                home service businesses in the electrical and HVAC trades — and the
-                electrification market growing fast around them. Our systems, SEO
-                strategies, and conversion frameworks are tuned for one outcome:
-                turning website visitors into booked estimates.
-              </p>
-
-              {/* Quick-jump nav */}
-              <div className="mb-8 flex flex-wrap gap-2">
-                {INDUSTRIES.map((i) => (
-                  <a
-                    key={i.id}
-                    href={`#${i.id}`}
-                    className="rounded-full px-4 py-2 text-[10px] font-bold uppercase tracking-[0.2em] transition-all hover:bg-md3-primary hover:text-md3-on-primary"
-                    style={{
-                      borderWidth: "0.5px",
-                      borderColor: INDUSTRIAL.outline,
-                      color: INDUSTRIAL.charcoal,
-                      backgroundColor: "#fff",
-                    }}
-                  >
-                    {i.name}
-                  </a>
-                ))}
-              </div>
-
-              {/* Hero CTA */}
-              <div className="flex flex-wrap gap-5">
-                <Link
-                  to="/contact"
-                  className="bg-[#1a1a1a] px-8 py-4 text-[11px] font-bold uppercase tracking-[0.3em] text-white transition-all hover:bg-md3-primary"
-                >
-                  Book A Free Growth Call
-                </Link>
-                <Link
-                  to="/contact?ref=audit"
-                  className="border-b py-4 text-[11px] font-bold uppercase tracking-[0.3em] text-[#1a1a1a] [border-bottom-width:0.5px] transition-all hover:border-md3-primary hover:text-md3-primary"
-                  style={{ borderColor: INDUSTRIAL.outline }}
-                >
-                  Get A Free Audit →
-                </Link>
-              </div>
-            </div>
-          </div>
-        </section>
-
+        <div style={industrialMeshStyle}>
         {/* ── Fit check strip ──────────────────────────────────────────────── */}
         <section className="bg-md3-surface-container-low py-10" style={{ borderBottomWidth: "0.5px", borderColor: INDUSTRIAL.outline }}>
-          <div className="mx-auto max-w-7xl px-6 lg:px-8">
-            <div className="flex flex-wrap items-center gap-4">
-              <p className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.25em]" style={{ color: INDUSTRIAL.muted }}>
+          <div className="mx-auto max-w-[1728px] px-6 lg:px-8">
+            <div className="flex flex-col gap-6 lg:flex-row lg:items-center">
+              <p className="flex shrink-0 items-center gap-2 text-[10px] font-bold uppercase tracking-[0.25em]" style={{ color: INDUSTRIAL.muted }}>
                 <span>You&apos;re in the right place if you are a</span>
                 <ArrowRight className="size-3.5 shrink-0" aria-hidden />
               </p>
-              {[
-                "Residential Electrician",
-                "Commercial Electrician",
-                "HVAC Company",
-                "AC & Heating Contractor",
-                "EV Charger Installer",
-                "Heat Pump Contractor",
-                "Home Energy Auditor",
-                "Insulation Contractor",
-              ].map((label) => (
-                <span
-                  key={label}
-                  className="rounded-full bg-white px-4 py-1.5 text-[10px] font-bold uppercase tracking-widest"
-                  style={{ color: INDUSTRIAL.charcoal, borderWidth: "0.5px", borderColor: INDUSTRIAL.outline }}
+
+              {/* Marquee Carousel */}
+              <div className="relative flex-1 overflow-hidden" style={{ maskImage: "linear-gradient(to right, transparent, black 10%, black 90%, transparent)" }}>
+                <motion.div 
+                  className="flex w-max items-center gap-3 pr-3"
+                  animate={{ x: [0, -1450] }} // Approximated loop - will be smooth with duplication
+                  transition={{ 
+                    duration: 35, 
+                    repeat: Infinity, 
+                    ease: "linear",
+                    repeatType: "loop"
+                  }}
                 >
-                  {label}
-                </span>
-              ))}
+                  {[
+                    "Residential Electrician",
+                    "Commercial Electrician",
+                    "HVAC Company",
+                    "AC & Heating Contractor",
+                    "EV Charger Installer",
+                    "Heat Pump Contractor",
+                    "Home Energy Auditor",
+                    "Insulation Contractor",
+                    "Roofing Contractor",
+                    "Plumbing Company",
+                    // Duplicate for seamless loop
+                    "Residential Electrician",
+                    "Commercial Electrician",
+                    "HVAC Company",
+                    "AC & Heating Contractor",
+                    "EV Charger Installer",
+                    "Heat Pump Contractor",
+                    "Home Energy Auditor",
+                    "Insulation Contractor",
+                    "Roofing Contractor",
+                    "Plumbing Company"
+                  ].map((label, idx) => (
+                    <span
+                      key={`${label}-${idx}`}
+                      className="whitespace-nowrap rounded-lg bg-white px-5 py-2 text-[10px] font-bold uppercase tracking-widest shadow-sm"
+                      style={{ color: INDUSTRIAL.charcoal, borderWidth: "0.5px", borderColor: INDUSTRIAL.outline }}
+                    >
+                      {label}
+                    </span>
+                  ))}
+                </motion.div>
+              </div>
             </div>
           </div>
         </section>
 
+
         {/* ── Primary Industries ───────────────────────────────────────────── */}
         <div>
-          <div className="mx-auto max-w-7xl px-6 pt-16 lg:px-8">
+          <div className="mx-auto max-w-[1728px] px-6 pt-16 lg:px-8">
             <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.3em] text-md3-primary">
               Primary Specializations
             </p>
-            <h2 className="font-headline text-2xl font-bold tracking-tighter" style={{ color: INDUSTRIAL.charcoal }}>
+            <h2 className="font-headline text-4xl font-bold tracking-tighter lg:text-5xl" style={{ color: INDUSTRIAL.charcoal }}>
               Where we go deepest
             </h2>
           </div>
@@ -517,14 +648,13 @@ export function WhoWeHelp() {
           ))}
         </div>
 
-        {/* ── Secondary / expansion Industries ────────────────────────────── */}
         <section className="py-20 lg:py-28" style={{ borderTopWidth: "0.5px", borderColor: INDUSTRIAL.outline }}>
-          <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="mx-auto max-w-[1440px] px-6 lg:px-8">
             <div className="mb-14">
               <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.3em] text-md3-primary">
                 Expansion Markets
               </p>
-              <h2 className="mb-4 font-headline text-2xl font-bold tracking-tighter" style={{ color: INDUSTRIAL.charcoal }}>
+              <h2 className="mb-4 font-headline text-4xl font-bold tracking-tighter lg:text-5xl" style={{ color: INDUSTRIAL.charcoal }}>
                 Electrification &amp; specialty trades
               </h2>
               <p className="max-w-xl text-sm leading-relaxed" style={{ color: INDUSTRIAL.muted }}>
@@ -533,65 +663,15 @@ export function WhoWeHelp() {
               </p>
             </div>
 
-            <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-              {SECONDARY.map((industry) => (
-                <SecondaryCard key={industry.id} industry={industry} />
-              ))}
-            </div>
+            <SecondaryExpansionCarousel />
           </div>
         </section>
 
-        {/* ── Not sure you fit? ────────────────────────────────────────────── */}
-        <section className="py-16" style={{ borderTopWidth: "0.5px", borderColor: INDUSTRIAL.outline }}>
-          <div className="mx-auto max-w-7xl px-6 lg:px-8">
-            <div
-              className="grid items-center gap-10 rounded-xl bg-white p-10 lg:grid-cols-2 lg:p-14"
-              style={{ borderWidth: "0.5px", borderColor: INDUSTRIAL.outline }}
-            >
-              <div>
-                <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.3em]" style={{ color: INDUSTRIAL.muted }}>
-                  Not sure you're a fit?
-                </p>
-                <h2 className="mb-4 font-headline text-3xl font-bold tracking-tighter lg:text-4xl" style={{ color: INDUSTRIAL.charcoal }}>
-                  We'll tell you honestly in 30 minutes.
-                </h2>
-                <p className="text-base leading-relaxed" style={{ color: INDUSTRIAL.muted }}>
-                  Book a free growth call. We'll look at your current site, your market,
-                  and your goals — and tell you exactly what it would take to win more
-                  work online. No pressure. If we're not the right fit, we'll say so.
-                </p>
-              </div>
-              <div className="flex flex-col gap-4 lg:items-end">
-                <div className="text-right hidden lg:block">
-                  <div className="mb-1 flex items-center justify-end gap-1.5">
-                    {[1, 2, 3, 4, 5].map((s) => (
-                      <Star key={s} className="size-4 fill-yellow-400 text-yellow-400" aria-hidden />
-                    ))}
-                    <span className="text-xs font-bold" style={{ color: INDUSTRIAL.charcoal }}>4.9 on Google</span>
-                  </div>
-                  <p className="text-xs" style={{ color: INDUSTRIAL.muted }}>47 contractors served · Avg 3.2× more leads</p>
-                </div>
-                <Link
-                  to="/contact"
-                  className="rounded-none bg-md3-primary px-8 py-4 text-center text-[11px] font-bold uppercase tracking-[0.25em] text-md3-on-primary shadow-md transition-all hover:bg-[#1a1a1a] lg:w-auto w-full"
-                >
-                  Book A Free Growth Call
-                </Link>
-                <Link
-                  to="/contact?ref=audit"
-                  className="border px-8 py-4 text-center text-[11px] font-bold uppercase tracking-[0.25em] transition-all hover:bg-[#1a1a1a] hover:text-white lg:w-auto w-full"
-                  style={{ borderColor: INDUSTRIAL.outline, color: INDUSTRIAL.charcoal, borderWidth: "0.5px" }}
-                >
-                  Get A Free Website Audit
-                </Link>
-              </div>
-            </div>
-          </div>
-        </section>
+        <CTASection />
 
         {/* ── Positioning statement ────────────────────────────────────────── */}
         <section className="border-t border-zinc-100 py-16 lg:py-20" style={{ background: INDUSTRIAL.charcoal }}>
-          <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="mx-auto max-w-[1440px] px-6 lg:px-8">
             <div className="grid gap-10 lg:grid-cols-3">
               {[
                 {
@@ -616,6 +696,7 @@ export function WhoWeHelp() {
           </div>
         </section>
 
+        </div>
       </div>
     </>
   );

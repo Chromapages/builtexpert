@@ -4,6 +4,12 @@ import { SEO } from "@/components/SEO";
 import { Section } from "@/components/ui/Section";
 import { AnimateIn } from "@/components/ui/AnimateIn";
 import { Button } from "@/components/ui/Button";
+import { HeaderSection } from "@/components/ui/HeaderSection";
+import {
+  INDUSTRIAL,
+  industrialMeshStyle,
+  industrialDarkMeshStyle,
+} from "@/lib/industrialStyle";
 
 const PROCESS_PHASES = [
   {
@@ -82,25 +88,23 @@ export function Process() {
         canonical="/process"
       />
 
-      <Section className="pt-32 pb-16">
-        <div className="max-w-4xl">
-          <AnimateIn>
-            <p className="text-[10px] font-bold uppercase tracking-[0.35em] text-muted mb-4">
-              How We Work
-            </p>
-            <h1 className="text-5xl md:text-7xl font-display font-light text-ink mb-6 uppercase leading-none">
-              Strategy First. Then Execution.
-            </h1>
-            <p className="text-lg md:text-xl text-muted leading-relaxed max-w-prose">
-              Every project follows a five-phase workflow designed to reduce ambiguity,
-              keep momentum high, and make launch decisions predictable.
-            </p>
-          </AnimateIn>
-        </div>
-      </Section>
+      <div className="font-body tracking-tight antialiased [letter-spacing:-0.01em] [&_h1]:normal-case [&_h2]:normal-case [&_h3]:normal-case selection:bg-md3-primary-container selection:text-md3-on-primary-container">
+        <HeaderSection 
+          badge="Strategy First"
+          title={
+            <>
+              Built for <span className="font-bold text-md3-primary">Precision Execution.</span>
+            </>
+          }
+          description="Every project follows a five-phase workflow designed to reduce ambiguity, keep momentum high, and make launch decisions predictable."
+          imageSrc="/images/process-hero.png"
+          imageAlt="Strategic Process"
+        />
 
-      <Section className="pt-0">
-        <div className="border-t border-border">
+        {/* Process Phases */}
+        <div className="pb-32 pt-24" style={industrialMeshStyle}>
+          <div className="mx-auto max-w-[1440px] px-6 lg:px-8">
+            <div className="border-t border-black/10">
           {PROCESS_PHASES.map((phase, index) => (
             <AnimateIn
               key={phase.id}
@@ -109,29 +113,30 @@ export function Process() {
             >
               <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-16">
                 <div className="lg:col-span-2">
-                  <p className="text-4xl md:text-5xl font-display font-light text-ink leading-none">
+                  <p className="font-headline text-5xl font-light leading-none text-md3-primary md:text-6xl">
                     {phase.id}
                   </p>
                 </div>
                 <div className="lg:col-span-3">
-                  <h2 className="text-2xl md:text-3xl font-display font-medium text-ink uppercase mb-2">
+                  <h2 className="mb-2 font-headline text-2xl font-bold uppercase text-black md:text-3xl">
                     {phase.name}
                   </h2>
-                  <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-muted">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-zinc-500">
                     {phase.timeframe}
                   </p>
                 </div>
                 <div className="lg:col-span-7">
-                  <p className="text-lg text-muted leading-relaxed max-w-prose mb-6">
+                  <p className="mb-8 max-w-prose text-lg leading-relaxed text-zinc-600">
                     {phase.description}
                   </p>
-                  <div>
-                    <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-muted mb-4">
-                      Deliverables
+                  <div className="rounded-lg border border-black/5 bg-white/50 p-6 backdrop-blur-sm">
+                    <p className="mb-6 text-[10px] font-bold uppercase tracking-[0.3em] text-md3-primary">
+                      Phase Deliverables
                     </p>
-                    <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <ul className="grid grid-cols-1 gap-4 md:grid-cols-2">
                       {phase.deliverables.map((item) => (
-                        <li key={item} className="text-ink border-t border-border pt-3">
+                        <li key={item} className="flex items-start gap-2 text-sm font-medium text-black">
+                          <span className="mt-1.5 h-1.5 w-1.5 shrink-0 bg-md3-primary" />
                           {item}
                         </li>
                       ))}
@@ -142,27 +147,38 @@ export function Process() {
             </AnimateIn>
           ))}
         </div>
-      </Section>
+      </div>
 
-      <Section className="bg-accent text-white py-24">
-        <AnimateIn className="max-w-4xl">
-          <p className="text-[10px] font-bold uppercase tracking-[0.35em] text-white/50 mb-4">
-            Post-Launch
-          </p>
-          <h2 className="text-4xl md:text-6xl font-display font-light uppercase leading-none mb-6 text-white">
-            The Site Launches. The Work Doesn’t Stop.
-          </h2>
-          <p className="text-lg text-white/80 leading-relaxed max-w-prose mb-10">
-            After launch, we stay involved through ongoing support, refinements,
-            and performance-focused iteration so the site keeps improving instead of stalling.
-          </p>
-          <Link to="/contact">
-            <Button variant="accent" size="lg" className="bg-ink text-white">
-              Book A Call
-            </Button>
-          </Link>
-        </AnimateIn>
-      </Section>
-    </>
-  );
+        {/* High-Impact CTA */}
+        <section className="relative overflow-hidden bg-zinc-950 py-24 text-white lg:py-32">
+          {/* Subtle Industrial Texture Overlay */}
+          <div className="absolute inset-0 z-0 opacity-20" style={industrialDarkMeshStyle} />
+          
+          <div className="relative z-10 mx-auto max-w-[1728px] px-6 lg:px-8">
+            <div className="max-w-4xl">
+              <AnimateIn>
+                <span className="mb-6 inline-block rounded-full bg-md3-primary px-3 py-1 text-[10px] font-bold uppercase tracking-[0.3em] text-white">
+                  Post-Launch
+                </span>
+                <h2 className="mb-8 font-headline text-4xl font-light uppercase leading-[0.95] tracking-tight text-white md:text-7xl">
+                  The Site Launches. <br />
+                  <span className="font-bold text-md3-primary">The Work Continues.</span>
+                </h2>
+                <p className="mb-12 max-w-2xl text-xl font-light leading-relaxed text-zinc-400">
+                  We don't just "hand over" a site and disappear. We stay involved through 
+                  ongoing support, performance refinements, and growth-focused iteration.
+                </p>
+                <Link to="/contact">
+                  <button className="inline-flex items-center justify-center bg-md3-primary px-12 py-5 text-[11px] font-bold uppercase tracking-[0.3em] text-white transition-all hover:bg-white hover:text-black">
+                    Book Your Strategy Call
+                  </button>
+                </Link>
+              </AnimateIn>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </>
+);
 }
