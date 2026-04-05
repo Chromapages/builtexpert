@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { ArrowRight, Star } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { SEO } from "@/components/SEO";
 import { HeaderSection } from "@/components/ui/HeaderSection";
 import {
@@ -15,6 +15,7 @@ import type { OSSectionData } from "@/components/features/OSSection";
 import { CTASection } from "@/components/ui/CTASection";
 import { getOsSection, getServicesHero, getFeaturedTestimonials, getServicesByCategory, getSiteSettings } from "@/lib/sanity.client";
 import { CardSkeleton } from "@/components/ui/CardSkeleton";
+import { Button } from "@/components/ui/Button";
 
 // ─── Default testimonials (fallback when Sanity is empty) ─────────────────────
 
@@ -111,7 +112,9 @@ function getServiceHref(service: any) {
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export function Services() {
+  const navigate = useNavigate();
   const [osSection, setOsSection] = useState<OSSectionData | null>(null);
+
   const [hero, setHero] = useState<any>(null);
   const [siteData, setSiteData] = useState<any>(null);
   const [services, setServices] = useState<any[]>([]);
@@ -315,9 +318,10 @@ export function Services() {
             {/* Category 05 — Growth Support (dark industrial grid) */}
             {(categoryMap["growthSupport"] || []).length > 0 && (
               <div 
-                className="relative overflow-hidden rounded-3xl p-6 sm:p-10 lg:p-20"
+                className="relative max-w-full overflow-hidden rounded-3xl p-5 sm:p-8 lg:p-20"
                 style={industrialDarkMeshStyle}
               >
+
                 <div className="relative z-10 mb-16 max-w-2xl">
                   <span className="mb-4 inline-block bg-md3-primary/20 px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.3em] text-md3-primary-fixed border border-md3-primary/30">
                     Category {CATEGORY_LABELS["growthSupport"].categoryNum}
@@ -432,12 +436,34 @@ export function Services() {
 
 function ServiceCard({ service }: { service: any }) {
   const bestFor = service.bestFor || [];
+  
+  // Logic-based "Primary Outcome" if not in Sanity
+  const outcome = service.outcome || (
+    service.category === 'audit' ? "Immediate Lead Leak Detection" :
+    service.category === 'websites' ? "High-Conversion Sales Asset" :
+    service.category === 'localSeo' ? "Map Pack Domination" :
+    service.category === 'landingPages' ? "Direct Social/Search Lead Capture" :
+    "Operational Scalability"
+  );
+
   return (
     <Link
       to={getServiceHref(service)}
-      className="group flex h-full flex-col border border-zinc-200 bg-white p-8 [border-width:0.5px] transition-all hover:-translate-y-1 hover:border-md3-primary/35 hover:shadow-lg hover:shadow-md3-primary/5"
+      className="group flex h-full flex-col border border-zinc-200 bg-white p-8 [border-width:0.5px] transition-all duration-300 hover:-translate-y-1.5 hover:border-md3-primary/35 hover:shadow-xl hover:shadow-md3-primary/10"
       aria-label={`View ${service.title} details`}
     >
+      <div className="mb-6 flex items-center justify-between gap-4">
+        <div className="h-px flex-1 bg-gradient-to-r from-md3-primary/40 to-transparent" />
+        <div className="shrink-0 rounded-full border border-md3-primary/15 bg-md3-primary/6 px-3 py-1.5 text-right">
+          <span className="block text-[8px] font-bold uppercase tracking-[0.28em] text-zinc-400">
+            Primary outcome
+          </span>
+          <span className="mt-1 block text-[10px] font-bold uppercase tracking-[0.2em] text-md3-primary">
+            {outcome}
+          </span>
+        </div>
+      </div>
+
       <h3 className="mb-4 font-headline text-xl font-bold text-[#1a1a1a] transition-colors group-hover:text-md3-primary">
         {service.title}
       </h3>
@@ -452,21 +478,31 @@ function ServiceCard({ service }: { service: any }) {
             <p className="text-[10px] font-bold uppercase tracking-widest text-[#1a1a1a]">Best for:</p>
             <ul className="space-y-2 text-xs font-light text-zinc-500">
               {bestFor.map((item: string, i: number) => (
-                <li key={i}>• {item}</li>
+                <li key={i} className="flex items-center gap-2">
+                  <span className="h-1 w-1 rounded-full bg-md3-primary/20" />
+                  {item}
+                </li>
               ))}
             </ul>
           </>
         )}
-        <p className="inline-flex items-center gap-2 pt-2 text-[10px] font-bold uppercase tracking-[0.24em] text-md3-primary">
-          View details
-          <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-1" aria-hidden />
-        </p>
+        <div className="inline-flex items-center gap-3 pt-4 text-[10px] font-bold uppercase tracking-[0.24em] text-md3-primary">
+          <span className="relative">
+            <span className="transition-colors duration-300 group-hover:text-[#1a1a1a]">View details</span>
+            <span className="absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-current transition-transform duration-300 group-hover:scale-x-100" />
+          </span>
+          <span className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-md3-primary/20 bg-md3-primary/6 transition-all duration-300 group-hover:border-md3-primary/40 group-hover:bg-md3-primary/10">
+            <ArrowRight className="size-3.5 transition-transform duration-300 group-hover:translate-x-0.5" aria-hidden />
+          </span>
+        </div>
       </div>
     </Link>
   );
 }
 
+
 function OngoingSupportCard({ service }: { service: any }) {
+  const navigate = useNavigate();
   const bestFor = service.bestFor || [];
   
   // Icon mapping
@@ -480,8 +516,13 @@ function OngoingSupportCard({ service }: { service: any }) {
       style={{ border: "1px solid rgba(255,255,255,0.08)" }}
     >
       <div className="relative z-10">
-        <div className="mb-8 flex h-14 w-14 items-center justify-center rounded-xl bg-md3-primary/10 text-md3-primary transition-transform group-hover:scale-110 group-hover:rotate-3">
-          <Icon className="size-7" strokeWidth={1.5} />
+        <div className="mb-8 flex items-center justify-between">
+          <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-md3-primary/10 text-md3-primary transition-transform group-hover:scale-110 group-hover:rotate-3">
+            <Icon className="size-7" strokeWidth={1.5} />
+          </div>
+          <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-teal-400 opacity-60">
+            System Continuity
+          </span>
         </div>
 
         <h3 className="mb-4 font-headline text-2xl font-bold text-white tracking-tight">
@@ -510,13 +551,15 @@ function OngoingSupportCard({ service }: { service: any }) {
       </div>
 
       <div className="relative z-10 mt-12 pt-6" style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}>
-        <Link
-          to={getServiceHref(service)}
-          className="inline-flex items-center gap-3 text-[10px] font-bold uppercase tracking-[0.25em] text-white transition-all hover:text-md3-primary"
+        <Button
+          onClick={() => navigate(getServiceHref(service))}
+          variant="accent"
+          size="sm"
+          className="w-full justify-between border border-white/10 bg-white/[0.03] text-white hover:border-md3-primary/40 hover:bg-md3-primary group-hover:bg-white/5"
         >
-          View Technical Scope
+          <span className="text-[9px] tracking-[0.2em]">View Technical Scope</span>
           <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-1.5" />
-        </Link>
+        </Button>
       </div>
 
       {/* Subtle corner accent */}
