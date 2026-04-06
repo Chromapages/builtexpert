@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
 import { SEO } from "@/components/SEO";
 import { trackEvent } from "@/components/Analytics";
+import { submitToCRM } from "@/lib/crm";
 import {
   INDUSTRIAL,
   industrialMeshStyle,
@@ -58,7 +59,17 @@ export function Audit() {
     e.preventDefault();
     setIsSubmitting(true);
     setSubmitError("");
-    
+
+    // Submit to CRM
+    submitToCRM({
+      name: formData.name,
+      email: formData.email,
+      company: formData.company,
+      phone: formData.phone,
+      brandId: "builtexpert",
+      sourceDetail: `Audit Page - ${formData.trade}`,
+    });
+
     try {
       // 1. Submit lead details first (capture the lead)
       const leadResponse = await fetch("/api/lead-intake", {

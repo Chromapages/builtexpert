@@ -2,6 +2,7 @@ import * as React from "react";
 import { ArrowRight, CheckCircle2, Download, Loader2, Mail } from "lucide-react";
 import { SEO } from "@/components/SEO";
 import { motion, AnimatePresence } from "motion/react";
+import { submitToCRM } from "@/lib/crm";
 import {
   INDUSTRIAL,
   industrialMeshStyle,
@@ -18,6 +19,15 @@ export function Checklist() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+
+    // Submit to CRM
+    submitToCRM({
+      name: "Checklist Lead", // No name field on this form
+      email: email,
+      brandId: "builtexpert",
+      sourceDetail: "Checklist Download",
+    });
+
     // Simulate API call
     await new Promise((resolve) => setTimeout(resolve, 1500));
     setIsSubmitting(false);

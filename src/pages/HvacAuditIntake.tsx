@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Check, ChevronRight, Loader2 } from "lucide-react";
 import { SEO } from "@/components/SEO";
 import { cn } from "@/lib/utils";
+import { submitToCRM } from "@/lib/crm";
 
 const TOP_SERVICES = [
   "AC Installation",
@@ -94,6 +95,16 @@ export function HvacAuditIntake() {
 
     setFormState("submitting");
     setErrorMessage("");
+
+    // Submit to CRM
+    submitToCRM({
+      name: fields.ownerName,
+      email: fields.email,
+      company: fields.businessName,
+      phone: "", // No phone field in this specific form state, but can add if available
+      brandId: "builtexpert",
+      sourceDetail: "HVAC Audit Intake Form",
+    });
 
     try {
       const body = {

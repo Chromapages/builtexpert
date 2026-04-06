@@ -10,6 +10,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import { SEO } from "@/components/SEO";
 import { cn } from "@/lib/utils";
 import { trackEmailClick, trackEvent } from "@/components/Analytics";
+import { submitToCRM } from "@/lib/crm";
 import {
   INDUSTRIAL,
   industrialMeshStyle,
@@ -180,6 +181,15 @@ export function Contact() {
 
     setIsSubmitting(true);
     setErrors({});
+
+    // Submit to CRM
+    submitToCRM({
+      name: formState.name,
+      email: formState.email,
+      company: formState.website, // Using website as company if company field is missing
+      brandId: "builtexpert",
+      sourceDetail: `Contact Page - ${formState.serviceType}`,
+    });
 
     try {
       const response = await fetch("/api/lead-intake", {

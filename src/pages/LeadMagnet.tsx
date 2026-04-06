@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { SEO } from "@/components/SEO";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "motion/react";
+import { submitToCRM } from "@/lib/crm";
 import {
   INDUSTRIAL,
   industrialMeshStyle,
@@ -410,6 +411,15 @@ export function LeadMagnet() {
     setTouched({ name: true, email: true });
     if (!isNameValid || !isEmailValid) return;
     setSubmitState("submitting");
+
+    // Submit to CRM
+    submitToCRM({
+      name: form.name,
+      email: form.email,
+      brandId: "builtexpert",
+      sourceDetail: `Lead Magnet - ${form.trade || "General"}`,
+    });
+
     try {
       const res = await fetch("https://formspree.io/f/mqakvjwe", {
         method: "POST",
