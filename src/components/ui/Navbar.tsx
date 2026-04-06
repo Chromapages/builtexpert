@@ -14,6 +14,7 @@ const NAV_LINKS: { name: string; href: string }[] = [
   { name: "Pricing", href: "/pricing" },
   { name: "Blog", href: "/journal" },
   { name: "About", href: "/about" },
+  { name: "Contact", href: "/contact" },
 ];
 
 function isNavLinkActive(pathname: string, href: string) {

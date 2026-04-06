@@ -18,7 +18,7 @@ export interface CRMFormData {
  */
 export const submitToCRM = async (formData: CRMFormData) => {
   try {
-    const response = await fetch('https://your-crm-domain.com/api/webhooks/leads', {
+    const response = await fetch('https://chromaos.vercel.app/api/webhooks/leads', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

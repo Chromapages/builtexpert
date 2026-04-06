@@ -500,7 +500,7 @@ export function Contact() {
                           <p className="text-xs font-medium text-md3-error">{errors.email}</p>
                         ) : (
                           <p className="text-[10px] font-light" style={{ color: INDUSTRIAL.muted }}>
-                            We&apos;ll send your audit here. No spam, ever.
+                            We&apos;ll get back to you within 24 hours. No spam, ever.
                           </p>
                         )}
                       </div>
@@ -578,10 +578,10 @@ export function Contact() {
                           disabled={isSubmitting}
                           className="w-full bg-[#1a1a1a] py-4 text-[11px] font-bold uppercase tracking-[0.2em] text-white transition-all hover:bg-md3-primary disabled:opacity-60"
                         >
-                          {isSubmitting ? "Sending..." : "Book My $497 Audit →"}
+                          {isSubmitting ? "Sending..." : "Send Message →"}
                         </button>
                         <p className="mt-3 text-center text-xs font-light" style={{ color: INDUSTRIAL.muted }}>
-                          Paid diagnostic. No sales pressure. Video delivered within 2 business days.
+                          Free consultation. No sales pressure. 
                         </p>
                         <p className="mt-1 text-center text-[10px] font-light" style={{ color: INDUSTRIAL.muted }}>
                           <Link to="/privacy" className="underline underline-offset-2 hover:text-md3-primary transition-colors">

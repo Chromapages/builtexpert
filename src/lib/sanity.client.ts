@@ -2,16 +2,16 @@ import { createClient } from "@sanity/client";
 import { createImageUrlBuilder } from "@sanity/image-url";
 
 export const client = createClient({
-  projectId: "z5yntv5o",
-  dataset: "production",
+  projectId: import.meta.env.VITE_SANITY_PROJECT_ID || "z5yntv5o",
+  dataset: import.meta.env.VITE_SANITY_DATASET || "production",
   useCdn: true, // `false` if you want to ensure fresh data
   apiVersion: "2024-03-27",
 });
 
 // Write client for server-side mutations
 export const writeClient = createClient({
-  projectId: "z5yntv5o",
-  dataset: "production",
+  projectId: import.meta.env.VITE_SANITY_PROJECT_ID || "z5yntv5o",
+  dataset: import.meta.env.VITE_SANITY_DATASET || "production",
   useCdn: false,
   apiVersion: "2024-03-27",
   token: process.env.SANITY_WRITE_TOKEN,
