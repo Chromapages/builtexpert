@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
-import { ArrowRight, Star } from "lucide-react";
+import { ArrowRight, Star, ShieldCheck, Zap, FileText } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
+import { motion } from "motion/react";
+import { cn } from "@/lib/utils";
 import { SEO } from "@/components/SEO";
 import { HeaderSection } from "@/components/ui/HeaderSection";
 import {
@@ -9,7 +11,6 @@ import {
   industrialDarkMeshStyle,
   industrialTextGradientStyle,
 } from "@/lib/industrialStyle";
-import { ShieldCheck, Zap, FileText } from "lucide-react";
 import { OSSection } from "@/components/features/OSSection";
 import type { OSSectionData } from "@/components/features/OSSection";
 import { CTASection } from "@/components/ui/CTASection";
@@ -156,13 +157,16 @@ export function Services() {
     fetchOsSection();
   }, []);
 
-  // ── Group services by category ─────────────────────────────────────────────
-  const categoryMap: Record<string, any[]> = {};
-  for (const s of services) {
-    const cat = CATEGORY_ALIASES[s.category] || "websites";
-    if (!categoryMap[cat]) categoryMap[cat] = [];
-    categoryMap[cat].push(s);
-  }
+  // ── Identify Hero and Supporting Services ──────────────────────────────────
+  const heroService = services.find(s => (s.category === 'websites' || s.title?.toLowerCase().includes("website")));
+  const supportingServices = services.filter(s => s._id !== heroService?._id);
+  
+  // Sort supporting services by their designated category number for logical flow
+  const sortedSupporting = [...supportingServices].sort((a, b) => {
+    const catA = CATEGORY_LABELS[CATEGORY_ALIASES[a.category] || "websites"]?.categoryNum || "99";
+    const catB = CATEGORY_LABELS[CATEGORY_ALIASES[b.category] || "websites"]?.categoryNum || "99";
+    return parseInt(catA) - parseInt(catB);
+  });
 
   // ── Display testimonials (Sanity or fallback) ─────────────────────────────
   const displayTestimonials = testimonials.length > 0 ? testimonials : TESTIMONIALS_FALLBACK;
@@ -215,146 +219,49 @@ export function Services() {
 
         <div className="pb-32 pt-24" style={industrialMeshStyle}>
 
-        {/* ── Services Sections (Sanity-driven) ── */}
+        {/* ── Services Bento Grid (FLFS-Optimized) ── */}
         <section className="mx-auto max-w-[1440px] px-4 sm:px-8 lg:px-12 2xl:px-16 3xl:max-w-screen-2xl 4xl:max-w-[1728px]">
-          <div className="space-y-32">
+          <div className="mb-20">
+            <span className="mb-4 inline-block bg-teal-50 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-teal-700">
+              Service Ecosystem
+            </span>
+            <h2 className="font-headline text-5xl font-bold tracking-tighter text-[#1a1a1a] md:text-6xl">
+              Precision Engines for <span className="text-md3-primary">Contractor Growth.</span>
+            </h2>
+            <div className="mt-6 h-px w-32 bg-md3-primary" />
+          </div>
 
-            {/* Category 01 — Lead System Audit */}
-            {(categoryMap["audit"] || []).length > 0 && (
-              <div>
-                <div className="mb-12">
-                  <span className="mb-4 inline-block bg-teal-50 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-teal-700">
-                    Category {CATEGORY_LABELS["audit"].categoryNum}
-                  </span>
-                  <h2 className="font-headline text-4xl font-bold tracking-tight text-[#1a1a1a]">
-                    {CATEGORY_LABELS["audit"].label}
-                  </h2>
-                  <div className="mt-4 h-px w-24 bg-md3-primary" />
-                </div>
-                <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-                  {loading ? (
-                    Array.from({ length: 3 }).map((_, i) => <CardSkeleton key={`skeleton-audit-${i}`} />)
-                  ) : (
-                    categoryMap["audit"].map((service: any) => (
-                      <ServiceCard key={service._id || service.slug?.current} service={service} />
-                    ))
-                  )}
-                </div>
-              </div>
-            )}
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+             {loading ? (
+                Array.from({ length: 5 }).map((_, i) => (
+                  <div key={`skeleton-${i}`} className={i === 0 ? "lg:col-span-2 lg:row-span-2" : "col-span-1"}>
+                    <CardSkeleton />
+                  </div>
+                ))
+             ) : (
+               <>
+                {/* Hero Service: Contractor Websites */}
+                {heroService && (
+                  <div className="lg:col-span-2 lg:row-span-2">
+                    <ServiceCard service={heroService} isHero={true} />
+                  </div>
+                )}
 
-            {/* Category 02 — Contractor Websites */}
-            {(categoryMap["websites"] || []).length > 0 && (
-              <div>
-                <div className="mb-12">
-                  <span className="mb-4 inline-block bg-teal-50 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-teal-700">
-                    Category {CATEGORY_LABELS["websites"].categoryNum}
-                  </span>
-                  <h2 className="font-headline text-4xl font-bold tracking-tight text-[#1a1a1a]">
-                    {CATEGORY_LABELS["websites"].label}
-                  </h2>
-                  <div className="mt-4 h-px w-24 bg-md3-primary" />
-                </div>
-                <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-                  {loading ? (
-                    Array.from({ length: 3 }).map((_, i) => <CardSkeleton key={`skeleton-websites-${i}`} />)
-                  ) : (
-                    categoryMap["websites"].map((service: any) => (
-                      <ServiceCard key={service._id || service.slug?.current} service={service} />
-                    ))
-                  )}
-                </div>
-              </div>
-            )}
-
-            {/* Category 03 — Landing Pages */}
-            {(categoryMap["landingPages"] || []).length > 0 && (
-              <div>
-                <div className="mb-12">
-                  <span className="mb-4 inline-block bg-teal-50 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-teal-700">
-                    Category {CATEGORY_LABELS["landingPages"].categoryNum}
-                  </span>
-                  <h2 className="font-headline text-4xl font-bold tracking-tight text-[#1a1a1a]">
-                    {CATEGORY_LABELS["landingPages"].label}
-                  </h2>
-                  <div className="mt-4 h-px w-24 bg-md3-primary" />
-                </div>
-                <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-                  {loading ? (
-                    Array.from({ length: 3 }).map((_, i) => <CardSkeleton key={`skeleton-lp-${i}`} />)
-                  ) : (
-                    categoryMap["landingPages"].map((service: any) => (
-                      <ServiceCard key={service._id || service.slug?.current} service={service} />
-                    ))
-                  )}
-                </div>
-              </div>
-            )}
-
-            {/* Category 04 — Local SEO */}
-            {(categoryMap["localSeo"] || []).length > 0 && (
-              <div>
-                <div className="mb-12">
-                  <span className="mb-4 inline-block bg-teal-50 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-teal-700">
-                    Category {CATEGORY_LABELS["localSeo"].categoryNum}
-                  </span>
-                  <h2 className="font-headline text-4xl font-bold tracking-tight text-[#1a1a1a]">
-                    {CATEGORY_LABELS["localSeo"].label}
-                  </h2>
-                  <div className="mt-4 h-px w-24 bg-md3-primary" />
-                </div>
-                <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-                  {loading ? (
-                    Array.from({ length: 2 }).map((_, i) => <CardSkeleton key={`skeleton-seo-${i}`} />)
-                  ) : (
-                    categoryMap["localSeo"].map((service: any) => (
-                      <ServiceCard key={service._id || service.slug?.current} service={service} />
-                    ))
-                  )}
-                </div>
-              </div>
-            )}
-
-            {/* Category 05 — Growth Support (dark industrial grid) */}
-            {(categoryMap["growthSupport"] || []).length > 0 && (
-              <div 
-                className="relative max-w-full overflow-hidden rounded-3xl p-5 sm:p-8 lg:p-20"
-                style={industrialDarkMeshStyle}
-              >
-
-                <div className="relative z-10 mb-16 max-w-2xl">
-                  <span className="mb-4 inline-block bg-md3-primary/20 px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.3em] text-md3-primary-fixed border border-md3-primary/30">
-                    Category {CATEGORY_LABELS["growthSupport"].categoryNum}
-                  </span>
-                  <h2 className="font-headline text-5xl font-bold tracking-tighter text-white md:text-6xl">
-                    {CATEGORY_LABELS["growthSupport"].label}
-                  </h2>
-                  <p className="mt-6 text-lg font-light leading-relaxed text-white/50">
-                    Precision-engineered upkeep to ensure your digital foundation never drifts from peak performance. 
-                  </p>
-                </div>
-
-                <div className="relative z-10 grid grid-cols-1 gap-6 lg:grid-cols-3">
-                  {loading ? (
-                    Array.from({ length: 3 }).map((_, i) => <div key={`skeleton-gs-${i}`} className="bg-white/5 p-8 rounded-2xl"><CardSkeleton /></div>)
-                  ) : (
-                    categoryMap["growthSupport"].map((service: any) => (
-                      <OngoingSupportCard key={service._id || service.slug?.current} service={service} />
-                    ))
-                  )}
-                </div>
-
-                {/* Decorative element */}
-                <div className="pointer-events-none absolute right-0 top-0 h-full w-1/3 opacity-[0.03] select-none">
-                  <svg className="h-full w-full" viewBox="0 0 100 100" fill="none" stroke="white" strokeWidth="0.1">
-                    <circle cx="100" cy="0" r="80" />
-                    <circle cx="100" cy="0" r="60" />
-                    <circle cx="100" cy="0" r="40" />
-                  </svg>
-                </div>
-              </div>
-            )}
-
+                {/* Supporting Services */}
+                {sortedSupporting.map((service) => {
+                  const isGrowthSupport = CATEGORY_ALIASES[service.category] === 'growthSupport';
+                  return (
+                    <div key={service._id} className="col-span-1">
+                      {isGrowthSupport ? (
+                        <OngoingSupportCard service={service} />
+                      ) : (
+                        <ServiceCard service={service} />
+                      )}
+                    </div>
+                  );
+                })}
+               </>
+             )}
           </div>
         </section>
 
@@ -434,7 +341,7 @@ export function Services() {
 
 // ─── Sub-components ────────────────────────────────────────────────────────────
 
-function ServiceCard({ service }: { service: any }) {
+function ServiceCard({ service, isHero = false }: { service: any; isHero?: boolean }) {
   const bestFor = service.bestFor || [];
   
   // Logic-based "Primary Outcome" if not in Sanity
@@ -447,56 +354,133 @@ function ServiceCard({ service }: { service: any }) {
   );
 
   return (
-    <Link
-      to={getServiceHref(service)}
-      className="group flex h-full flex-col border border-zinc-200 bg-white p-8 [border-width:0.5px] transition-all duration-300 hover:-translate-y-1.5 hover:border-md3-primary/35 hover:shadow-xl hover:shadow-md3-primary/10"
-      aria-label={`View ${service.title} details`}
+    <motion.div
+      whileHover={{ y: -8 }}
+      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+      className="h-full"
     >
-      <div className="mb-6 flex items-center justify-between gap-4">
-        <div className="h-px flex-1 bg-gradient-to-r from-md3-primary/40 to-transparent" />
-        <div className="shrink-0 rounded-full border border-md3-primary/15 bg-md3-primary/6 px-3 py-1.5 text-right">
-          <span className="block text-[8px] font-bold uppercase tracking-[0.28em] text-zinc-400">
-            Primary outcome
-          </span>
-          <span className="mt-1 block text-[10px] font-bold uppercase tracking-[0.2em] text-md3-primary">
-            {outcome}
-          </span>
-        </div>
-      </div>
-
-      <h3 className="mb-4 font-headline text-xl font-bold text-[#1a1a1a] transition-colors group-hover:text-md3-primary">
-        {service.title}
-      </h3>
-      {service.description && (
-        <p className="mb-6 text-sm font-light leading-relaxed text-zinc-600">
-          {service.description}
-        </p>
-      )}
-      <div className="mt-auto space-y-4">
-        {bestFor.length > 0 && (
-          <>
-            <p className="text-[10px] font-bold uppercase tracking-widest text-[#1a1a1a]">Best for:</p>
-            <ul className="space-y-2 text-xs font-light text-zinc-500">
-              {bestFor.map((item: string, i: number) => (
-                <li key={i} className="flex items-center gap-2">
-                  <span className="h-1 w-1 rounded-full bg-md3-primary/20" />
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </>
+      <Link
+        to={getServiceHref(service)}
+        className={cn(
+          "group relative flex h-full flex-col border border-zinc-200 bg-white p-8 [border-width:0.5px] transition-all duration-300 hover:border-md3-primary/35 hover:shadow-2xl hover:shadow-md3-primary/10 rounded-2xl overflow-hidden text-[#1a1a1a]",
+          isHero && "bg-black border-zinc-800 text-white"
         )}
-        <div className="inline-flex items-center gap-3 pt-4 text-[10px] font-bold uppercase tracking-[0.24em] text-md3-primary">
-          <span className="relative">
-            <span className="transition-colors duration-300 group-hover:text-[#1a1a1a]">View details</span>
-            <span className="absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-current transition-transform duration-300 group-hover:scale-x-100" />
-          </span>
-          <span className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-md3-primary/20 bg-md3-primary/6 transition-all duration-300 group-hover:border-md3-primary/40 group-hover:bg-md3-primary/10">
-            <ArrowRight className="size-3.5 transition-transform duration-300 group-hover:translate-x-0.5" aria-hidden />
-          </span>
+        aria-label={`View ${service.title} details`}
+      >
+        {/* Background Image for Hero Tile */}
+        {isHero && (
+          <div className="absolute inset-0 z-0 select-none pointer-events-none">
+            <img 
+              src="/images/contractor-hero-bg.png" 
+              alt="" 
+              className="h-full w-full object-cover opacity-[0.70] contrast-[1.2] transition-all duration-700 group-hover:scale-110 group-hover:opacity-[0.90]" 
+              loading="lazy"
+            />
+            {/* Dark Cinematic Overlay */}
+            <div className="absolute inset-0 bg-black/50 transition-opacity group-hover:opacity-60" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
+            
+            {/* Decorative Grid Line */}
+            <div className="absolute bottom-0 right-0 h-32 w-32 opacity-[0.03]">
+              <svg className="h-full w-full" viewBox="0 0 100 100" fill="none" stroke="#1a1a1a" strokeWidth="0.5">
+                <path d="M0 100 L100 0 M0 80 L80 0 M20 100 L100 20" />
+              </svg>
+            </div>
+          </div>
+        )}
+
+        <div className="relative z-10 flex flex-col h-full"> 
+          <div className="mb-6 flex items-center justify-between gap-4">
+            <div className="h-px flex-1 bg-gradient-to-r from-md3-primary/40 to-transparent" />
+            <div className={cn(
+              "shrink-0 rounded-full px-3 py-1.5 text-right transition-colors",
+              isHero 
+                ? "border border-white/20 bg-white/10 backdrop-blur-md" 
+                : "border border-md3-primary/15 bg-md3-primary/6"
+            )}>
+              <span className={cn(
+                "block text-[8px] font-bold uppercase tracking-[0.28em]",
+                isHero ? "text-white/40" : "text-zinc-400"
+              )}>
+                Primary outcome
+              </span>
+              <span className={cn(
+                "mt-1 block text-[10px] font-bold uppercase tracking-[0.2em]",
+                isHero ? "text-teal-300" : "text-md3-primary"
+              )}>
+                {outcome}
+              </span>
+            </div>
+          </div>
+
+          <h3 className={cn(
+            "mb-4 font-headline font-bold transition-colors tracking-tighter",
+            isHero ? "text-4xl md:text-5xl text-white underline-offset-8" : "text-xl text-[#1a1a1a] group-hover:text-md3-primary"
+          )}>
+            {service.title}
+          </h3>
+          {service.description && (
+            <p className={cn(
+              "mb-6 font-light leading-relaxed",
+              isHero ? "text-lg max-w-prose text-white/80" : "text-sm text-zinc-600"
+            )}>
+              {service.description}
+            </p>
+          )}
+          
+          <div className={cn(
+            "mt-auto space-y-6",
+            isHero && "grid grid-cols-1 md:grid-cols-2 gap-x-12 space-y-0"
+          )}>
+            {bestFor.length > 0 && (
+              <div className="space-y-4">
+                <p className={cn(
+                  "text-[10px] font-bold uppercase tracking-widest",
+                  isHero ? "text-white/40" : "text-[#1a1a1a]"
+                )}>Best for:</p>
+                <ul className={cn(
+                  "space-y-3 font-light",
+                  isHero ? "text-sm text-white/70" : "text-xs text-zinc-500"
+                )}>
+                  {bestFor.map((item: string, i: number) => (
+                    <li key={i} className="flex items-center gap-3">
+                      <span className={cn(
+                        "h-1.5 w-1.5 rounded-full",
+                        isHero ? "bg-md3-primary/60" : "bg-md3-primary/30"
+                      )} />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            
+            <div className={cn(
+              "flex flex-col justify-end",
+              isHero ? "pt-0" : "pt-4"
+            )}>
+              <div className="inline-flex items-center gap-3 text-[10px] font-bold uppercase tracking-[0.24em] text-md3-primary">
+                <span className="relative">
+                  <span className={cn(
+                    "transition-colors duration-300",
+                    isHero ? "group-hover:text-white" : "group-hover:text-[#1a1a1a]"
+                  )}>View details</span>
+                  <span className="absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-current transition-transform duration-300 group-hover:scale-x-100" />
+                </span>
+                <span className={cn(
+                  "inline-flex h-8 w-8 items-center justify-center rounded-full border transition-all duration-300",
+                  isHero 
+                    ? "border-white/20 bg-white/5 group-hover:border-md3-primary/40 group-hover:bg-md3-primary/20" 
+                    : "border border-md3-primary/20 bg-md3-primary/6 group-hover:border-md3-primary/40 group-hover:bg-md3-primary/10"
+                )}>
+                  <ArrowRight className="size-4 transition-transform duration-300 group-hover:translate-x-0.5" aria-hidden />
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    </Link>
+      </Link>
+    </motion.div>
   );
 }
 
@@ -511,59 +495,65 @@ function OngoingSupportCard({ service }: { service: any }) {
              : ShieldCheck;
 
   return (
-    <div 
-      className="group relative flex flex-col justify-between overflow-hidden rounded-2xl bg-white/[0.03] p-8 transition-all hover:bg-white/[0.06] hover:shadow-2xl hover:shadow-black/50"
-      style={{ border: "1px solid rgba(255,255,255,0.08)" }}
+    <motion.div
+      whileHover={{ y: -8 }}
+      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+      className="h-full"
     >
-      <div className="relative z-10">
-        <div className="mb-8 flex items-center justify-between">
-          <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-md3-primary/10 text-md3-primary transition-transform group-hover:scale-110 group-hover:rotate-3">
-            <Icon className="size-7" strokeWidth={1.5} />
+      <div 
+        className="group relative flex h-full flex-col justify-between overflow-hidden rounded-2xl bg-white/[0.03] p-8 transition-all hover:bg-white/[0.06] hover:shadow-2xl hover:shadow-black/50"
+        style={industrialDarkMeshStyle}
+      >
+        <div className="relative z-10">
+          <div className="mb-8 flex items-center justify-between">
+            <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-md3-primary/10 text-md3-primary transition-transform group-hover:scale-110 group-hover:rotate-3">
+              <Icon className="size-7" strokeWidth={1.5} />
+            </div>
+            <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-teal-400 opacity-60">
+              System Continuity
+            </span>
           </div>
-          <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-teal-400 opacity-60">
-            System Continuity
-          </span>
+
+          <h3 className="mb-4 font-headline text-2xl font-bold text-white tracking-tight">
+            {service.title}
+          </h3>
+          
+          {service.description && (
+            <p className="mb-8 text-sm font-light leading-relaxed text-white/50">
+              {service.description}
+            </p>
+          )}
+
+          {bestFor.length > 0 && (
+            <div className="space-y-4">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-white/40">Best for:</p>
+              <ul className="space-y-3 text-[11px] font-medium text-white/60">
+                {bestFor.map((item: string, i: number) => (
+                  <li key={i} className="flex items-start gap-2">
+                    <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-md3-primary/40" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
 
-        <h3 className="mb-4 font-headline text-2xl font-bold text-white tracking-tight">
-          {service.title}
-        </h3>
-        
-        {service.description && (
-          <p className="mb-8 text-sm font-light leading-relaxed text-white/50">
-            {service.description}
-          </p>
-        )}
+        <div className="relative z-10 mt-12 pt-6" style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+          <Button
+            onClick={() => navigate(getServiceHref(service))}
+            variant="accent"
+            size="sm"
+            className="w-full justify-between border border-white/10 bg-white/[0.03] text-white hover:border-md3-primary/40 hover:bg-md3-primary group-hover:bg-white/5"
+          >
+            <span className="text-[9px] tracking-[0.2em]">View Technical Scope</span>
+            <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-1.5" />
+          </Button>
+        </div>
 
-        {bestFor.length > 0 && (
-          <div className="space-y-4">
-            <p className="text-[10px] font-bold uppercase tracking-widest text-white/40">Best for:</p>
-            <ul className="space-y-2 text-[11px] font-medium text-white/60">
-              {bestFor.map((item: string, i: number) => (
-                <li key={i} className="flex items-start gap-2">
-                  <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-md3-primary/40" />
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+        {/* Subtle corner accent */}
+        <div className="absolute -right-4 -top-4 h-24 w-24 rounded-full bg-md3-primary/5 blur-3xl transition-opacity group-hover:opacity-100 opacity-0" />
       </div>
-
-      <div className="relative z-10 mt-12 pt-6" style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}>
-        <Button
-          onClick={() => navigate(getServiceHref(service))}
-          variant="accent"
-          size="sm"
-          className="w-full justify-between border border-white/10 bg-white/[0.03] text-white hover:border-md3-primary/40 hover:bg-md3-primary group-hover:bg-white/5"
-        >
-          <span className="text-[9px] tracking-[0.2em]">View Technical Scope</span>
-          <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-1.5" />
-        </Button>
-      </div>
-
-      {/* Subtle corner accent */}
-      <div className="absolute -right-4 -top-4 h-24 w-24 rounded-full bg-md3-primary/5 blur-3xl transition-opacity group-hover:opacity-100 opacity-0" />
-    </div>
+    </motion.div>
   );
 }
