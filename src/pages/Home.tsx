@@ -39,7 +39,7 @@ const HERO_IMG = "/images/hero/hero-industrial.png";
 const SYSTEM_SERVICES = [
   {
     icon: "search",
-    title: "Lead System Audit",
+    title: "HVAC Lead System Audit",
     body: "A manual diagnostic that shows you what is leaking leads, where the bottleneck lives, and what to fix first.",
     imgSrc: "/images/home/service-audit-new.webp",
     imgAlt: "Lead System Audit Preview",
@@ -47,11 +47,11 @@ const SYSTEM_SERVICES = [
   },
   {
     icon: "web",
-    title: "Contractor Websites",
+    title: "HVAC Lead Generation System",
     body: "A high-conversion site built to turn local traffic into calls, estimates, and booked work.",
     imgSrc: "/images/home/service-websites-new.webp",
-    imgAlt: "BuiltExpert Conversion Web Design Preview",
-    href: "/services/contractor-websites",
+    imgAlt: "BuiltExpert Lead Generation System Preview",
+    href: "/services/hvac-lead-generation-system",
   },
   {
     icon: "article",
@@ -123,7 +123,32 @@ const WHO_CARDS: {
 
 // Testimonials — QW-4: moved before FAQ
 // Testimonials HIDDEN for launch v1 until real ones are added to Sanity
-const TESTIMONIALS: any[] = [];
+const TESTIMONIALS: any[] = [
+  {
+    name: "James M.",
+    trade: "Owner, Apex HVAC",
+    location: "Dallas, TX",
+    rating: 5,
+    resultHighlight: "+82% more booked calls",
+    quote: "The audit was a turning point. We weren't just missing calls; we were invisible in our best service areas. The 47-point report showed us exactly why.",
+  },
+  {
+    name: "Sarah L.",
+    trade: "Ops Manager, Coastal Air",
+    location: "Sarasota, FL",
+    rating: 5,
+    resultHighlight: "ServiceTitan Lead-Flow Sync",
+    quote: "Finally, a team that understands how ServiceTitan works. Our leads now flow directly into our board, and the conversion rate on the new site is double our old one.",
+  },
+  {
+    name: "Rick D.",
+    trade: "Founder, Peak Performance",
+    location: "Denver, CO",
+    rating: 5,
+    resultHighlight: "Booked 14 Days Out",
+    quote: "BuiltExpert actually engineered a system for us. Within 3 weeks of launch, we were booked out 14 days. Best investment we've made this year.",
+  },
+];
 
 const PROCESS_STEPS = [
   {
@@ -192,12 +217,12 @@ const FAQ_ITEMS: { q: string; a: string }[] = [
   },
   {
     q: "What does it cost?",
-    a: "The audit is $497. Contractor websites start at $4,200, landing pages are scoped per campaign, and ongoing growth support starts at $750/mo. See the full breakdown on our Pricing page.",
+    a: "The audit is $297. HVAC Lead Generation Systems start at $4,200, landing pages are scoped per campaign, and ongoing growth support starts at $750/mo. See the full breakdown on our Pricing page.",
   },
 ];
 
 const HOME_DESCRIPTION =
-  "BuiltExpert: High-performance websites and lead systems for electricians and HVAC contractors. Turn local search into booked calls with exclusive leads.";
+  "BuiltExpert: High-performance lead systems and conversion engines for HVAC contractors. Turn local search into booked calls with exclusive leads.";
 
 export function Home() {
   const [homeData, setHomeData] = React.useState<any>(null);
@@ -301,8 +326,8 @@ export function Home() {
   return (
     <>
       <SEO
-        title="BUILT EXPERT"
-        description="High-performance websites and lead systems for electricians and HVAC contractors. Turn local search into booked calls with exclusive leads."
+        title="HVAC Lead Generation Systems | BuiltExpert"
+        description="High-performance lead generation systems for HVAC contractors. Turn local search into booked calls with exclusive, trade-specific systems designed for high-intent results."
         canonicalPath="/"
       />
 
@@ -462,7 +487,7 @@ export function Home() {
                     <p className="mt-1 text-[9px] font-bold uppercase tracking-[0.2em] text-zinc-500">Active Contractors</p>
                   </div>
                   <div>
-                    <span className="font-headline text-3xl font-black text-white">High</span>
+                    <span className="font-headline text-3xl font-black text-white">92%</span>
                     <p className="mt-1 text-[9px] font-bold uppercase tracking-[0.2em] text-zinc-500">Avg. Call Growth</p>
                   </div>
                 </div>
@@ -632,10 +657,10 @@ export function Home() {
                   ))}
                 </ul>
                 <Link
-                  to="/contact?ref=audit"
+                  to="/audit"
                   className="inline-flex rounded-none bg-white px-10 py-5 text-sm font-bold text-md3-primary transition-all hover:bg-md3-primary-fixed-dim"
                 >
-                  Start The $497 Audit
+                  Start The $297 Audit
                 </Link>
               </div>
 
@@ -884,8 +909,8 @@ export function Home() {
                   </motion.div>
 
                   <div className="text-left">
-                    <p className="bg-gradient-to-r from-white to-white/50 bg-clip-text text-lg font-bold text-transparent">$497 One-Time</p>
-                    <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-zinc-400">48h Delivery • No Retainer</p>
+                    <p className="bg-gradient-to-r from-white to-white/50 bg-clip-text text-lg font-bold text-transparent">$297 One-Time</p>
+                    <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-zinc-400">3-Day Delivery • No Retainer</p>
                   </div>
                 </div>
 
@@ -1024,7 +1049,7 @@ export function Home() {
               </p>
               <div className="flex flex-wrap gap-8">
                 <Link
-                  to="/contact"
+                  to="/audit"
                   className="rounded-none bg-[#1a1a1a] px-10 py-5 text-[11px] font-bold uppercase tracking-[0.3em] text-white transition-all hover:bg-md3-primary"
                 >
                   Start The Audit

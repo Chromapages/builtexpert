@@ -5,11 +5,11 @@ import { SEO } from "@/components/SEO";
 import { INDUSTRIAL } from "@/lib/industrialStyle";
 import { cn } from "@/lib/utils";
 
-const CHECKOUT_URL = import.meta.env.VITE_STRIPE_AUDIT_LINK || "https://buy.stripe.com/REPLACE_WITH_STRIPE_LINK";
+const AUDIT_FORM_URL = "/audit";
 
 const AUDIT_PRICE = "$297";
-const AUDIT_PRICE_RUSH = "$447";
-const AUDIT_PRICE_FULL = "$497";
+const AUDIT_PRICE_RUSH = "$397";
+const AUDIT_PRICE_FULL = "$447";
 const TURNAROUND = "3 business days";
 
 // ─── FAQ data ─────────────────────────────────────────────────────────────────
@@ -157,14 +157,14 @@ export function HvacAuditLanding() {
 
               {/* CTAs */}
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-                <a
-                  href={CHECKOUT_URL}
+                <Link
+                  to={AUDIT_FORM_URL}
                   className="inline-flex items-center justify-center gap-2 bg-md3-primary px-8 py-4 text-[11px] font-bold uppercase tracking-[0.25em] text-white transition-all hover:bg-[#004f4f] sm:px-10 sm:py-5"
                   aria-label="Get My HVAC Audit for $297"
                 >
                   Get My Audit — {AUDIT_PRICE}
                   <ArrowRight className="size-4" aria-hidden />
-                </a>
+                </Link>
                 <a
                   href="#whats-included"
                   className="text-center text-sm font-medium text-zinc-400 transition-colors hover:text-white"
@@ -176,7 +176,7 @@ export function HvacAuditLanding() {
               {/* Pricing anchor — Anchoring (PLFS: 13) */}
               <p className="mt-6 text-xs font-light text-zinc-500">
                 Starting at <span className="font-semibold text-white">{AUDIT_PRICE}</span> · Rush at {AUDIT_PRICE_RUSH} ·{" "}
-                <span className="line-through">{AUDIT_PRICE_FULL}</span> + strategy call
+                Audit + Strategy Call available
               </p>
             </div>
           </div>
@@ -302,7 +302,7 @@ export function HvacAuditLanding() {
                 </p>
                 <div className="border-t border-[#e5e7eb] pt-6 [border-top-width:0.5px]">
                   <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-400">
-                    Founder price · Normally {AUDIT_PRICE_FULL}
+                    One-time diagnostic · Specialized for trades
                   </p>
                 </div>
               </div>
@@ -668,13 +668,13 @@ export function HvacAuditLanding() {
                       </li>
                     ))}
                   </ul>
-                  <a
-                    href={CHECKOUT_URL}
+                  <Link
+                    to={AUDIT_FORM_URL}
                     className="flex w-full items-center justify-center gap-2 border border-md3-primary bg-white py-3.5 text-[10px] font-bold uppercase tracking-[0.25em] text-md3-primary transition-all hover:bg-md3-primary/5 sm:py-4"
                     aria-label={`Get standard audit for ${AUDIT_PRICE}`}
                   >
                     Get My Audit — {AUDIT_PRICE}
-                  </a>
+                  </Link>
                 </div>
 
                 {/* Tier 2: Rush — featured */}
@@ -694,7 +694,7 @@ export function HvacAuditLanding() {
                       </span>
                       <span className="text-sm font-light text-zinc-400">one-time</span>
                     </div>
-                    <p className="mb-6 text-xs font-light text-zinc-400">2 business days turnaround</p>
+                    <p className="mb-6 text-xs font-light text-zinc-400">3 business days turnaround</p>
                     <ul className="mb-8 space-y-2.5 border-t border-[#e5e7eb] pt-6 [border-width:0.5px]">
                       {[
                         "Branded PDF audit report",
@@ -710,14 +710,14 @@ export function HvacAuditLanding() {
                         </li>
                       ))}
                     </ul>
-                    <a
-                      href={CHECKOUT_URL}
+                    <Link
+                      to={AUDIT_FORM_URL}
                       className="flex w-full items-center justify-center gap-2 bg-md3-primary py-3.5 text-[10px] font-bold uppercase tracking-[0.25em] text-white transition-all hover:bg-[#004f4f] sm:py-4"
                       aria-label={`Get rush audit for ${AUDIT_PRICE_RUSH}`}
                     >
                       Get My Audit — {AUDIT_PRICE_RUSH}
                       <ArrowRight className="size-3.5" aria-hidden />
-                    </a>
+                    </Link>
                   </div>
                 </div>
 
@@ -750,13 +750,13 @@ export function HvacAuditLanding() {
                       </li>
                     ))}
                   </ul>
-                  <a
-                    href={CHECKOUT_URL}
+                  <Link
+                    to={AUDIT_FORM_URL}
                     className="flex w-full items-center justify-center gap-2 border border-md3-primary bg-white py-3.5 text-[10px] font-bold uppercase tracking-[0.25em] text-md3-primary transition-all hover:bg-md3-primary/5 sm:py-4"
                     aria-label={`Get audit with strategy call for ${AUDIT_PRICE_FULL}`}
                   >
                     Get My Audit — {AUDIT_PRICE_FULL}
-                  </a>
+                  </Link>
                 </div>
               </div>
 
@@ -898,14 +898,14 @@ export function HvacAuditLanding() {
                 what&apos;s costing you jobs — and what to fix first.
               </p>
 
-              <a
-                href={CHECKOUT_URL}
+              <Link
+                to={AUDIT_FORM_URL}
                 className="mb-6 inline-flex items-center gap-2 bg-md3-primary px-10 py-5 text-[11px] font-bold uppercase tracking-[0.25em] text-white transition-all hover:bg-[#004f4f]"
                 aria-label={`Get HVAC Lead System Audit for ${AUDIT_PRICE}`}
               >
                 Get My Audit — {AUDIT_PRICE}
                 <ArrowRight className="size-4" aria-hidden />
-              </a>
+              </Link>
 
               <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-600">
                 <span>{AUDIT_PRICE} standard · {AUDIT_PRICE_RUSH} rush · {AUDIT_PRICE_FULL} + call</span>

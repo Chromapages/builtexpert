@@ -71,6 +71,38 @@ interface Industry {
 const INDUSTRIES: Industry[] = [
   // ── Primary ──────────────────────────────────────────────────────────────
   {
+    id: "hvac-contractors",
+    tier: "primary",
+    name: "HVAC Contractors",
+    tagline: "Win emergency calls and high-margin system replacements.",
+    description:
+      "HVAC businesses live on two kinds of work: fast-response emergency repairs and high-ticket system replacements. Your website needs to convert both. We build HVAC systems that show up when it's 100° outside, load fast on mobile, and send estimates to your dispatch team automatically.",
+    problems: [
+      "Losing emergency repair calls to competitors who rank above them locally",
+      "Landing page doesn't clearly show financing options for system replacements",
+      "Seasonal traffic spikes with no dedicated seasonal campaign landing pages",
+      "Site speed below 70 on mobile — Google penalizes it in local rankings",
+      "No way to book online — leads drop off when they can't immediately schedule",
+    ],
+    whatWeImprove: [
+      "Emergency service pages optimized for near-me searches",
+      "Financing-forward design — highlight monthly payment options upfront",
+      "Seasonal landing pages for summer cooling and winter heating campaigns",
+      "Core Web Vitals optimization — 90+ Lighthouse score on mobile",
+      "Online booking and instant quote flows integrated into the site",
+    ],
+    stat: { value: "90+", label: "Lighthouse performance score" },
+    testimonial: {
+      quote: "Losing emergency calls to a competitor with a worse service was embarrassing. Three months after launch my Google Maps rank went from page 2 to #1 for AC repair in my city.",
+      name: "Marcus T.",
+      trade: "HVAC Contractor",
+      location: "Phoenix, AZ",
+      result: "#1 Google Maps rank in 90 days",
+    },
+    ctaLabel: "View HVAC Lead Systems",
+    ctaHref: "/who-we-help/hvac-contractors",
+  },
+  {
     id: "electricians",
     tier: "primary",
     name: "Electricians",
@@ -99,40 +131,8 @@ const INDUSTRIES: Industry[] = [
       location: "Denver, CO",
       result: "19 calls/month in 90 days",
     },
-    ctaLabel: "View Electrician Website Solutions",
+    ctaLabel: "View Electrician Systems",
     ctaHref: "/who-we-help/electricians",
-  },
-  {
-    id: "hvac-contractors",
-    tier: "primary",
-    name: "HVAC Contractors",
-    tagline: "Win emergency calls and high-margin system replacements.",
-    description:
-      "HVAC businesses live on two kinds of work: fast-response emergency repairs and high-ticket system replacements. Your website needs to convert both. We build HVAC sites that show up when it's 100° outside, load fast on mobile, and send estimates to your dispatch team automatically.",
-    problems: [
-      "Losing emergency repair calls to competitors who rank above them locally",
-      "Landing page doesn't clearly show financing options for system replacements",
-      "Seasonal traffic spikes with no dedicated seasonal campaign landing pages",
-      "Site speed below 70 on mobile — Google penalizes it in local rankings",
-      "No way to book online — leads drop off when they can't immediately schedule",
-    ],
-    whatWeImprove: [
-      "Emergency service pages optimized for near-me searches",
-      "Financing-forward design — highlight monthly payment options upfront",
-      "Seasonal landing pages for summer cooling and winter heating campaigns",
-      "Core Web Vitals optimization — 90+ Lighthouse score on mobile",
-      "Online booking and instant quote flows integrated into the site",
-    ],
-    stat: { value: "90+", label: "Lighthouse performance score" },
-    testimonial: {
-      quote: "Losing emergency calls to a competitor with a worse service was embarrassing. Three months after launch my Google Maps rank went from page 2 to #1 for AC repair in my city.",
-      name: "Marcus T.",
-      trade: "HVAC Contractor",
-      location: "Phoenix, AZ",
-      result: "#1 Google Maps rank in 90 days",
-    },
-    ctaLabel: "View HVAC Contractor Solutions",
-    ctaHref: "/who-we-help/hvac-contractors",
   },
   // ── Secondary ─────────────────────────────────────────────────────────────
   {
@@ -591,7 +591,7 @@ export function WhoWeHelp() {
       <SEO
         title="Who We Help"
         description="BuiltExpert specializes in websites and lead systems for electricians, HVAC contractors, EV charger installers, heat pump contractors, panel upgrade specialists, and home performance companies."
-        canonical="/who-we-help" 
+        canonicalPath="/who-we-help" 
       />
       <div className="font-body tracking-tight antialiased [letter-spacing:-0.01em] [&_h1]:normal-case [&_h2]:normal-case [&_h3]:normal-case selection:bg-md3-primary-container selection:text-md3-on-primary-container">
         <HeaderSection 
@@ -602,7 +602,7 @@ export function WhoWeHelp() {
               <span className="font-bold text-md3-primary">Your Trade.</span>
             </>
           }
-          description="We don't work with every business. We work with growth-minded contractors—electricians, HVAC techs, and specialty trades—who need a website that actually generates calls."
+          description="We don't work with every business. We work with growth-minded HVAC contractors and specialty trades who need a system that actually generates calls."
           imageSrc="/images/who-we-help-hero.png"
           imageAlt="Industrial Trade Workspace"
         />
@@ -630,16 +630,16 @@ export function WhoWeHelp() {
                   }}
                 >
                   {[
-                    "Residential Electrician",
-                    "Commercial Electrician",
-                    "HVAC Company",
-                    "AC & Heating Contractor",
-                    "EV Charger Installer",
-                    "Heat Pump Contractor",
-                    "Home Energy Auditor",
-                    "Insulation Contractor",
-                    "Roofing Contractor",
-                    "Plumbing Company",
+                     "HVAC Company",
+                     "AC & Heating Contractor",
+                     "Residential Electrician",
+                     "Commercial Electrician",
+                     "EV Charger Installer",
+                     "Heat Pump Contractor",
+                     "Home Energy Auditor",
+                     "Insulation Contractor",
+                     "Roofing Contractor",
+                     "Plumbing Company",
                     // Duplicate for seamless loop
                     "Residential Electrician",
                     "Commercial Electrician",

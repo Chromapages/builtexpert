@@ -60,7 +60,7 @@ export function About() {
               >
                 <p>
                   Generic agencies build templates. We build systems tuned
-                  specifically to how electricians and HVAC contractors get
+                  specifically to how HVAC contractors get
                   found, trusted, and hired online.
                 </p>
                 <p>
@@ -75,19 +75,19 @@ export function About() {
             >
               <div className="mb-6 flex h-10 w-10 items-center justify-center rounded-lg bg-md3-secondary-container">
                 <span className="material-symbols-outlined text-xl text-md3-on-secondary-container">
-                  electric_bolt
+                  ac_unit
                 </span>
               </div>
               <h4
                 className="mb-3 font-headline text-xl font-semibold"
                 style={{ color: INDUSTRIAL.charcoal }}
               >
-                Electricians
+                Heat Pumps & IAQ
               </h4>
               <p className="text-sm font-light" style={{ color: INDUSTRIAL.muted }}>
-                High-margin panel upgrades, EV charging installs, and
-                commercial maintenance contracts — we know how customers
-                search for these jobs and build pages that rank for them.
+                High-margin heat pump installs, ductless mini-splits, and 
+                indoor air quality solutions — we know how customers 
+                search for these comfort upgrades and build pages that rank for them.
               </p>
             </div>
             <div

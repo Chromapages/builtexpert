@@ -108,15 +108,15 @@ const TRADE_FAQS: FAQEntry[] = [
 ];
 
 export const SERVICE_DETAILS: Record<string, ServiceDetailContent> = {
-  "contractor-websites": {
-    slug: "contractor-websites",
-    title: "Contractor Websites That Turn Clicks Into Calls",
+  "hvac-lead-generation-system": {
+    slug: "hvac-lead-generation-system",
+    title: "HVAC Lead Generation System",
     badge: "Core Build",
     summary:
-      "A high-conversion website built to explain the offer, reduce friction, and move qualified visitors into booked work.",
+      "A high-conversion sales engine built to turn local HVAC traffic into calls, estimates, and booked replacement jobs.",
     intro:
-      "This is the foundation. We shape the structure around how contractors are actually hired: fast answers, proof of work, clear service areas, and a conversion path that feels easy to trust.",
-    problemSolved: "Most contractor sites are 'brochures' that look okay but don't sell. We solve the trust gap and the conversion bottleneck.",
+      "This is your primary growth engine. We shape the structure around how HVAC customers actually hire: fast answers on emergency service, proof of replacement quality, and a conversion path that feels easy to trust.",
+    problemSolved: "Generic contractor sites look like brochures. We build systems that solve the trust gap and the conversion bottleneck.",
     whoItsFor: [
       "Contractors with an outdated site that is costing them jobs",
       "Teams that need a stronger first impression before the call",
@@ -260,7 +260,7 @@ export const SERVICE_DETAILS: Record<string, ServiceDetailContent> = {
   },
   "lead-system-audit": {
     slug: "lead-system-audit",
-    title: "Lead System Audits That Show The Bottleneck",
+    title: "HVAC Lead System Audit",
     badge: "Entry Offer",
     summary:
       "A diagnostic review of the site, funnel, and follow-up flow so you know what to fix first.",
@@ -294,7 +294,7 @@ export const SERVICE_DETAILS: Record<string, ServiceDetailContent> = {
       "Good fit when lead quality is inconsistent",
     ],
     pricing: {
-      setup: "$497",
+      setup: "$297",
       monthly: "Not required",
       note: "A focused diagnostic, not a full build engagement.",
       inclusions: [
@@ -418,7 +418,7 @@ export const TRADE_DETAILS: Record<string, TradeDetailContent> = {
   },
   "hvac-contractors": {
     slug: "hvac-contractors",
-    title: "HVAC Marketing Built Around Speed And Trust",
+    title: "HVAC Lead Generation Systems",
     badge: "Trade Focus",
     summary:
       "We help HVAC businesses win emergency repair calls, replacement leads, and seasonal demand with a better digital system.",

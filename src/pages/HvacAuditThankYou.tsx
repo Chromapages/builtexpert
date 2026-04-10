@@ -55,7 +55,7 @@ export function HvacAuditThankYou() {
   return (
     <>
       <SEO
-        titleFull="Audit Confirmed — What Happens Next | BuiltExpert"
+        title="Audit Confirmed — What Happens Next"
         description="Your HVAC Lead System Audit is confirmed. Here's what to expect over the next 3 business days."
       />
       <div className="bg-[#fcf9f8]">
@@ -174,10 +174,17 @@ export function HvacAuditThankYou() {
                   If you have questions before or after your audit arrives, reach
                   out directly at{" "}
                   <a
-                    href="mailto:hello@builtexpert.co"
+                    href="mailto:hello@builtexpert.com"
                     className="font-medium text-[#006565] hover:underline"
                   >
-                    hello@builtexpert.co
+                    hello@builtexpert.com
+                  </a>
+                  {" "}or call{" "}
+                  <a
+                    href="tel:+19512959085"
+                    className="font-medium text-[#006565] hover:underline"
+                  >
+                    (951)-295-9085
                   </a>
                   . We aim to respond within one business day.
                 </p>
@@ -200,7 +207,7 @@ export function HvacAuditThankYou() {
               be ready to talk through options. No pressure built into the audit.
             </p>
             <a
-              href="mailto:hello@builtexpert.co?subject=Post-Audit%20Project%20Inquiry"
+              href="mailto:hello@builtexpert.com?subject=Post-Audit%20Project%20Inquiry"
               className="mt-4 inline-flex items-center gap-2 rounded-lg border border-[#3e4949] bg-white/5 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-white/10"
             >
               Get in touch after your audit

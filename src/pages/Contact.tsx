@@ -20,8 +20,8 @@ import {
 // ─── Service type map (handles ?service= and ?tier= params) ──────────────────
 
 const SERVICE_OPTIONS = [
-  { value: "audit", label: "Lead System Audit" },
-  { value: "contractor-websites", label: "Contractor Website" },
+  { value: "audit", label: "HVAC Lead System Audit" },
+  { value: "hvac-lead-generation-system", label: "HVAC Lead Generation System" },
   { value: "landing-pages", label: "Landing Pages" },
   { value: "local-seo", label: "Local SEO" },
   { value: "growth-support", label: "Growth Support" },
@@ -35,10 +35,11 @@ function resolveServiceType(param: string | null): ServiceType {
   const map: Record<string, ServiceType> = {
     audit: "audit",
     "lead-system-audit": "audit",
-    contractor: "contractor-websites",
-    "contractor-websites": "contractor-websites",
-    websites: "contractor-websites",
-    "website-redesign": "contractor-websites",
+    contractor: "hvac-lead-generation-system",
+    "hvac-lead-generation-system": "hvac-lead-generation-system",
+    "contractor-websites": "hvac-lead-generation-system",
+    websites: "hvac-lead-generation-system",
+    "website-redesign": "hvac-lead-generation-system",
     "landing-pages": "landing-pages",
     "local-seo": "local-seo",
     "growth-support": "growth-support",
@@ -71,7 +72,7 @@ function getContextCopy(serviceLabel: string | null, ref: string | null) {
   }
   return {
     badge: null,
-    sub: "Fill out the form below. We’ll review your site and send a tailored response within 2 business days.",
+    sub: "Fill out the form below. We’ll review your site and send a tailored response within 3 business days.",
   };
 }
 
@@ -84,11 +85,11 @@ const OBJECTIONS = [
   },
   {
     q: "How long does the audit take?",
-    a: "We'll send your personalised video breakdown within 2 business days of receiving your form.",
+    a: "We'll send your personalised video breakdown within 3 business days of receiving your form.",
   },
   {
     q: "What do I need to provide?",
-    a: "Just your name, email, and website URL. The goals field is optional — fill in as much or as little as you like.",
+    a: "Your name, business name, phone, email, and website URL. Any additional context is helpful but optional.",
   },
 ];
 
@@ -96,7 +97,9 @@ const OBJECTIONS = [
 
 interface FormState {
   name: string;
+  business: string;
   email: string;
+  phone: string;
   website: string;
   serviceType: string;
   goals: string;
@@ -104,7 +107,9 @@ interface FormState {
 
 interface FormErrors {
   name?: string;
+  business?: string;
   email?: string;
+  phone?: string;
   website?: string;
   submit?: string;
 }
@@ -124,7 +129,9 @@ export function Contact() {
 
   const [formState, setFormState] = useState<FormState>({
     name: "",
+    business: "",
     email: "",
+    phone: "",
     website: "",
     serviceType: defaultService,
     goals: "",
@@ -137,11 +144,13 @@ export function Contact() {
   const validate = (state: FormState): FormErrors => {
     const newErrors: FormErrors = {};
     if (!state.name.trim()) newErrors.name = "Please enter your name";
+    if (!state.business.trim()) newErrors.business = "Please enter your business name";
     if (!state.email.trim()) {
       newErrors.email = "Please enter your email address";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(state.email)) {
       newErrors.email = "That doesn't look right — try you@gmail.com";
     }
+    if (!state.phone.trim()) newErrors.phone = "Phone number is required";
     if (state.website.trim()) {
       try {
         const u = state.website.includes("://")
@@ -176,7 +185,7 @@ export function Contact() {
     e.preventDefault();
     const validationErrors = validate(formState);
     setErrors(validationErrors);
-    setTouched({ name: true, email: true, website: true });
+    setTouched({ name: true, business: true, email: true, phone: true, website: true });
     if (Object.keys(validationErrors).length > 0) return;
 
     setIsSubmitting(true);
@@ -186,7 +195,8 @@ export function Contact() {
     submitToCRM({
       name: formState.name,
       email: formState.email,
-      company: formState.website, // Using website as company if company field is missing
+      company: formState.business,
+      phone: formState.phone,
       brandId: "builtexpert",
       sourceDetail: `Contact Page - ${formState.serviceType}`,
     });
@@ -199,6 +209,8 @@ export function Contact() {
           leadType: "contact",
           name: formState.name,
           email: formState.email,
+          phone: formState.phone,
+          company: formState.business,
           website: formState.website,
           serviceType: formState.serviceType,
           goals: formState.goals,
@@ -210,7 +222,7 @@ export function Contact() {
       if (response.ok) {
         trackEvent("form_submit", { form: "contact", service_type: formState.serviceType });
         setIsSuccess(true);
-        setFormState({ name: "", email: "", website: "", serviceType: defaultService, goals: "" });
+        setFormState({ name: "", business: "", email: "", phone: "", website: "", serviceType: defaultService, goals: "" });
         setTouched({});
         setTimeout(() => navigate("/thank-you", { replace: true }), 900);
       } else {
@@ -237,7 +249,7 @@ export function Contact() {
     <>
       <SEO
         title="Contact Us"
-        description="Find out exactly why your phone isn't ringing. Paid 15-min audit for contractors — video breakdown delivered within 2 business days."
+        description="Find out exactly why your phone isn't ringing. Paid 15-min audit for contractors — video breakdown delivered within 3 business days."
         canonicalPath="/contact"
       />
 
@@ -337,12 +349,12 @@ export function Contact() {
                   className="mb-4 font-headline text-4xl font-light tracking-tight"
                   style={{ color: INDUSTRIAL.charcoal }}
                 >
-                Request Your $497 Audit
+                Request Your $297 Audit
               </h2>
               <div className="mb-8 h-px w-24 bg-md3-primary" />
               <p className="mb-12 font-light leading-relaxed" style={{ color: INDUSTRIAL.muted }}>
                 We&apos;ll manually review your site and send a detailed video
-                breakdown of your opportunities — delivered within 2 business days.
+                breakdown of your opportunities — delivered within 3 business days.
               </p>
               <div className="space-y-6">
                 {[
@@ -420,7 +432,7 @@ export function Contact() {
                         Audit Request Received
                       </h3>
                       <p className="mb-2 max-w-md font-light" style={{ color: INDUSTRIAL.muted }}>
-                        We&apos;ll review your site and send your personalised video breakdown within 2 business days.
+                        We&apos;ll review your site and send your personalised video breakdown within 3 business days.
                       </p>
                       <p className="mb-8 text-sm font-light" style={{ color: INDUSTRIAL.muted }}>
                         Check your inbox — we&apos;ll reach out from{" "}
@@ -478,6 +490,30 @@ export function Contact() {
                       </div>
 
                       <div className="space-y-2">
+                        <label htmlFor="business" className="text-[10px] font-bold uppercase tracking-[0.2em]" style={{ color: INDUSTRIAL.muted }}>
+                          Business Name
+                        </label>
+                        <div className="relative">
+                          <input
+                            id="business" name="business" type="text" autoComplete="organization"
+                            value={formState.business} onChange={handleChange} onBlur={handleBlur}
+                            placeholder="Hernandez HVAC"
+                            className={cn(
+                              inputClass,
+                              isFieldValid("business") && "border-green-400/60 ring-1 ring-green-500/30",
+                            )}
+                            style={isFieldValid("business") ? undefined : inputStyle}
+                          />
+                          {isFieldValid("business") && (
+                            <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-green-500 text-base leading-none">✓</span>
+                          )}
+                        </div>
+                        {errors.business && touched.business && (
+                          <p className="text-xs font-medium text-md3-error">{errors.business}</p>
+                        )}
+                      </div>
+
+                      <div className="space-y-2">
                         <label htmlFor="email" className="text-[10px] font-bold uppercase tracking-[0.2em]" style={{ color: INDUSTRIAL.muted }}>
                           Email Address
                         </label>
@@ -500,8 +536,32 @@ export function Contact() {
                           <p className="text-xs font-medium text-md3-error">{errors.email}</p>
                         ) : (
                           <p className="text-[10px] font-light" style={{ color: INDUSTRIAL.muted }}>
-                            We&apos;ll get back to you within 24 hours. No spam, ever.
+                            Direct team access. No spam, ever.
                           </p>
+                        )}
+                      </div>
+
+                      <div className="space-y-2">
+                        <label htmlFor="phone" className="text-[10px] font-bold uppercase tracking-[0.2em]" style={{ color: INDUSTRIAL.muted }}>
+                          Phone Number
+                        </label>
+                        <div className="relative">
+                          <input
+                            id="phone" name="phone" type="tel" autoComplete="tel" inputMode="tel"
+                            value={formState.phone} onChange={handleChange} onBlur={handleBlur}
+                            placeholder="(555) 000-0000"
+                            className={cn(
+                              inputClass,
+                              isFieldValid("phone") && "border-green-400/60 ring-1 ring-green-500/30",
+                            )}
+                            style={isFieldValid("phone") ? undefined : inputStyle}
+                          />
+                          {isFieldValid("phone") && (
+                            <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-green-500 text-base leading-none">✓</span>
+                          )}
+                        </div>
+                        {errors.phone && touched.phone && (
+                          <p className="text-xs font-medium text-md3-error">{errors.phone}</p>
                         )}
                       </div>
 
@@ -604,8 +664,8 @@ export function Contact() {
             style={{ borderWidth: "0.5px", borderColor: INDUSTRIAL.outline }}
           >
             {[
-              { stat: "2 business days", detail: "Video audit turnaround" },
-              { stat: "Proven partners", detail: "Electricians & HVAC contractors" },
+              { stat: "3 business days", detail: "Video audit turnaround" },
+              { stat: "Proven partners", detail: "HVAC contractors" },
               { stat: "No obligation", detail: "Audit is yours to keep" },
               { stat: "hello@builtexpert.com", detail: "Direct team access" },
             ].map(({ stat, detail }) => (

@@ -29,11 +29,11 @@ export function Terms() {
               BuiltExpert provides a range of digital marketing and growth services specifically for trade contractors, including:
             </p>
             <ul className="list-disc pl-5 mt-2 space-y-1">
-              <li>Lead System Audits ($497 Diagnostic)</li>
-              <li>High-Performance Contractor Websites</li>
+              <li>HVAC Lead System Audits ($297 Diagnostic)</li>
+              <li>HVAC Lead Generation Systems</li>
               <li>Conversion-Optimized Landing Pages</li>
               <li>Local SEO & Google Business Profile Management</li>
-              <li>Growth Support & Lead Management Retainers</li>
+              <li>HVAC Growth & Optimization Retainers</li>
             </ul>
             <p className="mt-4">
               The specific scope of work, deliverables, and timelines for each project will be defined in a separate Project Agreement or Statement of Work (SOW).
@@ -43,7 +43,7 @@ export function Terms() {
           <section>
             <h2 className="text-xl font-bold text-md3-on-surface mb-4">3. Payments & Fees</h2>
             <p>
-              <strong>Lead System Audit:</strong> The $497 fee is non-refundable once the audit process has begun and the final report/blueprint has been delivered.
+              <strong>HVAC Lead System Audit:</strong> The $297 fee is non-refundable once the audit process has begun and the final report/blueprint has been delivered.
             </p>
             <p className="mt-2">
               <strong>Project Services:</strong> Most website and design projects require a 50% non-refundable deposit to begin work. Final payment is due upon project completion or before the site goes live.

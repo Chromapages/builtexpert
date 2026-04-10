@@ -121,8 +121,8 @@ export function Audit() {
   return (
     <>
       <SEO
-        title="Lead System Audit — $497 Strategic Diagnostic"
-        description="A manual, deep-dive diagnostic of your contracting business's digital presence. Find exactly what's costing you calls."
+        title="HVAC Lead System Audit — $297 Strategic Diagnostic"
+        description="A manual, deep-dive diagnostic of your HVAC business's digital presence. Find exactly what's costing you calls."
         canonicalPath="/audit"
       />
 
@@ -136,11 +136,11 @@ export function Audit() {
                 Low-Friction Entry Offer
               </span>
               <h1 className="mb-8 font-headline text-6xl font-bold tracking-tighter text-[#1a1a1a] md:text-8xl lg:text-9xl uppercase">
-                The Lead System <br />
-                <span className="text-md3-primary">Audit.</span>
+                HVAC Lead <br />
+                <span className="text-md3-primary">System Audit.</span>
               </h1>
               <p className="max-w-2xl text-xl font-light leading-relaxed text-zinc-600 md:text-2xl">
-                Before you hire another agency or spend another $1k on Google Ads, find out why your current system isn&apos;t performing. A manual, 47-point diagnostic for <span className="font-semibold text-[#1a1a1a]">$497</span>.
+                Before you hire another agency or spend another $1k on Google Ads, find out why your current system isn&apos;t performing. A manual, 47-point diagnostic for <span className="font-semibold text-[#1a1a1a]">$297</span>.
               </p>
             </div>
           </div>
@@ -163,7 +163,7 @@ export function Audit() {
 
             <div className="mt-24 grid grid-cols-1 lg:grid-cols-2 gap-16 bg-[#1a1a1a] p-12 text-white">
                <div>
-                  <h2 className="font-headline font -light text-3xl font-bold mb-6">Why is this $497?</h2>
+                  <h2 className="font-headline font -light text-3xl font-bold mb-6">Why is this $297?</h2>
                   <p className="text-zinc-400 font-light mb-8">
                     Free audits are automated lead-magnets. They don&apos;t look at your competitors, they don&apos;t understand your local market dynamics, and they don&apos;t find the &quot;Lead Leaks&quot; in your specific landing pages.
                   </p>
@@ -357,7 +357,7 @@ export function Audit() {
                       disabled={isSubmitting}
                       className="mt-12 flex w-full items-center justify-center gap-3 bg-md3-primary py-5 text-[11px] font-bold uppercase tracking-[0.25em] text-white transition-all hover:bg-[#1a1a1a] disabled:opacity-50"
                     >
-                      {isSubmitting ? <><Loader2 className="animate-spin" /> Redirecting to Secure Payment...</> : "Complete Secure Booking — $497"}
+                      {isSubmitting ? <><Loader2 className="animate-spin" /> Redirecting to Secure Payment...</> : "Complete Secure Booking — $297"}
                     </button>
                     <button onClick={prevStep} type="button" className="mt-8 text-xs font-bold uppercase tracking-widest text-zinc-400 hover:text-zinc-600">← Back</button>
                   </motion.div>
@@ -373,7 +373,7 @@ export function Audit() {
               <h2 className="font-headline text-3xl font-bold mb-12 uppercase">Audit FAQ</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                  {[
-                   { q: "Is this a recurring fee?", a: "No. This is a one-time diagnostic fee of $497. There are no ongoing commitments unless you decide to work with us later." },
+                   { q: "Is this a recurring fee?", a: "No. This is a one-time diagnostic fee of $297. There are no ongoing commitments unless you decide to work with us later." },
                    { q: "How long until I get the result?", a: "Standard turnaround is 48 business hours. We manually record your audit video and draft the action plan within that timeframe." },
                    { q: "What if I don't have a website yet?", a: "Then we audit your competitors and your mapping presence to show you exactly what the market demands for your first build." },
                    { q: "Can I use this for multiple companies?", a: "This price covers a single brand audit. For multi-location or franchise groups, contact us for a custom quote." }

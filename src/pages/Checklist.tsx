@@ -45,8 +45,8 @@ export function Checklist() {
   return (
     <>
       <SEO
-        title="Contractor Lead Leak Checklist — 21 Quick Checks"
-        description="Stop guessing why your phone isn't ringing. Download the 21-point checklist to find exactly where you're losing leads."
+        title="HVAC Lead Leak Checklist — 21 Quick Checks"
+        description="Stop guessing why your phone isn't ringing. Download the 21-point HVAC-specific checklist to find exactly where you're losing leads."
         canonicalPath="/checklist"
       />
 
@@ -58,9 +58,9 @@ export function Checklist() {
               Stop Guessing Why Your <span style={industrialTextGradientStyle}>Phone Isn't Ringing.</span>
             </>
           }
-          description="The Contractor Lead Leak Checklist: 21 Quick Checks to Find What’s Costing You Calls and Jobs. Immediate download."
-          imageSrc="/Users/king-lewie/.gemini/antigravity/brain/633f4974-3b9b-44b2-95bb-df6d33f83097/contractor_checklist_bg_1775279870065.png"
-          imageAlt="Contractor workspace with blueprints and checklist"
+          description="The HVAC Lead Leak Checklist: 21 Quick Checks to Find What’s Costing You Calls and Jobs. Immediate download."
+          imageSrc="/images/contractor-hero-bg.png"
+          imageAlt="HVAC contractor workspace with blueprints and checklist"
         />
 
         <div className="mx-auto max-w-4xl px-8 mt-12">
@@ -145,12 +145,7 @@ export function Checklist() {
                   </p>
                 </form>
 
-                <div className="mt-10 pt-10 border-t border-zinc-100 flex items-center justify-center gap-4 grayscale opacity-40">
-                  <span className="text-[10px] uppercase tracking-widest font-bold">Recommended for</span>
-                  <div className="text-[10px] font-bold">HVAC</div>
-                  <div className="text-[10px] font-bold">ELECTRICAL</div>
-                  <div className="text-[10px] font-bold">PLUMBING</div>
-                </div>
+
               </div>
             </div>
           ) : (
@@ -164,7 +159,7 @@ export function Checklist() {
               </div>
               <h2 className="mb-4 font-headline text-3xl font-bold text-zinc-800">Checklist Sent!</h2>
               <p className="mb-8 text-zinc-500 font-light">
-                We've sent the **Contractor Lead Leak Checklist** to <span className="font-semibold text-zinc-800">{email}</span>. Check your inbox (and spam folder) in the next 2 minutes.
+                We've sent the **HVAC Lead Leak Checklist** to <span className="font-semibold text-zinc-800">{email}</span>. Check your inbox (and spam folder) in the next 2 minutes.
               </p>
               
               <div className="h-px w-full bg-zinc-100 my-10" />
@@ -180,7 +175,7 @@ export function Checklist() {
                   to="/audit"
                   className="inline-flex items-center gap-3 bg-zinc-800 py-4 px-8 text-[11px] font-bold uppercase tracking-[0.25em] text-white transition-all hover:bg-zinc-700"
                 >
-                  Start The Strategic Audit
+                  Start The $297 Audit
                   <ArrowRight className="size-4" />
                 </Link>
               </div>

@@ -9,9 +9,9 @@ interface SEOProps {
   ogType?: "website" | "article" | "business.business";
 }
 
-const DEFAULT_TITLE = "BuiltExpert | High-Converting Websites for Contractors";
+const DEFAULT_TITLE = "BuiltExpert | High-Converting Lead Systems for HVAC Contractors";
 const DEFAULT_DESCRIPTION =
-  "We build powerful lead-generation websites and Local SEO systems for electrician, HVAC, and plumbing businesses. Get more calls, more bookings, more revenue.";
+  "We build powerful lead-generation systems and Local SEO for HVAC contractors. Get more calls, more bookings, more revenue with a system built for the trades.";
 const SITE_URL = "https://builtexpert.com";
 const DEFAULT_OG_IMAGE = "/images/og-home.png";
 

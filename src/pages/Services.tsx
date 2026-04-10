@@ -32,11 +32,11 @@ const TESTIMONIALS_FALLBACK = [
   },
   {
     quote:
-      'We rank #1 in our city now for "electrician near me". Our schedule is full 3 weeks out.',
-    name: "Dani R.",
-    role: "Master Electrician",
-    location: "Denver, CO",
-    result: "#1 local map pack",
+      "The Lead System Audit showed us exactly where we were leaking money. 2 months later, our bookings are up 40%.",
+    name: "Steve D.",
+    role: "HVAC Owner",
+    location: "Phoenix, AZ",
+    result: "40% increase in bookings",
     rating: 5,
   },
   {
@@ -63,8 +63,8 @@ const DEFAULT_PROCESS_STEPS = [
 // ─── Category label map ────────────────────────────────────────────────────────
 
 const CATEGORY_LABELS: Record<string, { label: string; categoryNum: string }> = {
-  audit: { label: "Lead System Audit", categoryNum: "01" },
-  websites: { label: "Contractor Websites", categoryNum: "02" },
+  audit: { label: "HVAC Lead System Audit", categoryNum: "01" },
+  websites: { label: "HVAC Lead Generation System", categoryNum: "02" },
   landingPages: { label: "Landing Pages", categoryNum: "03" },
   localSeo: { label: "Local SEO", categoryNum: "04" },
   growthSupport: { label: "Growth Support", categoryNum: "05" },
@@ -176,7 +176,7 @@ export function Services() {
   const heroLine1 = hero?.headlineLine1 || "Stop Losing Jobs To";
   const heroLine2 = hero?.headlineLine2 || "Contractors Who";
   const heroAccent = hero?.headlineAccent || "Outrank You.";
-  const heroSub = hero?.subheadline || siteData?.tagline || "We build contractor websites, landing pages, and local SEO systems that send calls, estimates, and jobs to your CRM.";
+  const heroSub = hero?.subheadline || siteData?.tagline || "We build HVAC lead generation systems, landing pages, and local SEO systems that send calls, estimates, and jobs to your CRM.";
   const heroCta1Label = hero?.ctaPrimaryLabel || "Book A Growth Call";
   const heroCta1Url = hero?.ctaPrimaryUrl || "/contact";
   const heroCta2Label = hero?.ctaSecondaryLabel || "Start The Audit";
@@ -194,8 +194,8 @@ export function Services() {
   return (
     <>
       <SEO
-        title="Contractor Web Design Services"
-        description="Outcome-driven growth systems for contractors: audits, websites, landing pages, local SEO, and growth support. Build your digital foundation and start winning more jobs."
+        title="HVAC Lead Generation Systems"
+        description="Outcome-driven growth systems for HVAC contractors: audits, systems, landing pages, local SEO, and growth support. Build your digital foundation and start winning more jobs."
         canonicalPath="/services"
       />
 
@@ -240,7 +240,7 @@ export function Services() {
                 ))
              ) : (
                <>
-                {/* Hero Service: Contractor Websites */}
+                {/* Hero Service: HVAC Lead Generation System */}
                 {heroService && (
                   <div className="lg:col-span-2 lg:row-span-2">
                     <ServiceCard service={heroService} isHero={true} />

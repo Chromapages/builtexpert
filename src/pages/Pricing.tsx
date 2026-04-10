@@ -38,7 +38,7 @@ const FALLBACK_TIERS = [
     annualPrice: 1350,
     tagline: "Up to 3 service areas targeted",
     includes: [
-      "Everything in Visibility",
+      "Everything in Support",
       "Monthly Content Updates (1 page)",
       "Ongoing Local SEO Campaign",
       "Conversion Rate Optimization",
@@ -68,7 +68,7 @@ const FAQ_ITEMS = [
   {
     title: "Why is the Lead System Audit a paid offer?",
     content:
-      "Most free 'audits' are just automated reports that tell you what you already know. Our $497 audit is a manual, strategic deep-dive into your specific market and competitors. We find the technical blockers and messaging gaps that are actually costing you money. There is no credit-back gimmick; the value is in the diagnosis and the recommendations.",
+      "Most free 'audits' are just automated reports that tell you what you already know. Our $297 audit is a manual, strategic deep-dive into your specific market and competitors. We find the technical blockers and messaging gaps that are actually costing you money. There is no credit-back gimmick; the value is in the diagnosis and the recommendations.",
     },
   {
     title: "Do I have to pay for a growth retainer after my site is built?",
@@ -78,7 +78,7 @@ const FAQ_ITEMS = [
   {
     title: "What is BuiltExpert?",
     content:
-      "BuiltExpert is the premier growth partner for trade contractors. We specialize in building high-performance digital infrastructure—from contractor websites to local SEO and conversion-focused landing pages—that turns searches into booked jobs. Everything we do is built for speed, conversion, and measurable ROI.",
+      "BuiltExpert is the premier growth partner for trade contractors. We specialize in building high-performance digital infrastructure—from HVAC Lead Generation Systems to local SEO and conversion-focused landing pages—that turns searches into booked jobs. Everything we do is built for speed, conversion, and measurable ROI.",
   },
   {
     title: "Do I own the website if I cancel?",
@@ -222,7 +222,7 @@ export function Pricing() {
               </span>
             </>
           }
-          description="No packages. No bundles. Just five ways we work with contractors—from a $497 diagnostic to full-scale growth support."
+          description="No packages. No bundles. Just five ways we work with contractors—from a $297 diagnostic to full-scale growth support."
           imageSrc="/images/pricing-hero.png"
           imageAlt="Industrial Growth Metrics"
         />
@@ -237,7 +237,7 @@ export function Pricing() {
                 Entry Offer
               </span>
               <h2 className="font-headline text-4xl font-bold tracking-tight text-[#1a1a1a]">
-                Lead System Audit
+                HVAC Lead System Audit
               </h2>
               <p className="mt-6 text-lg font-light text-zinc-600 leading-relaxed">
                 Before you spend another dollar on ads or SEO, find out exactly where your system is broken. We manually audit your site, your local search rankings, and your conversion path.
@@ -261,7 +261,7 @@ export function Pricing() {
               <div className="mb-8">
                 <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-zinc-400">One-Time Investment</span>
                 <div className="mt-2 flex items-baseline justify-center gap-1">
-                  <span className="text-6xl font-bold tracking-tighter text-[#1a1a1a]">${isLoading && !tiers.length ? '...' : activeTiers[0]?.monthlyPrice ? activeTiers[0].monthlyPrice : '497'}</span>
+                  <span className="text-6xl font-bold tracking-tighter text-[#1a1a1a]">${isLoading && !tiers.length ? '...' : activeTiers[0]?.monthlyPrice ? activeTiers[0].monthlyPrice : '297'}</span>
                 </div>
               </div>
               <div className="w-full space-y-4">
@@ -297,11 +297,11 @@ export function Pricing() {
             className="grid grid-cols-1 gap-px overflow-hidden bg-[#e5e7eb] lg:grid-cols-3"
             style={{ borderWidth: "0.5px", borderColor: INDUSTRIAL.outline }}
           >
-            {/* Contractor Websites */}
+            {/* HVAC Lead Generation System */}
             <div className="flex flex-col justify-between bg-white p-12">
               <div>
                 <h3 className="mb-8 text-xs font-bold uppercase tracking-[0.2em] text-zinc-400">
-                  Contractor Websites
+                  HVAC Lead Generation System
                 </h3>
                 <div className="mb-6">
                   <span className="text-4xl font-light tracking-tighter text-[#1a1a1a]">
@@ -309,7 +309,7 @@ export function Pricing() {
                   </span>
                 </div>
                 <p className="mb-8 text-sm font-light text-zinc-500 leading-relaxed">
-                  Elite, trade-specific sites designed to rank locally and convert visitors into booked appointments. No templates.
+                  The ultimate sales engine for your business. An elite, trade-specific system designed to rank locally and convert strangers into booked appointments on autopilot.
                 </p>
                 <ul className="mb-12 space-y-4 text-sm text-[#1a1a1a]">
                   {[
@@ -327,7 +327,7 @@ export function Pricing() {
                 </ul>
               </div>
               <Link
-                to="/services/contractor-websites"
+                to="/services/hvac-lead-generation-system"
                 className="block w-full border py-4 text-center text-[10px] font-bold uppercase tracking-[0.2em] text-[#1a1a1a] transition-all hover:bg-[#1a1a1a] hover:text-white"
                 style={{ borderWidth: "0.5px", borderColor: INDUSTRIAL.outline }}
               >
@@ -419,14 +419,14 @@ export function Pricing() {
               Continuity — Monthly Retainer
             </span>
             <h2 className="font-headline text-4xl font-bold tracking-tight text-[#1a1a1a]">
-              Ongoing Growth Support.
+              HVAC Growth Retainers.
             </h2>
             <p className="mt-4 max-w-2xl text-lg font-light text-zinc-600">
-              One extra HVAC install or electrical job per month covers the 
-              Growth retainer. We focus on rapid, measurable impact in your local service area.
+              One extra HVAC install or service call per month more than covers the 
+              investment. We focus on rapid, measurable impact in your local service area using the BuiltExpert OS.
             </p>
             <p className="mt-2 max-w-2xl text-sm font-light text-zinc-500">
-              Works with your existing site or any BuiltExpert build. Month-to-month on all plans.
+              Works with your existing system or any BuiltExpert build. Month-to-month on all plans.
             </p>
           </div>
 
@@ -631,7 +631,7 @@ export function Pricing() {
               to="/contact"
               className="inline-flex items-center gap-2 bg-[#1a1a1a] px-8 py-4 text-[11px] font-bold uppercase tracking-[0.3em] text-white transition-all hover:bg-md3-primary"
             >
-              Book My Audit
+              Customize Your Plan
             </Link>
             <Link
               to="/checklist"
@@ -797,8 +797,9 @@ export function Pricing() {
                     e: row.e === "Included" ? "check" : row.e === "Not included" ? "—" : row.e,
                     ent: row.ent === "Included" ? "check" : row.ent === "Not included" ? "—" : row.ent,
                     eBold: true,
+                    highlight: false,
                   })),
-                ].map((row) => (
+                ].map((row: any) => (
                   <tr
                     key={row.feature}
                     style={{

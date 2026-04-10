@@ -6,7 +6,7 @@ const PHONE_DISPLAY = "(951)-295-9085";
 const PHONE_HREF = "tel:+19512959085";
 
 const SERVICES_LINKS = [
-  { name: "Contractor Websites", href: "/services/contractor-websites" },
+  { name: "HVAC Lead Generation System", href: "/services/hvac-lead-generation-system" },
   { name: "Landing Pages", href: "/services/landing-pages" },
   { name: "Local SEO", href: "/services/local-seo" },
   { name: "Growth Support", href: "/services/growth-support" },
@@ -15,7 +15,7 @@ const SERVICES_LINKS = [
 const RESOURCE_LINKS = [
   { name: "Our Process", href: "/process" },
   { name: "Who We Help", href: "/who-we-help" },
-  { name: "Lead System Audit", href: "/audit" },
+  { name: "HVAC Lead System Audit", href: "/audit" },
   { name: "Journal", href: "/journal" },
 ];
 

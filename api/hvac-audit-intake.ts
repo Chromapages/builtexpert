@@ -10,7 +10,7 @@ const rateLimitMap = new Map<string, number>();
 const RATE_LIMIT_WINDOW = 60 * 1000; // 1 minute
 const MAX_REQUESTS = 5;
 
-// Valid budget ranges from the frontend enum
+// Valid budget/spend ranges
 const VALID_BUDGET_RANGES = [
   "Under $1,000",
   "$1,000–$2,500",
@@ -18,6 +18,15 @@ const VALID_BUDGET_RANGES = [
   "$5,000–$10,000",
   "$10,000+",
   "Just exploring options",
+];
+
+const VALID_MARKETING_SPEND = [
+  "Not currently investing",
+  "Under $500",
+  "$500–$1,500",
+  "$1,500–$3,000",
+  "$3,000–$5,000",
+  "$5,000+",
 ];
 
 async function sendEmailNotification(data: any) {
@@ -32,13 +41,24 @@ async function sendEmailNotification(data: any) {
     <p><strong>Owner:</strong> ${data.ownerName}</p>
     <p><strong>Business:</strong> ${data.businessName}</p>
     <p><strong>Email:</strong> ${data.email}</p>
+    <p><strong>Phone:</strong> ${data.phone || "N/A"}</p>
     <p><strong>Website:</strong> ${data.websiteUrl || "N/A"}</p>
-    <p><strong>Years in Business:</strong> ${data.yearsInBusiness}</p>
-    <p><strong>Top Services:</strong> ${Array.isArray(data.topServices) ? data.topServices.join(", ") : data.topServices}</p>
-    <p><strong>Service Areas:</strong> ${data.serviceAreas || "N/A"}</p>
-    <p><strong>Problem:</strong> ${data.mainProblem || "N/A"}</p>
+    <p><strong>GBP URL:</strong> ${data.googleBusinessProfileUrl || "N/A"}</p>
+    <hr />
+    <p><strong>Service Area:</strong> ${data.serviceAreas || "N/A"}</p>
+    <p><strong>Top Services:</strong> ${Array.isArray(data.topServices) ? data.topServices.join(", ") : data.topServices || "N/A"}</p>
+    <hr />
     <p><strong>Monthly Lead Volume:</strong> ${data.monthlyLeadVolume || "N/A"}</p>
-    <p><strong>Budget:</strong> ${data.budgetRange || "N/A"}</p>
+    <p><strong>Current Lead Sources:</strong> ${data.currentLeadSources || "N/A"}</p>
+    <p><strong>Runs Google Ads / LSA:</strong> ${data.runsGoogleAds || "N/A"}</p>
+    <p><strong>Current Tools:</strong> ${data.currentTools || "N/A"}</p>
+    <p><strong>Monthly Marketing Spend:</strong> ${data.monthlyMarketingSpend || "N/A"}</p>
+    <hr />
+    <p><strong>Primary Goal:</strong> ${data.primaryGoal || "N/A"}</p>
+    <p><strong>Biggest Frustration:</strong> ${data.mainProblem || "N/A"}</p>
+    <p><strong>Additional Notes:</strong> ${data.additionalNotes || "N/A"}</p>
+    <hr />
+    <p><strong>Timeline:</strong> ${data.timeline || "N/A"}</p>
     <hr />
     <p><a href="https://z5yntv4o.sanity.studio/desk/auditIntakeSubmission">View in Sanity Studio</a></p>
   `;
@@ -103,19 +123,18 @@ export default async function handler(
       return response.end(JSON.stringify({ error: "Invalid body" }));
     }
 
-    // Basic validation
-    if (!data.email || !data.businessName || !data.ownerName) {
+    // Required field validation
+    const required = ["email", "businessName", "ownerName", "phone", "serviceAreas", "primaryGoal", "mainProblem", "timeline"];
+    const missingFields = required.filter((f) => !data[f] || !String(data[f]).trim());
+    if (missingFields.length > 0) {
       response.statusCode = 400;
-      return response.end(JSON.stringify({ error: "Missing required fields" }));
+      return response.end(JSON.stringify({ error: `Missing required fields: ${missingFields.join(", ")}` }));
     }
 
-    // Coerce yearsInBusiness to number
-    data.yearsInBusiness = Number(data.yearsInBusiness) || 0;
-
-    // Validate budgetRange against enums
-    if (data.budgetRange && !VALID_BUDGET_RANGES.includes(data.budgetRange)) {
+    // Validate monthlyMarketingSpend against enum (optional — skip if blank)
+    if (data.monthlyMarketingSpend && !VALID_MARKETING_SPEND.includes(data.monthlyMarketingSpend)) {
       response.statusCode = 400;
-      return response.end(JSON.stringify({ error: "Invalid budget range value" }));
+      return response.end(JSON.stringify({ error: "Invalid marketing spend value" }));
     }
 
     // Require https for websiteUrl if present

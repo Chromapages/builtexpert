@@ -3,8 +3,8 @@ import Stripe from "stripe";
 
 const stripeKey = process.env.STRIPE_SECRET_KEY;
 
-const AUDIT_AMOUNT = 49700;
-const AUDIT_NAME = "Lead System Audit - Manual Strategic Diagnostic";
+const AUDIT_AMOUNT = 29700;
+const AUDIT_NAME = "HVAC Lead System Audit - Manual Strategic Diagnostic";
 
 function json(response: ServerResponse, statusCode: number, body: Record<string, unknown>) {
   response.statusCode = statusCode;

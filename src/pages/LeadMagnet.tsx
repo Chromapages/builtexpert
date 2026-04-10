@@ -87,7 +87,7 @@ const TESTIMONIALS = [
     quote:
       "I thought my website was fine. Turns out it was killing my close rate. Made the fixes over a weekend. First real estimate request came in Monday morning.",
     name: "Chris V.",
-    trade: "Master Electrician",
+    trade: "AC & Heating Specialist",
     location: "Denver, CO",
     result: "First estimate request in 48 hrs",
   },
@@ -95,7 +95,7 @@ const TESTIMONIALS = [
     quote:
       "The follow-up section alone was worth it. I was losing so many leads just because I couldn't get back to them fast enough. Not anymore.",
     name: "Pete M.",
-    trade: "Plumbing Contractor",
+    trade: "Mechanical Services Owner",
     location: "Columbus, OH",
     result: "40% more jobs closed",
   },
@@ -450,7 +450,7 @@ export function LeadMagnet() {
       <SEO
         title="The Contractor Lead Fix — Free Guide"
         description="7 simple changes that help local contractors get more qualified calls without wasting money on bad marketing. Free download — no spam."
-        canonical="/contractor-lead-fix"
+        canonicalPath="/contractor-lead-fix"
       />
 
       <div

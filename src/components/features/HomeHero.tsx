@@ -71,7 +71,7 @@ export function HomeHero({
       <div className="relative z-20 site-container py-24 sm:py-28 lg:py-36">
         <div className="max-w-2xl">
           <span className="mb-6 inline-block rounded-full bg-md3-secondary-container px-3 py-1 text-[10px] font-bold uppercase tracking-[0.3em] text-md3-on-secondary-container shadow-sm">
-            For Electricians & HVAC Contractors
+            For HVAC Contractors
           </span>
 
           <h1

@@ -19,11 +19,11 @@ function resolveList(primary?: string[], fallback: string[] = []) {
 }
 
 const CATEGORY_LABELS: Record<string, string> = {
-  websites: "Websites & Service Pages",
-  localVisibility: "Local Visibility",
-  leadGen: "Lead Generation & CRO",
-  automation: "Automation & Analytics",
-  ongoingSupport: "Growth Support & Maintenance",
+  websites: "HVAC Lead Generation Systems",
+  localVisibility: "HVAC Local Visibility",
+  leadGen: "HVAC Conversion Optimization",
+  automation: "HVAC Analytics & Reporting",
+  ongoingSupport: "HVAC Growth Support",
 };
 
 function resolveServiceDetail(slug?: string, serviceData?: any): ServiceDetailContent | null {

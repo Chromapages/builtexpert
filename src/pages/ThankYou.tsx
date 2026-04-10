@@ -29,7 +29,7 @@ export function ThankYou() {
       <SEO
         title="Thank You"
         description="Your request has been received. Expect a reply within one business day."
-        canonical="/thank-you"
+        canonicalPath="/thank-you"
       />
 
       <Section className="min-h-[72vh] items-center" background="surface">
@@ -64,9 +64,9 @@ export function ThankYou() {
           </div>
 
           <div className="mt-10 flex flex-col justify-center gap-3 sm:flex-row">
-            <Link to="/services" className="inline-flex">
+            <Link to="/audit" className="inline-flex">
               <Button variant="primary" size="lg">
-                View Our Services
+                Get Your Audit →
               </Button>
             </Link>
             <Link to="/pricing" className="inline-flex">
