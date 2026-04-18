@@ -18,6 +18,8 @@ import {
 
 const DISCORD_WEBHOOK_URL =
   "https://discord.com/api/webhooks/1489833739591614575/AgCErboPkUkIwLUzRTCpNNFq2r1mwE1UYdj_u7WyyBctn1V9f1H-KKP0bCjbgRCYpwAf";
+const LEAD_INTAKE_URL = "http://192.168.86.32:3144/api/lead-intake";
+const LEAD_INTAKE_SECRET = "builtexpert-lead-secret-2026";
 
 // ─── Service type map (handles ?service= and ?tier= params) ──────────────────
 
@@ -151,7 +153,6 @@ export function Contact() {
     goals: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [errors, setErrors] = useState<FormErrors>({});
 
@@ -206,29 +207,46 @@ export function Contact() {
     setErrors({});
 
     try {
-      await fetch(DISCORD_WEBHOOK_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          embeds: [
-            {
-              title: "\uD83C\uDD95 New Lead \u2014 BuiltExpert",
-              color: 4433507,
-              fields: [
-                { name: "Company", value: buildDiscordFieldValue(formState.business), inline: true },
-                { name: "Contact", value: buildDiscordFieldValue(formState.name), inline: true },
-                { name: "Email", value: buildDiscordFieldValue(formState.email), inline: true },
-                { name: "Phone", value: buildDiscordFieldValue(formState.phone), inline: true },
-                { name: "Website", value: buildDiscordFieldValue(formState.website), inline: true },
-                { name: "Source", value: "builtexpert.com form", inline: true },
-              ],
-              footer: {
-                text: `BuiltExpert Lead | ${formatDateForFooter()}`,
+      await Promise.allSettled([
+        fetch(DISCORD_WEBHOOK_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            embeds: [
+              {
+                title: "\uD83C\uDD95 New Lead \u2014 BuiltExpert",
+                color: 4433507,
+                fields: [
+                  { name: "Company", value: buildDiscordFieldValue(formState.business), inline: true },
+                  { name: "Contact", value: buildDiscordFieldValue(formState.name), inline: true },
+                  { name: "Email", value: buildDiscordFieldValue(formState.email), inline: true },
+                  { name: "Phone", value: buildDiscordFieldValue(formState.phone), inline: true },
+                  { name: "Website", value: buildDiscordFieldValue(formState.website), inline: true },
+                  { name: "Source", value: "builtexpert.com form", inline: true },
+                ],
+                footer: {
+                  text: `BuiltExpert Lead | ${formatDateForFooter()}`,
+                },
               },
-            },
-          ],
+            ],
+          }),
         }),
-      });
+        fetch(LEAD_INTAKE_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-Lead-Secret": LEAD_INTAKE_SECRET,
+          },
+          body: JSON.stringify({
+            company_name: formState.business,
+            contact_name: formState.name,
+            email: formState.email,
+            phone: formState.phone,
+            website_url: formState.website,
+            source: "website_form",
+          }),
+        }),
+      ]);
 
       trackEvent("form_submit", { form: "contact", service_type: formState.serviceType });
     } catch (error) {
