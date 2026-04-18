@@ -153,6 +153,7 @@ export function Contact() {
     goals: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [errors, setErrors] = useState<FormErrors>({});
 
@@ -433,14 +434,14 @@ export function Contact() {
                 style={{ borderWidth: "0.5px", borderColor: INDUSTRIAL.outline }}
               >
                 <AnimatePresence mode="wait">
-                  {isSuccess ? (
-                    <motion.div
-                      key="success"
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      className="flex flex-col items-center justify-center py-12 text-center"
-                    >
+                  <motion.form
+                    key="form"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    onSubmit={handleSubmit}
+                    className="grid grid-cols-1 gap-6 md:grid-cols-2"
+                  >
                       <div
                         className="mb-6 flex h-16 w-16 items-center justify-center bg-md3-primary/10 text-md3-primary"
                         style={{ borderWidth: "0.5px", borderColor: INDUSTRIAL.outline }}
@@ -468,16 +469,7 @@ export function Contact() {
                       >
                         Submit another request
                       </button>
-                    </motion.div>
-                  ) : (
-                    <motion.form
-                      key="form"
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      onSubmit={handleSubmit}
-                      className="grid grid-cols-1 gap-6 md:grid-cols-2"
-                    >
+                    
                       {/* Honeypot */}
                       <input type="text" name="_gotcha" className="hidden" tabIndex={-1} autoComplete="off" />
 
@@ -671,8 +663,7 @@ export function Contact() {
                           </Link>
                         </p>
                       </div>
-                    </motion.form>
-                  )}
+                  </motion.form>
                 </AnimatePresence>
               </div>
             </div>
