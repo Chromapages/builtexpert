@@ -10,12 +10,14 @@ import { Link, useSearchParams } from "react-router-dom";
 import { SEO } from "@/components/SEO";
 import { cn } from "@/lib/utils";
 import { trackEmailClick, trackEvent } from "@/components/Analytics";
-import { submitToCRM } from "@/lib/crm";
 import {
   INDUSTRIAL,
   industrialMeshStyle,
   industrialTextGradientStyle,
 } from "@/lib/industrialStyle";
+
+const DISCORD_WEBHOOK_URL =
+  "https://discord.com/api/webhooks/1489833739591614575/AgCErboPkUkIwLUzRTCpNNFq2r1mwE1UYdj_u7WyyBctn1V9f1H-KKP0bCjbgRCYpwAf";
 
 // ─── Service type map (handles ?service= and ?tier= params) ──────────────────
 
@@ -114,6 +116,18 @@ interface FormErrors {
   submit?: string;
 }
 
+function formatDateForFooter() {
+  return new Intl.DateTimeFormat("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  }).format(new Date());
+}
+
+function buildDiscordFieldValue(value: string) {
+  return value.trim() || "Not provided";
+}
+
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export function Contact() {
@@ -191,47 +205,37 @@ export function Contact() {
     setIsSubmitting(true);
     setErrors({});
 
-    // Submit to CRM
-    submitToCRM({
-      name: formState.name,
-      email: formState.email,
-      company: formState.business,
-      phone: formState.phone,
-      brandId: "builtexpert",
-      sourceDetail: `Contact Page - ${formState.serviceType}`,
-    });
-
     try {
-      const response = await fetch("/api/lead-intake", {
+      await fetch(DISCORD_WEBHOOK_URL, {
         method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          leadType: "contact",
-          name: formState.name,
-          email: formState.email,
-          phone: formState.phone,
-          company: formState.business,
-          website: formState.website,
-          serviceType: formState.serviceType,
-          goals: formState.goals,
-          source: refParam ?? undefined,
-          _gotcha: "",
+          embeds: [
+            {
+              title: "\uD83C\uDD95 New Lead \u2014 BuiltExpert",
+              color: 4433507,
+              fields: [
+                { name: "Company", value: buildDiscordFieldValue(formState.business), inline: true },
+                { name: "Contact", value: buildDiscordFieldValue(formState.name), inline: true },
+                { name: "Email", value: buildDiscordFieldValue(formState.email), inline: true },
+                { name: "Phone", value: buildDiscordFieldValue(formState.phone), inline: true },
+                { name: "Website", value: buildDiscordFieldValue(formState.website), inline: true },
+                { name: "Source", value: "builtexpert.com form", inline: true },
+              ],
+              footer: {
+                text: `BuiltExpert Lead | ${formatDateForFooter()}`,
+              },
+            },
+          ],
         }),
       });
 
-      if (response.ok) {
-        trackEvent("form_submit", { form: "contact", service_type: formState.serviceType });
-        setIsSuccess(true);
-        setFormState({ name: "", business: "", email: "", phone: "", website: "", serviceType: defaultService, goals: "" });
-        setTouched({});
-        setTimeout(() => navigate("/thank-you", { replace: true }), 900);
-      } else {
-        setErrors({ submit: "Something went wrong. Please try again or email us directly." });
-      }
-    } catch {
-      setErrors({ submit: "Connection failed. Please check your connection and try again." });
+      trackEvent("form_submit", { form: "contact", service_type: formState.serviceType });
+    } catch (error) {
+      console.error("Contact page Discord webhook failed:", error);
     } finally {
       setIsSubmitting(false);
+      navigate("/thank-you", { replace: true });
     }
   };
 

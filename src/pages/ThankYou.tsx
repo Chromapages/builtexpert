@@ -15,11 +15,11 @@ const NEXT_STEPS = [
   },
   {
     title: "We reach out",
-    body: "You should hear from us within one business day.",
+    body: "We&apos;ll be in touch within 24 hours.",
   },
   {
     title: "We recommend the path",
-    body: "If we’re a fit, we’ll outline the cleanest way to move forward.",
+    body: "If we&apos;re a fit, we&apos;ll outline the cleanest way to move forward.",
   },
 ];
 
@@ -28,7 +28,7 @@ export function ThankYou() {
     <>
       <SEO
         title="Thank You"
-        description="Your request has been received. Expect a reply within one business day."
+        description="Your request has been received. We&apos;ll be in touch within 24 hours."
         canonicalPath="/thank-you"
       />
 
@@ -41,10 +41,10 @@ export function ThankYou() {
             Request Received
           </p>
           <h1 className="font-headline text-4xl font-light tracking-tight text-md3-on-surface sm:text-5xl">
-            We&apos;ve got it — expect a reply within one business day.
+            Thanks! We&apos;ve received your request and will be in touch within 24 hours.
           </h1>
           <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-md3-on-surface-variant">
-            We’ll review your request, look at the current opportunity, and send back the next best step.
+            We&apos;ll review your request, look at the current opportunity, and send back the next best step.
           </p>
 
           <div className="mt-10 grid gap-4 text-left sm:grid-cols-3">
