@@ -2,6 +2,7 @@ import ReactGA from "react-ga4";
 
 export function reportWebVitals() {
     if (typeof window === "undefined") return;
+    if (!("PerformanceObserver" in window)) return;
 
     // Function to send metrics to GA4
     const sendToAnalytics = ({ name, value, id }: { name: string; value: number; id: string }) => {

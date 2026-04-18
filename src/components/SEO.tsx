@@ -13,7 +13,8 @@ const DEFAULT_TITLE = "BuiltExpert | High-Converting Lead Systems for HVAC Contr
 const DEFAULT_DESCRIPTION =
   "We build powerful lead-generation systems and Local SEO for HVAC contractors. Get more calls, more bookings, more revenue with a system built for the trades.";
 const SITE_URL = "https://builtexpert.com";
-const DEFAULT_OG_IMAGE = "/images/og-home.png";
+const DEFAULT_OG_IMAGE = "/images/contractor-hero-bg.png";
+const DEFAULT_LOGO_IMAGE = "/favicon.png";
 
 export function SEO({
   title = DEFAULT_TITLE,
@@ -35,6 +36,7 @@ export function SEO({
 
       {/* Open Graph / Facebook */}
       <meta property="og:type" content={ogType} />
+      <meta property="og:site_name" content="BuiltExpert" />
       <meta property="og:title" content={fullTitle} />
       <meta property="og:description" content={description} />
       <meta property="og:url" content={canonicalUrl} />
@@ -53,7 +55,8 @@ export function SEO({
           "@type": "LocalBusiness",
           "name": "BuiltExpert",
           "url": SITE_URL,
-          "logo": `${SITE_URL}/logo.png`,
+          "logo": `${SITE_URL}${DEFAULT_LOGO_IMAGE}`,
+          "image": absoluteOgImage,
           "description": DEFAULT_DESCRIPTION,
           "sameAs": [
             "https://twitter.com/builtexpert",

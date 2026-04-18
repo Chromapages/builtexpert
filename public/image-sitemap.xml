@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <url>
+    <loc>https://builtexpert.com/</loc>
+    <image:image>
+      <image:loc>https://builtexpert.com/images/contractor-hero-bg.png</image:loc>
+      <image:title>BuiltExpert contractor marketing hero image</image:title>
+      <image:caption>Industrial contractor-themed homepage hero used for BuiltExpert marketing pages.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://builtexpert.com/</loc>
+    <image:image>
+      <image:loc>https://builtexpert.com/images/home/service-audit-new.webp</image:loc>
+      <image:title>HVAC Lead System Audit preview</image:title>
+      <image:caption>Preview image for the HVAC Lead System Audit offer.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://builtexpert.com/services/hvac-lead-generation-system</loc>
+    <image:image>
+      <image:loc>https://builtexpert.com/images/home/service-websites-new.webp</image:loc>
+      <image:title>HVAC Lead Generation System preview</image:title>
+      <image:caption>Preview image for conversion-focused contractor websites.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://builtexpert.com/services/landing-pages</loc>
+    <image:image>
+      <image:loc>https://builtexpert.com/images/home/service-landing-new.webp</image:loc>
+      <image:title>Landing pages preview</image:title>
+      <image:caption>Preview image for BuiltExpert landing page design and campaign pages.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://builtexpert.com/services/local-seo</loc>
+    <image:image>
+      <image:loc>https://builtexpert.com/images/home/service-local-seo-new.webp</image:loc>
+      <image:title>Local SEO preview</image:title>
+      <image:caption>Preview image for local search visibility and map pack growth services.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://builtexpert.com/services/growth-support</loc>
+    <image:image>
+      <image:loc>https://builtexpert.com/images/home/service-growth-new.webp</image:loc>
+      <image:title>Growth support preview</image:title>
+      <image:caption>Preview image for ongoing optimization and growth support services.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://builtexpert.com/who-we-help/hvac-contractors</loc>
+    <image:image>
+      <image:loc>https://builtexpert.com/images/who/hvac.png</image:loc>
+      <image:title>HVAC contractor market page image</image:title>
+      <image:caption>Illustration used on the HVAC contractor audience page.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://builtexpert.com/who-we-help/electricians</loc>
+    <image:image>
+      <image:loc>https://builtexpert.com/images/who/electrician.png</image:loc>
+      <image:title>Electrician market page image</image:title>
+      <image:caption>Illustration used on the electrician audience page.</image:caption>
+    </image:image>
+  </url>
+</urlset>

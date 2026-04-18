@@ -37,7 +37,7 @@ const FALLBACK: Required<OSSectionData> = {
   headline: "The whole system.",
   subheadline: "One partner. One number.",
   description:
-    "Everything BuiltExpert does — lead capture, follow-up, pipeline visibility, and review generation — running as one connected system. No duct-tape. No coordinating five vendors. Just a clean, predictable booked-estimate machine that works while you work.",
+    "Everything BuiltExpert does - lead capture, follow-up, pipeline visibility, and review generation - running as one connected system. No duct-tape. No coordinating five vendors. Just a clean, predictable booked-estimate machine that works while you work.",
   differentiatorBullets: [
     { text: "LeadOps gets you leads. OS gets you booked jobs." },
     { text: "LeadOps runs on its own. OS runs with a team behind it." },
@@ -47,15 +47,15 @@ const FALLBACK: Required<OSSectionData> = {
   ],
   problemItems: [
     { text: "Missed leads with no follow-up" },
-    { text: "No follow-up system — leads go cold" },
-    { text: "Dark pipeline — you don't know what's happening" },
-    { text: "Review luck — happens randomly or not at all" },
+    { text: "No follow-up system - leads go cold" },
+    { text: "Dark pipeline - you don't know what's happening" },
+    { text: "Review luck - happens randomly or not at all" },
   ],
   solutionItems: [
-    { text: "Every lead captured — no entry point missed" },
+    { text: "Every lead captured - no entry point missed" },
     { text: "Automated follow-up within minutes" },
-    { text: "Full visibility dashboard — you see everything" },
-    { text: "Systematic review building — every job generates one" },
+    { text: "Full visibility dashboard - you see everything" },
+    { text: "Systematic review building - every job generates one" },
   ],
   featureBullets: [
     { text: "Lead capture across every entry point" },
@@ -70,7 +70,7 @@ const FALLBACK: Required<OSSectionData> = {
   forWho: [
     {
       text:
-        "Contractors done managing 3–4 vendors, want pipeline visibility, ready to hand off.",
+        "Contractors done managing 3-4 vendors, want pipeline visibility, ready to hand off.",
     },
   ],
   notForWho: [
@@ -81,11 +81,11 @@ const FALLBACK: Required<OSSectionData> = {
   ],
   ctaLabel: "Get Your OS Audit",
   ctaUrl: "/contact?plan=os",
-  secondaryCtaLabel: "See pricing →",
+  secondaryCtaLabel: "See pricing ->",
   secondaryCtaUrl: "/pricing#os-section",
   pricingSetup: "$4,997",
   pricingMonthly: "$5,997/mo",
-  pricingNote: "Full system — everything listed above",
+  pricingNote: "Full system - everything listed above",
 };
 
 function resolve(data: OSSectionData | null | undefined): Required<OSSectionData> {
@@ -152,7 +152,7 @@ function PricingVariant({ data }: { data: OSSectionData | null | undefined }) {
             to={d.ctaUrl}
             className="inline-block bg-teal-600 px-8 py-4 text-[11px] font-bold uppercase tracking-[0.3em] text-white transition-all hover:bg-teal-500"
           >
-            {d.ctaLabel} →
+            {d.ctaLabel} -&gt;
           </Link>
           <p className="mt-6 max-w-sm text-sm font-light text-zinc-500">
             Not sure if OS is right for you? We'll look at your current setup, show you
@@ -315,7 +315,7 @@ function FullVariant({ data, id }: { data: OSSectionData | null | undefined; id?
             to={d.ctaUrl}
             className="inline-block bg-teal-600 px-8 py-4 text-[11px] font-bold uppercase tracking-[0.3em] text-white transition-all hover:bg-teal-500"
           >
-            {d.ctaLabel} →
+            {d.ctaLabel} -&gt;
           </Link>
           {d.secondaryCtaUrl && (
             <Link

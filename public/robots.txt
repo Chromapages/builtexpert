@@ -4,3 +4,5 @@ Allow: /
 
 # Sitemaps
 Sitemap: https://builtexpert.com/sitemap.xml
+Sitemap: https://builtexpert.com/image-sitemap.xml
+Sitemap: https://builtexpert.com/video-sitemap.xml

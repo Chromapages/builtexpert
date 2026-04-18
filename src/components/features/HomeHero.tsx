@@ -18,11 +18,27 @@ export function HomeHero({
   bgImage,
   videoUrl,
 }: HomeHeroProps) {
+  const [shouldRenderVideo, setShouldRenderVideo] = React.useState(false);
+
+  React.useEffect(() => {
+    if (!videoUrl || typeof window === "undefined") return;
+
+    const mediaQuery = window.matchMedia("(min-width: 1024px) and (prefers-reduced-motion: no-preference)");
+    const syncVideoPreference = () => setShouldRenderVideo(mediaQuery.matches);
+
+    syncVideoPreference();
+    mediaQuery.addEventListener("change", syncVideoPreference);
+
+    return () => {
+      mediaQuery.removeEventListener("change", syncVideoPreference);
+    };
+  }, [videoUrl]);
+
   return (
     <section className="relative -mt-24 flex min-h-[95vh] items-center justify-center overflow-hidden pt-24">
 
       {/* ── Background ── */}
-      {!videoUrl ? (
+      {!videoUrl || !shouldRenderVideo ? (
         <div
           className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
           style={{ backgroundImage: `url(${bgImage})`, filter: "brightness(0.65) contrast(1.1)" }}
@@ -33,7 +49,8 @@ export function HomeHero({
           loop
           muted
           playsInline
-          preload="auto"
+          preload="metadata"
+          poster={bgImage}
           className="absolute inset-0 z-0 h-full w-full object-cover brightness-[0.6] contrast-[1.1]"
           style={{
             willChange: "transform",

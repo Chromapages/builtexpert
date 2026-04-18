@@ -182,7 +182,7 @@ export function HvacAuditIntake() {
         topServices: selectedServices.join(", "),
         currentLeadSources: selectedLeadSources.join(", "),
         currentTools: selectedTools.join(", "),
-        _subject: `HVAC Audit Intake — ${fields.businessName}`,
+        _subject: `HVAC Audit Intake - ${fields.businessName}`,
       };
 
       const res = await fetch("/api/hvac-audit-intake", {
@@ -222,7 +222,7 @@ export function HvacAuditIntake() {
           <h2 className="font-headline text-xl font-bold text-[#1a1a1a]">
             Intake received
           </h2>
-          <p className="mt-2 text-sm text-[#6b7280]">Redirecting you now…</p>
+          <p className="mt-2 text-sm text-[#6b7280]">Redirecting you now...</p>
         </div>
       </div>
     );
@@ -233,7 +233,7 @@ export function HvacAuditIntake() {
   return (
     <>
       <SEO
-        title="HVAC Lead System Audit — Intake Form"
+        title="HVAC Lead System Audit - Intake Form"
         description="Complete your intake form. The more specific you are, the sharper your audit findings will be."
         canonicalPath="/audit/intake"
       />
@@ -244,7 +244,7 @@ export function HvacAuditIntake() {
           <div className="mx-auto max-w-2xl px-4 py-3 sm:px-6">
             <div className="flex items-center gap-2 text-sm">
               <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#006565] text-[10px] font-bold text-white">
-                ✓
+                1
               </span>
               <span className="text-[#6b7280]">Purchase complete</span>
               <ChevronRight className="h-3.5 w-3.5 text-[#bdc9c8]" />
@@ -268,7 +268,7 @@ export function HvacAuditIntake() {
               Help us prepare your audit
             </h1>
             <p className="mt-2 text-[#6b7280]">
-              Takes 2–3 minutes. The more specific you are, the sharper your
+              Takes 2-3 minutes. The more specific you are, the sharper your
               audit findings will be.
             </p>
           </div>
@@ -358,7 +358,7 @@ export function HvacAuditIntake() {
                   onChange={handleChange}
                   onBlur={handleBlur}
                   error=""
-                  hint="Find it at g.co/kgs — helps us audit your local map presence"
+                  hint="Find it at g.co/kgs - helps us audit your local map presence"
                   optional
                 />
               </div>
@@ -366,7 +366,7 @@ export function HvacAuditIntake() {
                 <TextareaField
                   label="Main service area"
                   name="serviceAreas"
-                  placeholder="e.g. Dallas, TX — serving Plano, Frisco, McKinney, Allen"
+                  placeholder="e.g. Dallas, TX - serving Plano, Frisco, McKinney, Allen"
                   value={fields.serviceAreas}
                   onChange={handleChange}
                   onBlur={handleBlur}
@@ -390,7 +390,7 @@ export function HvacAuditIntake() {
             {/* ── Section 3: Your Lead Situation ─────────────────────────── */}
             <Fieldset legend="Your lead situation" optional>
               <p className="mb-4 text-xs text-[#9ca3af]">
-                Optional — add what you can, skip what you don't know yet.
+                Optional - add what you can, skip what you don't know yet.
               </p>
 
               <SelectField
@@ -403,10 +403,10 @@ export function HvacAuditIntake() {
                 hint="Roughly how many enquiries / calls does your business get per month?"
                 options={[
                   { value: "", label: "Select an estimate" },
-                  { value: "0–5", label: "0–5 leads / month" },
-                  { value: "6–15", label: "6–15 leads / month" },
-                  { value: "16–30", label: "16–30 leads / month" },
-                  { value: "31–50", label: "31–50 leads / month" },
+                  { value: "0-5", label: "0-5 leads / month" },
+                  { value: "6-15", label: "6-15 leads / month" },
+                  { value: "16-30", label: "16-30 leads / month" },
+                  { value: "31-50", label: "31-50 leads / month" },
                   { value: "50+", label: "50+ leads / month" },
                   { value: "Not sure", label: "Not sure" },
                 ]}
@@ -470,9 +470,9 @@ export function HvacAuditIntake() {
                     { value: "", label: "Select a range" },
                     { value: "Not currently investing", label: "Not currently investing" },
                     { value: "Under $500", label: "Under $500 / month" },
-                    { value: "$500–$1,500", label: "$500–$1,500 / month" },
-                    { value: "$1,500–$3,000", label: "$1,500–$3,000 / month" },
-                    { value: "$3,000–$5,000", label: "$3,000–$5,000 / month" },
+                    { value: "$500-$1,500", label: "$500-$1,500 / month" },
+                    { value: "$1,500-$3,000", label: "$1,500-$3,000 / month" },
+                    { value: "$3,000-$5,000", label: "$3,000-$5,000 / month" },
                     { value: "$5,000+", label: "$5,000+ / month" },
                   ]}
                 />
@@ -509,7 +509,7 @@ export function HvacAuditIntake() {
                   onChange={handleChange}
                   onBlur={handleBlur}
                   error={touched.mainProblem ? errors.mainProblem : ""}
-                  hint="Be as specific as you like — this shapes what we focus on in the audit"
+                  hint="Be as specific as you like - this shapes what we focus on in the audit"
                   rows={4}
                   required
                 />
@@ -523,7 +523,7 @@ export function HvacAuditIntake() {
                   onChange={handleChange}
                   onBlur={handleBlur}
                   error=""
-                  hint="Optional — any context that would help us give you a better audit"
+                  hint="Optional - any context that would help us give you a better audit"
                   rows={2}
                   optional
                 />
@@ -542,7 +542,7 @@ export function HvacAuditIntake() {
                 required
                 options={[
                   { value: "", label: "Select your timeline" },
-                  { value: "Immediately", label: "Immediately — ready to move now" },
+                  { value: "Immediately", label: "Immediately - ready to move now" },
                   { value: "1 month", label: "Within the next 30 days" },
                   { value: "3 months", label: "Within the next 90 days" },
                   { value: "Exploring", label: "Just researching for now" },
@@ -571,10 +571,10 @@ export function HvacAuditIntake() {
               {formStatus === "submitting" ? (
                 <>
                   <Loader2 className="h-5 w-5 animate-spin" />
-                  Submitting…
+                  Submitting...
                 </>
               ) : (
-                "Submit My Intake →"
+                "Submit My Intake ->"
               )}
             </button>
 

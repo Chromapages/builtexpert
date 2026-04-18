@@ -127,7 +127,7 @@ export function Navbar() {
           <Link
             to="/"
             className="font-headline text-xl font-black tracking-tighter text-zinc-900 transition-colors hover:text-md3-primary md:text-2xl"
-            aria-label="BuiltExpert — home"
+            aria-label="BuiltExpert - home"
           >
             BuiltExpert<span className="text-md3-primary">.</span>
           </Link>
@@ -210,7 +210,7 @@ export function Navbar() {
               />
               <span className="relative z-10 flex items-center gap-2">
                 Get Your Audit
-                <motion.span animate={{ x: [0, 4, 0] }} transition={{ repeat: Infinity, duration: 1.5 }}>→</motion.span>
+                <motion.span animate={{ x: [0, 4, 0] }} transition={{ repeat: Infinity, duration: 1.5 }}>-&gt;</motion.span>
               </span>
             </Link>
           </div>
@@ -280,7 +280,7 @@ export function Navbar() {
                           }}
                           className="text-md3-primary group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200"
                         >
-                          →
+                          -&gt;
                         </motion.span>
                       </Link>
                     </motion.div>
@@ -297,7 +297,7 @@ export function Navbar() {
                     to="/audit"
                     className="flex w-full items-center justify-center bg-zinc-950 py-5 text-sm font-black uppercase tracking-tighter text-white"
                   >
-                    Start The System Audit →
+                    Start The System Audit -&gt;
                   </Link>
                   <a
                     href={PHONE_HREF}

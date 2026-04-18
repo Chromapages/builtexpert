@@ -172,8 +172,8 @@ const PROCESS_STEPS = [
   {
     n: "03",
     t: "Build",
-    timeframe: "Weeks 2–5",
-    d: "Your high-conversion site, content funnels, and CRM integrations — engineered from the ground up for speed, trust, and conversion.",
+    timeframe: "Weeks 2-5",
+    d: "Your high-conversion site, content funnels, and CRM integrations - engineered from the ground up for speed, trust, and conversion.",
     deliverable: "Full site + integrations",
     docCode: "PROD-X",
     tagline: "SYSTEM ENGINEERING",
@@ -201,7 +201,7 @@ const PROCESS_STEPS = [
 const FAQ_ITEMS: { q: string; a: string }[] = [
   {
     q: "How are you different from HomeAdvisor or Angie's List?",
-    a: "Those platforms sell the same lead to 4 or 5 competitors in your area and start a race to the bottom on price. We build a proprietary lead system exclusive to you. Every call we generate belongs to you — we never resell it.",
+    a: "Those platforms sell the same lead to 4 or 5 competitors in your area and start a race to the bottom on price. We build a proprietary lead system exclusive to you. Every call we generate belongs to you - we never resell it.",
   },
   {
     q: "What if I've been burned by a marketing agency before?",
@@ -209,11 +209,11 @@ const FAQ_ITEMS: { q: string; a: string }[] = [
   },
   {
     q: "How long before I start getting calls?",
-    a: "The build takes 4–6 weeks. Most clients start seeing organic inbound within 60 days. If you need calls in week one, we can layer in local service ads to get the phone moving while the SEO builds.",
+    a: "The build takes 4-6 weeks. Most clients start seeing organic inbound within 60 days. If you need calls in week one, we can layer in local service ads to get the phone moving while the SEO builds.",
   },
   {
     q: "Do you work with ServiceTitan or Housecall Pro?",
-    a: "Yes — both. Every lead, form fill, and missed call routes directly into your dispatch board. No manual data entry, no leads falling through the cracks.",
+    a: "Yes - both. Every lead, form fill, and missed call routes directly into your dispatch board. No manual data entry, no leads falling through the cracks.",
   },
   {
     q: "What does it cost?",
@@ -310,7 +310,7 @@ export function Home() {
   );
 
   const heroSubheadline = homeData?.hero?.subheadline || 
-    "We build high-converting websites and local SEO systems for trades across the US. No shared leads, no fluff — just an iron-clad digital presence that gets the phone ringing.";
+    "We build high-converting websites and local SEO systems for trades across the US. No shared leads, no fluff - just an iron-clad digital presence that gets the phone ringing.";
 
   const heroStats = homeData?.hero?.stats || [
     { label: "Contractors Served", value: "47" },
@@ -403,7 +403,7 @@ export function Home() {
                 key={card.title}
                 role="link"
                 tabIndex={0}
-                aria-label={`${card.title} — ${card.cta}`}
+                aria-label={`${card.title} - ${card.cta}`}
                 className="group relative flex flex-col overflow-hidden rounded-2xl bg-white border border-[#e5e7eb] shadow-sm [border-width:0.5px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-md3-primary transition-all hover:shadow-md"
                 onClick={() => navigate(card.linkTo)}
                 onKeyDown={(e) => {
@@ -509,7 +509,7 @@ export function Home() {
                   </h3>
                   <p className="text-base font-light leading-relaxed" style={{ color: INDUSTRIAL.muted }}>
                     Most agencies will build a site for anyone. We won&apos;t. We work exclusively
-                    with contractors because a generalist can&apos;t out-market a specialist — and your
+                    with contractors because a generalist can&apos;t out-market a specialist - and your
                     competitors deserve every disadvantage we can give them.
                   </p>
                 </div>
@@ -637,7 +637,7 @@ export function Home() {
                 Find Out Exactly Why Your Phone Isn&apos;t Ringing
               </h2>
               <p className="mx-auto max-w-2xl text-lg text-md3-primary-fixed">
-                We&apos;ll spend 20 minutes reviewing your site by hand — no automated tools.
+                We&apos;ll spend 20 minutes reviewing your site by hand - no automated tools.
                 You&apos;ll get a plain-English breakdown of what&apos;s costing you jobs and what we&apos;d fix first.
               </p>
             </div>
@@ -910,7 +910,7 @@ export function Home() {
 
                   <div className="text-left">
                     <p className="bg-gradient-to-r from-white to-white/50 bg-clip-text text-lg font-bold text-transparent">$297 One-Time</p>
-                    <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-zinc-400">3-Day Delivery • No Retainer</p>
+                    <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-zinc-400">3-Day Delivery | No Retainer</p>
                   </div>
                 </div>
 

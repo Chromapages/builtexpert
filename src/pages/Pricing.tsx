@@ -78,7 +78,7 @@ const FAQ_ITEMS = [
   {
     title: "What is BuiltExpert?",
     content:
-      "BuiltExpert is the premier growth partner for trade contractors. We specialize in building high-performance digital infrastructure—from HVAC Lead Generation Systems to local SEO and conversion-focused landing pages—that turns searches into booked jobs. Everything we do is built for speed, conversion, and measurable ROI.",
+      "BuiltExpert is the premier growth partner for trade contractors. We specialize in building high-performance digital infrastructure - from HVAC Lead Generation Systems to local SEO and conversion-focused landing pages - that turns searches into booked jobs. Everything we do is built for speed, conversion, and measurable ROI.",
   },
   {
     title: "Do I own the website if I cancel?",
@@ -88,7 +88,7 @@ const FAQ_ITEMS = [
   {
     title: "How is this different from a regular marketing agency?",
     content:
-      "Most agencies sell you traffic. We build systems that convert traffic into booked jobs—website, SEO, lead capture, and conversion optimisation working together. We measure success in calls and jobs, not impressions and clicks.",
+      "Most agencies sell you traffic. We build systems that convert traffic into booked jobs - website, SEO, lead capture, and conversion optimisation working together. We measure success in calls and jobs, not impressions and clicks.",
   },
 ];
 
@@ -206,7 +206,7 @@ export function Pricing() {
     <>
       <SEO
         title="Pricing"
-        description="Contractor growth plans from $750/mo — website build included. No long-term contracts. Cancel anytime. Annual pricing available."
+        description="Contractor growth plans from $750/mo - website build included. No long-term contracts. Cancel anytime. Annual pricing available."
         canonicalPath="/pricing"
       />
 
@@ -222,7 +222,7 @@ export function Pricing() {
               </span>
             </>
           }
-          description="No packages. No bundles. Just five ways we work with contractors—from a $297 diagnostic to full-scale growth support."
+          description="No packages. No bundles. Just five ways we work with contractors - from a $297 diagnostic to full-scale growth support."
           imageSrc="/images/pricing-hero.png"
           imageAlt="Industrial Growth Metrics"
         />
@@ -248,7 +248,7 @@ export function Pricing() {
                   "Direct Competitor Comparison (who is winning and why)",
                   "Technical 'Lead Leak' Report showing lost opportunities",
                   "Prioritized Action Plan for your next 90 days",
-                  "No credit-back gimmick — just a clear diagnosis and next step"
+                  "No credit-back gimmick - just a clear diagnosis and next step"
                 ].map((item) => (
                   <div key={item} className="flex items-start gap-3">
                     <span className="material-symbols-outlined mt-0.5 text-base text-teal-600">check</span>
@@ -275,7 +275,7 @@ export function Pricing() {
                   to="/checklist"
                   className="block text-[11px] font-bold uppercase tracking-[0.2em] text-zinc-400 hover:text-md3-primary transition-colors"
                 >
-                  Not sure yet? Get the checklist first →
+                  Not sure yet? Get the checklist first -&gt;
                 </Link>
               </div>
             </div>
@@ -305,7 +305,7 @@ export function Pricing() {
                 </h3>
                 <div className="mb-6">
                   <span className="text-4xl font-light tracking-tighter text-[#1a1a1a]">
-                    $4,200 – $12k+
+                    $4,200 - $12k+
                   </span>
                 </div>
                 <p className="mb-8 text-sm font-light text-zinc-500 leading-relaxed">
@@ -343,7 +343,7 @@ export function Pricing() {
                 </h3>
                 <div className="mb-6">
                   <span className="text-4xl font-bold tracking-tighter text-[#1a1a1a]">
-                    $1,500 – $2,500
+                    $1,500 - $2,500
                   </span>
                 </div>
                 <p className="mb-8 text-sm font-light text-zinc-500 leading-relaxed">
@@ -416,7 +416,7 @@ export function Pricing() {
         <section id="growth-tiers" className="mx-auto mb-16 max-w-[1440px] px-4 sm:px-8 lg:px-12 2xl:px-16 3xl:max-w-screen-2xl 4xl:max-w-[1728px]">
           <div className="mb-10">
             <span className="mb-4 inline-block bg-teal-50 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-teal-700">
-              Continuity — Monthly Retainer
+              Continuity - Monthly Retainer
             </span>
             <h2 className="font-headline text-4xl font-bold tracking-tight text-[#1a1a1a]">
               HVAC Growth Retainers.
@@ -535,7 +535,7 @@ export function Pricing() {
                             isExpansion ? "text-teal-400" : "text-teal-600"
                           }`}
                         >
-                          ${getAnnualTotal(tier)}/yr · save ${getAnnualSaving(tier)}
+                          ${getAnnualTotal(tier)}/yr | save ${getAnnualSaving(tier)}
                         </p>
                       ) : (
                         <p
@@ -590,7 +590,7 @@ export function Pricing() {
                         isExpansion ? "text-zinc-400 hover:text-white" : "text-zinc-500 hover:text-md3-primary"
                       }`}
                     >
-                      See what's included →
+                      See what&apos;s included -&gt;
                     </a>
                   </div>
                 );
@@ -620,7 +620,7 @@ export function Pricing() {
                 to="/contact?growth=enterprise"
                 className="inline-block flex-shrink-0 border border-[#1a1a1a] px-8 py-4 text-[10px] font-bold uppercase tracking-[0.2em] text-[#1a1a1a] transition-all hover:bg-[#1a1a1a] hover:text-white"
               >
-                Talk to us →
+                Talk to us -&gt;
               </Link>
             </div>
           </div>
@@ -638,7 +638,7 @@ export function Pricing() {
               className="border-b py-4 text-[11px] font-bold uppercase tracking-[0.3em] text-zinc-500 [border-bottom-width:0.5px] transition-all hover:border-md3-primary hover:text-md3-primary"
               style={{ borderColor: INDUSTRIAL.outline }}
             >
-              Free Checklist →
+              Free Checklist -&gt;
             </Link>
           </div>
         </section>
@@ -792,10 +792,10 @@ export function Pricing() {
                   },
                   ...COMPARISON_ROWS.slice(1).map((row) => ({
                     ...row,
-                    v: row.v === "Included" ? "check" : row.v === "Not included" ? "—" : row.v,
-                    g: row.g === "Included" ? "check" : row.g === "Not included" ? "—" : row.g,
-                    e: row.e === "Included" ? "check" : row.e === "Not included" ? "—" : row.e,
-                    ent: row.ent === "Included" ? "check" : row.ent === "Not included" ? "—" : row.ent,
+                    v: row.v === "Included" ? "check" : row.v === "Not included" ? "-" : row.v,
+                    g: row.g === "Included" ? "check" : row.g === "Not included" ? "-" : row.g,
+                    e: row.e === "Included" ? "check" : row.e === "Not included" ? "-" : row.e,
+                    ent: row.ent === "Included" ? "check" : row.ent === "Not included" ? "-" : row.ent,
                     eBold: true,
                     highlight: false,
                   })),
@@ -818,8 +818,8 @@ export function Pricing() {
                     <td className="py-5 text-center font-light" style={{ color: INDUSTRIAL.muted }}>
                       {row.v === "check" ? (
                         <span className="material-symbols-outlined text-lg text-teal-600">check</span>
-                      ) : row.v === "—" ? (
-                        <span>—</span>
+                      ) : row.v === "-" ? (
+                        <span>-</span>
                       ) : (
                         row.v
                       )}
@@ -828,8 +828,8 @@ export function Pricing() {
                     <td className="py-5 text-center" style={{ color: INDUSTRIAL.charcoal }}>
                       {row.g === "check" ? (
                         <span className="material-symbols-outlined text-lg text-teal-600">check</span>
-                      ) : row.g === "—" ? (
-                        <span style={{ color: INDUSTRIAL.muted }}>—</span>
+                      ) : row.g === "-" ? (
+                        <span style={{ color: INDUSTRIAL.muted }}>-</span>
                       ) : (
                         <span className="font-semibold">{row.g}</span>
                       )}
@@ -848,8 +848,8 @@ export function Pricing() {
                     <td className="py-5 text-center" style={{ color: INDUSTRIAL.muted }}>
                       {row.ent === "check" ? (
                         <span className="material-symbols-outlined text-lg text-teal-600">check</span>
-                      ) : row.ent === "—" ? (
-                        <span>—</span>
+                      ) : row.ent === "-" ? (
+                        <span>-</span>
                       ) : (
                         <span className="font-medium">{row.ent}</span>
                       )}
@@ -868,7 +868,7 @@ export function Pricing() {
               to="/services"
               className="font-semibold text-md3-primary transition-colors hover:text-teal-600"
             >
-              Learn about BuiltExpert OS →
+              Learn about BuiltExpert OS -&gt;
             </Link>
           </p>
 

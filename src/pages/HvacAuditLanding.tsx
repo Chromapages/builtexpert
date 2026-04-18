@@ -16,11 +16,11 @@ const TURNAROUND = "3 business days";
 const FAQ = [
   {
     q: "What exactly does the audit cover?",
-    a: "Four areas: your website's conversion performance, your local search and Google Maps visibility, your lead capture and form flow, and your follow-up and dispatch integration. We review your actual site, your actual local rankings, and your actual competitor landscape — not a generic checklist.",
+    a: "Four areas: your website's conversion performance, your local search and Google Maps visibility, your lead capture and form flow, and your follow-up and dispatch integration. We review your actual site, your actual local rankings, and your actual competitor landscape - not a generic checklist.",
   },
   {
     q: "Is implementation included?",
-    a: "No. This is a diagnostic audit, not a delivery project. You'll receive specific findings and a priority action plan, but execution — rebuilding your site, running ads, fixing your CRM flow — is a separate engagement. We'll flag that clearly in the deliverable so there's no confusion.",
+    a: "No. This is a diagnostic audit, not a delivery project. You'll receive specific findings and a priority action plan, but execution - rebuilding your site, running ads, fixing your CRM flow - is a separate engagement. We'll flag that clearly in the deliverable so there's no confusion.",
   },
   {
     q: "How long does it take to receive my audit?",
@@ -32,7 +32,7 @@ const FAQ = [
   },
   {
     q: "How is this different from an automated SEO audit tool?",
-    a: "Automated tools generate generic scores based on crawling. This audit is done manually by an HVAC-specialized team. We open your actual site on desktop and mobile, search for your business in your actual service areas, review your lead form by hand, and evaluate your follow-up flow. You get specific findings about your specific business — not a template report.",
+    a: "Automated tools generate generic scores based on crawling. This audit is done manually by an HVAC-specialized team. We open your actual site on desktop and mobile, search for your business in your actual service areas, review your lead form by hand, and evaluate your follow-up flow. You get specific findings about your specific business - not a template report.",
   },
   {
     q: "What happens after the audit?",
@@ -45,25 +45,25 @@ const AUDIT_AREAS = [
   {
     num: "01",
     title: "Website Performance",
-    desc: "We evaluate your site's ability to convert local traffic — load speed, mobile experience, messaging clarity, CTAs, trust signals, and whether the site pre-qualifies the right jobs.",
+    desc: "We evaluate your site's ability to convert local traffic - load speed, mobile experience, messaging clarity, CTAs, trust signals, and whether the site pre-qualifies the right jobs.",
     checks: ["Page speed & Core Web Vitals", "Mobile UX review", "Headline & CTA clarity", "Trust and credibility signals", "Lead form friction analysis"],
   },
   {
     num: "02",
     title: "Local Search & Google Maps",
-    desc: "We analyze how you show up when someone in your area searches for HVAC — including your Google Business Profile, Map Pack rankings, citation consistency, and competitor gaps.",
+    desc: "We analyze how you show up when someone in your area searches for HVAC - including your Google Business Profile, Map Pack rankings, citation consistency, and competitor gaps.",
     checks: ["Google Business Profile audit", "Map Pack ranking analysis", "Local citation review", "Competitor gap analysis", "Review velocity assessment"],
   },
   {
     num: "03",
     title: "Lead Capture & Conversion",
-    desc: "We identify where leads are dropping off — forms that don't convert, offers that don't land, and calls that don't happen because the path to contact was unclear.",
+    desc: "We identify where leads are dropping off - forms that don't convert, offers that don't land, and calls that don't happen because the path to contact was unclear.",
     checks: ["Lead form & CTA review", "Landing page alignment", "Offer clarity & specificity", "Pricing visibility audit", "Phone & call-to-action placement"],
   },
   {
     num: "04",
     title: "Follow-Up & Lead Flow",
-    desc: "We look at what happens after a lead comes in — whether follow-up is fast enough, whether leads reach dispatch, and where jobs are being lost after first contact.",
+    desc: "We look at what happens after a lead comes in - whether follow-up is fast enough, whether leads reach dispatch, and where jobs are being lost after first contact.",
     checks: ["Response time gaps", "CRM & dispatch integration", "Missed call handling", "ServiceTitan / Housecall Pro flow", "Lead nurture evaluation"],
   },
 ];
@@ -121,7 +121,7 @@ export function HvacAuditLanding() {
               <div className="mb-8 inline-flex items-center gap-3 rounded-full border border-md3-primary/30 bg-md3-primary/10 px-4 py-2">
                 <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-md3-primary" />
                 <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-md3-primary">
-                  Founder Pricing · Current Rate
+                  Founder Pricing | Current Rate
                 </span>
               </div>
 
@@ -132,7 +132,7 @@ export function HvacAuditLanding() {
               </h1>
 
               <p className="mb-10 max-w-2xl text-lg font-light leading-relaxed text-zinc-300">
-                Get a complete audit of your website, local search ranking, lead capture, and follow-up system —
+                Get a complete audit of your website, local search ranking, lead capture, and follow-up system -
                 delivered in <strong className="font-semibold text-white">3 business days</strong> with a
                 personalized Loom walkthrough and priority action plan.
               </p>
@@ -143,12 +143,12 @@ export function HvacAuditLanding() {
                   <Clock className="size-3.5 text-md3-primary" aria-hidden />
                   3 Business Days
                 </span>
-                <span className="opacity-30">·</span>
+                <span className="opacity-30">|</span>
                 <span className="flex items-center gap-2">
                   <FileText className="size-3.5 text-md3-primary" aria-hidden />
                   PDF Report + Loom
                 </span>
-                <span className="opacity-30">·</span>
+                <span className="opacity-30">|</span>
                 <span className="flex items-center gap-2">
                   <ListChecks className="size-3.5 text-md3-primary" aria-hidden />
                   4 Areas Reviewed
@@ -162,20 +162,20 @@ export function HvacAuditLanding() {
                   className="inline-flex items-center justify-center gap-2 bg-md3-primary px-8 py-4 text-[11px] font-bold uppercase tracking-[0.25em] text-white transition-all hover:bg-[#004f4f] sm:px-10 sm:py-5"
                   aria-label="Get My HVAC Audit for $297"
                 >
-                  Get My Audit — {AUDIT_PRICE}
+                  Get My Audit - {AUDIT_PRICE}
                   <ArrowRight className="size-4" aria-hidden />
                 </Link>
                 <a
                   href="#whats-included"
                   className="text-center text-sm font-medium text-zinc-400 transition-colors hover:text-white"
                 >
-                  See what&apos;s included ↓
+                  See what&apos;s included below
                 </a>
               </div>
 
               {/* Pricing anchor — Anchoring (PLFS: 13) */}
               <p className="mt-6 text-xs font-light text-zinc-500">
-                Starting at <span className="font-semibold text-white">{AUDIT_PRICE}</span> · Rush at {AUDIT_PRICE_RUSH} ·{" "}
+                Starting at <span className="font-semibold text-white">{AUDIT_PRICE}</span> | Rush at {AUDIT_PRICE_RUSH} |{" "}
                 Audit + Strategy Call available
               </p>
             </div>
@@ -224,11 +224,11 @@ export function HvacAuditLanding() {
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {[
                 "Your site gets visitors. But the phone doesn't ring.",
-                "Your competitor ranks above you on Google Maps — and you don't know why.",
+                "Your competitor ranks above you on Google Maps - and you don't know why.",
                 "Leads come in, but they're not converting into booked jobs.",
                 "More than half your work still comes from referrals you can't control.",
                 "You've spent money on marketing and have no clear picture of what it did.",
-                "You know something's off — but you don't know what to fix first.",
+                "You know something's off - but you don't know what to fix first.",
               ].map((pain, i) => (
                 <div
                   key={i}
@@ -261,10 +261,10 @@ export function HvacAuditLanding() {
                   className="mb-6 font-headline text-3xl font-light tracking-tight sm:text-4xl"
                   style={{ color: INDUSTRIAL.charcoal }}
                 >
-                  A Full Diagnostic of Your HVAC Lead System — Delivered in 3 Days
+                  A Full Diagnostic of Your HVAC Lead System - Delivered in 3 Days
                 </h2>
                 <p className="mb-8 text-base font-light leading-relaxed" style={{ color: INDUSTRIAL.muted }}>
-                  The HVAC Lead System Audit is a fixed-scope review of every part of your online lead system — from
+                  The HVAC Lead System Audit is a fixed-scope review of every part of your online lead system - from
                   how you show up in local search to whether leads are converting into booked jobs. It&apos;s not
                   consulting. It&apos;s not vague strategy. It&apos;s a specific diagnosis of what&apos;s broken and
                   what to fix first.
@@ -296,13 +296,13 @@ export function HvacAuditLanding() {
                 </p>
                 <p className="mb-6 text-sm font-light leading-relaxed" style={{ color: INDUSTRIAL.muted }}>
                   A single HVAC system replacement typically generates{" "}
-                  <strong className="font-semibold" style={{ color: INDUSTRIAL.charcoal }}>$3,000–$8,000</strong> in
-                  revenue. This audit costs less than 10% of one job — and shows you exactly why you&apos;re not
+                  <strong className="font-semibold" style={{ color: INDUSTRIAL.charcoal }}>$3,000-$8,000</strong> in
+                  revenue. This audit costs less than 10% of one job - and shows you exactly why you&apos;re not
                   booking more of them.
                 </p>
                 <div className="border-t border-[#e5e7eb] pt-6 [border-top-width:0.5px]">
                   <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-400">
-                    One-time diagnostic · Specialized for trades
+                    One-time diagnostic | Specialized for trades
                   </p>
                 </div>
               </div>
@@ -390,13 +390,13 @@ export function HvacAuditLanding() {
                 {
                   icon: Video,
                   title: "Personalized Loom Walkthrough",
-                  desc: "A recorded screen-by-screen walkthrough of your actual site, rankings, and lead flow — not a generic explainer.",
+                  desc: "A recorded screen-by-screen walkthrough of your actual site, rankings, and lead flow - not a generic explainer.",
                   tag: "Delivered with the report",
                 },
                 {
                   icon: ListChecks,
                   title: "Priority Action Plan",
-                  desc: "A clear, ranked list of what to fix first, second, and third — so you don't waste time on the wrong things.",
+                  desc: "A clear, ranked list of what to fix first, second, and third - so you don't waste time on the wrong things.",
                   tag: "Included in the report",
                 },
               ].map((item) => (
@@ -445,7 +445,7 @@ export function HvacAuditLanding() {
               <div className="grid gap-4 sm:grid-cols-2">
                 {[
                   "Which part of your lead system is the weakest link right now",
-                  "Why your competitors rank above you — and what it would take to change that",
+                  "Why your competitors rank above you - and what it would take to change that",
                   "Whether your website is helping or hurting your conversions",
                   "What's causing leads to go cold before they book",
                   "The 3 highest-impact changes you should make first",
@@ -556,7 +556,7 @@ export function HvacAuditLanding() {
                   </p>
                   <div className="mt-8 h-px w-16 bg-zinc-700" />
                   <p className="mt-8 max-w-xs text-sm font-light leading-relaxed text-zinc-400">
-                    HVAC businesses face a specific set of challenges — seasonal demand, high-intent emergency searches,
+                    HVAC businesses face a specific set of challenges - seasonal demand, high-intent emergency searches,
                     and a review-driven trust economy. We know what a high-performing HVAC lead system looks like
                     because we&apos;ve built and audited dozens of them.
                   </p>
@@ -604,7 +604,7 @@ export function HvacAuditLanding() {
                   </h3>
                   <p className="text-base font-light leading-relaxed" style={{ color: INDUSTRIAL.muted }}>
                     We don&apos;t lock you into anything. If your findings point to a need for a new site or a full
-                    lead system build, we&apos;re happy to have that conversation — but there&apos;s no pitch baked
+                    lead system build, we&apos;re happy to have that conversation - but there&apos;s no pitch baked
                     into this offer. You pay {AUDIT_PRICE}, you get clarity, and you decide what comes next.
                   </p>
                 </div>
@@ -634,7 +634,7 @@ export function HvacAuditLanding() {
                 <div className="inline-flex items-center gap-2 bg-md3-primary/10 px-3 py-1.5">
                   <span className="h-1.5 w-1.5 rounded-full bg-md3-primary" />
                   <span className="text-[9px] font-bold uppercase tracking-[0.3em] text-md3-primary">
-                    Founder Pricing · Introductory Rate
+                    Founder Pricing | Introductory Rate
                   </span>
                 </div>
               </div>
@@ -673,7 +673,7 @@ export function HvacAuditLanding() {
                     className="flex w-full items-center justify-center gap-2 border border-md3-primary bg-white py-3.5 text-[10px] font-bold uppercase tracking-[0.25em] text-md3-primary transition-all hover:bg-md3-primary/5 sm:py-4"
                     aria-label={`Get standard audit for ${AUDIT_PRICE}`}
                   >
-                    Get My Audit — {AUDIT_PRICE}
+                    Get My Audit - {AUDIT_PRICE}
                   </Link>
                 </div>
 
@@ -715,7 +715,7 @@ export function HvacAuditLanding() {
                       className="flex w-full items-center justify-center gap-2 bg-md3-primary py-3.5 text-[10px] font-bold uppercase tracking-[0.25em] text-white transition-all hover:bg-[#004f4f] sm:py-4"
                       aria-label={`Get rush audit for ${AUDIT_PRICE_RUSH}`}
                     >
-                      Get My Audit — {AUDIT_PRICE_RUSH}
+                      Get My Audit - {AUDIT_PRICE_RUSH}
                       <ArrowRight className="size-3.5" aria-hidden />
                     </Link>
                   </div>
@@ -755,7 +755,7 @@ export function HvacAuditLanding() {
                     className="flex w-full items-center justify-center gap-2 border border-md3-primary bg-white py-3.5 text-[10px] font-bold uppercase tracking-[0.25em] text-md3-primary transition-all hover:bg-md3-primary/5 sm:py-4"
                     aria-label={`Get audit with strategy call for ${AUDIT_PRICE_FULL}`}
                   >
-                    Get My Audit — {AUDIT_PRICE_FULL}
+                    Get My Audit - {AUDIT_PRICE_FULL}
                   </Link>
                 </div>
               </div>
@@ -895,7 +895,7 @@ export function HvacAuditLanding() {
               </h2>
               <p className="mb-10 text-lg font-light leading-relaxed text-zinc-400">
                 The audit takes 5 minutes of your time. The results arrive in {TURNAROUND}. You&apos;ll know exactly
-                what&apos;s costing you jobs — and what to fix first.
+                what&apos;s costing you jobs - and what to fix first.
               </p>
 
               <Link
@@ -903,13 +903,13 @@ export function HvacAuditLanding() {
                 className="mb-6 inline-flex items-center gap-2 bg-md3-primary px-10 py-5 text-[11px] font-bold uppercase tracking-[0.25em] text-white transition-all hover:bg-[#004f4f]"
                 aria-label={`Get HVAC Lead System Audit for ${AUDIT_PRICE}`}
               >
-                Get My Audit — {AUDIT_PRICE}
+                Get My Audit - {AUDIT_PRICE}
                 <ArrowRight className="size-4" aria-hidden />
               </Link>
 
               <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-600">
-                <span>{AUDIT_PRICE} standard · {AUDIT_PRICE_RUSH} rush · {AUDIT_PRICE_FULL} + call</span>
-                <span className="opacity-40">·</span>
+                <span>{AUDIT_PRICE} standard | {AUDIT_PRICE_RUSH} rush | {AUDIT_PRICE_FULL} + call</span>
+                <span className="opacity-40">|</span>
                 <span>PDF + Loom + Action Plan</span>
               </div>
             </div>

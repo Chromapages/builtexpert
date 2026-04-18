@@ -121,7 +121,7 @@ export function Audit() {
   return (
     <>
       <SEO
-        title="HVAC Lead System Audit — $297 Strategic Diagnostic"
+        title="HVAC Lead System Audit - $297 Strategic Diagnostic"
         description="A manual, deep-dive diagnostic of your HVAC business's digital presence. Find exactly what's costing you calls."
         canonicalPath="/audit"
       />
@@ -298,7 +298,7 @@ export function Audit() {
                         </button>
                       ))}
                     </div>
-                    <button onClick={prevStep} type="button" className="mt-8 text-xs font-bold uppercase tracking-widest text-zinc-400 hover:text-zinc-600">← Back</button>
+                    <button onClick={prevStep} type="button" className="mt-8 text-xs font-bold uppercase tracking-widest text-zinc-400 hover:text-zinc-600">&lt;- Back</button>
                   </motion.div>
                 )}
 
@@ -307,9 +307,9 @@ export function Audit() {
                     <h3 className="mb-8 font-headline text-2xl font-bold uppercase tracking-tight">Current monthly lead volume?</h3>
                     <div className="grid grid-cols-1 gap-4">
                       {[
-                        "0–10 leads / month",
-                        "10–30 leads / month",
-                        "30–100 leads / month",
+                        "0-10 leads / month",
+                        "10-30 leads / month",
+                        "30-100 leads / month",
                         "100+ leads / month",
                       ].map((leads) => (
                         <button
@@ -329,7 +329,7 @@ export function Audit() {
                         </button>
                       ))}
                     </div>
-                    <button onClick={prevStep} type="button" className="mt-8 text-xs font-bold uppercase tracking-widest text-zinc-400 hover:text-zinc-600">← Back</button>
+                    <button onClick={prevStep} type="button" className="mt-8 text-xs font-bold uppercase tracking-widest text-zinc-400 hover:text-zinc-600">&lt;- Back</button>
                   </motion.div>
                 )}
 
@@ -357,9 +357,9 @@ export function Audit() {
                       disabled={isSubmitting}
                       className="mt-12 flex w-full items-center justify-center gap-3 bg-md3-primary py-5 text-[11px] font-bold uppercase tracking-[0.25em] text-white transition-all hover:bg-[#1a1a1a] disabled:opacity-50"
                     >
-                      {isSubmitting ? <><Loader2 className="animate-spin" /> Redirecting to Secure Payment...</> : "Complete Secure Booking — $297"}
+                      {isSubmitting ? <><Loader2 className="animate-spin" /> Redirecting to Secure Payment...</> : "Complete Secure Booking - $297"}
                     </button>
-                    <button onClick={prevStep} type="button" className="mt-8 text-xs font-bold uppercase tracking-widest text-zinc-400 hover:text-zinc-600">← Back</button>
+                    <button onClick={prevStep} type="button" className="mt-8 text-xs font-bold uppercase tracking-widest text-zinc-400 hover:text-zinc-600">&lt;- Back</button>
                   </motion.div>
                 )}
               </form>

@@ -109,7 +109,7 @@ export function CaseStudy() {
       name: "BuiltExpert",
       logo: {
         "@type": "ImageObject",
-        url: "https://builtexpert.com/logo.png",
+        url: "https://builtexpert.com/favicon.png",
       },
     },
     mainEntityOfPage: {

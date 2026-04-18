@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
+  <url>
+    <loc>https://builtexpert.com/</loc>
+    <video:video>
+      <video:thumbnail_loc>https://builtexpert.com/images/contractor-hero-bg.png</video:thumbnail_loc>
+      <video:title>BuiltExpert contractor growth system hero video</video:title>
+      <video:description>Hero video used on the BuiltExpert homepage to present contractor-focused lead generation and marketing services.</video:description>
+      <video:content_loc>https://builtexpert.com/assets/hero-vid.mp4</video:content_loc>
+    </video:video>
+  </url>
+</urlset>
